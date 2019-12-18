@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# This project
+mkdocs_jupyter/assets/jupyter-fixes.css
