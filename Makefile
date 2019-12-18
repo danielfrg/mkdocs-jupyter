@@ -16,8 +16,12 @@ upload:  ## Upload package to pypi
 	twine upload dist/*.tar.gz
 
 .PHONY: upload-test
-upload:  ## Upload package to pypi test repository
+upload-test:  ## Upload package to pypi test repository
 	twine upload --repository testpypi dist/*.tar.gz
+
+.PHONY: clean
+clean:  ## Clean build files
+	@rm -rf dist
 
 .PHONY: env
 env:  ## Create virtualenv
