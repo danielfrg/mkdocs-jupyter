@@ -27,6 +27,6 @@ clean:  ## Clean build files
 env:  ## Create virtualenv
 	conda env create
 
+.PHONY: help
 help:  ## Show this help menu
 	@grep -E '^[0-9a-zA-Z_-]+:.*?##.*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?##"; OFS="\t\t"}; {printf "\033[36m%-30s\033[0m %s\n", $$1, ($$2==""?"":$$2)}'
-.PHONY: help
