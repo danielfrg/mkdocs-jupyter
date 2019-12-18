@@ -1,0 +1,107 @@
+// Theme reset: Links use whatever the theme does
+.rendered_html a {
+    text-decoration: inherit !important;
+}
+.rendered_html :link {
+    text-decoration: inherit !important;
+}
+.rendered_html :visited {
+    text-decoration: inherit !important;
+}
+.rendered_html pre {
+    // background: inherit !important;  // This doesn't work well...
+    background-color: #1a1a1a;  // Hard code it to my theme
+}
+
+// Theme reset: Code blocks use the theme
+pre code {
+    background-color: inherit !important;
+}
+
+// Pygments reset: Back to default since its not set on what Jupyter adds
+.highlight {
+    color: #000000;
+
+    code {
+        color: #000000;
+    }
+}
+.highlight .n {
+    color: #333333;
+}
+.highlight .p {
+    color: #000000;
+}
+
+// Removes left space on MD (text) cells so everything its aligned
+.text_cell .prompt {
+    display: none !important;
+}
+
+// Align input and output prompts
+div.input_prompt {
+    padding: 0.2em 0.4em;
+}
+div.output_prompt {
+    padding: 0.4em;
+}
+
+// Remove padding on MD (text) cells so the width matches MD posts
+.text_cell {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+.text_cell_render {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+.rendered_html * + p {
+    margin-top: inherit !important;
+}
+
+// Remove the anchor links
+.anchor-link {
+    display: none !important;
+}
+
+// Give code cells a little bit more vertical space
+.code_cell {
+    margin: 0 !important;
+    padding: 5px 0 !important;
+    border: none !important;
+}
+
+// Margin on the code cell
+div.input_area > div.highlight {
+    margin: 0.25em 0.4em !important;
+}
+
+// Make font of code cells standard
+.code_cell pre {
+    font-size: 12px !important;
+}
+
+// Make dataframes tables standard
+.output_html table.dataframe {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+}
+.output_html table.dataframe th, td {
+    padding: 4px;
+    text-align: left;
+}
+
+// Bokeh plots table no hover
+.bk-plot-wrapper {
+    tbody {
+        tr {
+            background: none !important;
+        }
+        tr:hover {
+            background: none !important;
+        }
+    }
+}

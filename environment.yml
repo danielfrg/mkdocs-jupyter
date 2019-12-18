@@ -1,0 +1,13 @@
+name: mkdocs-jupyter
+channels:
+  - conda-forge
+dependencies:
+  - python=3
+  - pip
+  - mkdocs
+  - jupyter
+  - notebook
+  - nbconvert
+  - pip:
+    - versioneer
+    - twine

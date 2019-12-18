@@ -1,0 +1,5 @@
+include versioneer.py
+include mkdocs_jupyter/_version.py
+include README.rst
+include LICENSE.txt
+include mkdocs_jupyter/assets/*
