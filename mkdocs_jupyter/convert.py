@@ -124,8 +124,6 @@ class SubCell(Preprocessor):
         return nbc, resources
 
 
-
-
 def get_html_from_filepath(filepath, start=0, end=None, template=None):
     """Return the HTML from a Jupyter Notebook
     """
@@ -174,41 +172,6 @@ def get_html_from_filepath(filepath, start=0, end=None, template=None):
     content, info = exporter.from_filename(filepath)
 
     return content, info
-
-
-# import nbconvert.filters.strings as nb_strings
-# from defusedxml import cElementTree as ElementTree
-# from xml.etree.cElementTree import Element
-
-# from ipython_genutils import py3compat
-
-
-# def parse_header_anchor(html):
-#     """We make to make the id lowercase
-#     because mkdocs uses just lowercase on the TOC
-
-#     Note on nbconvert.filters.add_anchor:
-#         sadly overwriting this filter on the exported doesn't do anything
-#         so we have to do this function
-#     """
-#     import re
-#     from bs4 import BeautifulSoup, SoupStrainer
-
-#     soup = BeautifulSoup(html)
-
-#     headers = soup.find_all(re.compile('^h[1-6]$'))
-
-#     for header in headers:
-#         if 'id' in header:
-#             header['id'] = header['id'].lower()
-
-#     return str(soup)
-
-#     def lower_ids(match):
-#         return match.group(2).lower()
-
-#     html = re.sub(r'<([^\s]+).*?id="([^"]*?)".*?>(.+?)</\1>', lower_ids, html)
-#     return html
 
 
 def custom_highlight_code(source, language="python", metadata=None):
