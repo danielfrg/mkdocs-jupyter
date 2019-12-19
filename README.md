@@ -2,6 +2,10 @@
 
 ![mkdocs-jupyter](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/screenshot.png)
 
+- Add Jupyter Notebooks directly to the mkdocs navigation
+- Feel and look the regular Jupyter Notebook style inside mkdocs pages
+- Support for mkdocs TOC
+
 ## Usage
 
 ```

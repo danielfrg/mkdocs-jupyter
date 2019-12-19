@@ -1,9 +1,12 @@
 import os
+import markdown
 
 import mkdocs
+from mkdocs.structure.toc import get_toc
+from mkdocs.structure.pages import Page
 from mkdocs.structure.files import Files
 
-from .convert import convert
+from . import convert
 
 
 class NotebookFile(mkdocs.structure.files.File):
@@ -26,8 +29,7 @@ class NotebookFile(mkdocs.structure.files.File):
 
 
 class Plugin(mkdocs.plugins.BasePlugin):
-    config_scheme = (
-    )
+    config_scheme = ()
 
     def on_files(self, files, config):
         files = Files(
@@ -40,8 +42,36 @@ class Plugin(mkdocs.plugins.BasePlugin):
         )
         return files
 
-    def on_page_read_source(self, _, page, config):
+    def on_pre_page(self, page, config, files):
         if str(page.file.abs_src_path).endswith("ipynb"):
-            body = convert(page.file.abs_src_path)
-            return body
-        return None
+
+            def new_render(self, config, files):
+                body = convert.nb2html(page.file.abs_src_path)
+                self.content = body
+
+                body = convert.nb2html(page.file.abs_src_path)
+                self.toc = get_nb_toc(page.file.abs_src_path)
+
+            # replace render with new_render for this object only
+            page.render = new_render.__get__(page, Page)
+        return page
+
+    # TODO we can remove this just here for testing
+    # def on_page_content(self, html, page, config, files):
+    #     print("---")
+    #     print(page.toc)
+    #     return html
+
+
+def get_nb_toc(fpath):
+    """Converts the notebook to md and get the toc
+    """
+    body = convert.nb2md(fpath)
+
+    extensions = ["toc", "fenced_code"]  # config['markdown_extensions']
+    mdx_configs = {"toc": {"permalink": True}}  # config['mdx_configs'] or {'toc': {'permalink': True}}
+    md = markdown.Markdown(extensions=extensions, extension_configs=mdx_configs)
+    content = md.convert(body)
+
+    toc = get_toc(getattr(md, "toc", ""))
+    return toc

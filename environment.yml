@@ -5,7 +5,6 @@ dependencies:
   - python=3
   - pip
   - mkdocs
-  - jupyter
   - notebook
   - nbconvert
   - pip:

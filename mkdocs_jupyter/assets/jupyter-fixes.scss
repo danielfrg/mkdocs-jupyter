@@ -8,10 +8,10 @@
 .rendered_html :visited {
     text-decoration: inherit !important;
 }
-.rendered_html pre {
-    // background: inherit !important;  // This doesn't work well...
-    background-color: #1a1a1a;  // Hard code it to my theme
-}
+// .rendered_html pre {
+//     // background: inherit !important;  // This doesn't work well...
+//     // background-color: #1a1a1a;  // Hard code it to my theme
+// }
 
 // Theme reset: Code blocks use the theme
 pre code {
@@ -71,6 +71,56 @@ div.output_prompt {
     margin: 0 !important;
     padding: 5px 0 !important;
     border: none !important;
+}
+
+// Tags on cells
+.celltoolbar {
+    // Mostly copying this from straight Jupyter
+    border: thin solid #CFCFCF;
+    border-bottom: none;
+    background: #EEE;
+    border-radius: 2px 2px 0px 0px;
+    width: 100%;
+    height: 29px;
+    padding-right: 4px;
+    display: box;
+    box-orient: horizontal;
+    box-align: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    box-pack: end;
+    justify-content: flex-end;
+    display: -webkit-flex;
+
+    .tags_button_container {
+        width: 100%;
+        display: flex;
+
+        .tag-container {
+            display: flex;
+            flex-direction: row;
+            flex-grow: 1;
+            overflow: hidden;
+            position: relative;
+
+            .cell-tag {
+                background-color: #fff;
+                white-space: nowrap;
+                margin: 3px 4px;
+                padding: 0 4px;
+                border-radius: 1px;
+                border: 1px solid #ccc;
+                box-shadow: none;
+                width: inherit;
+                font-size: 13px;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                height: 22px;
+                line-height: 22px;
+                display: inline-block;
+            }
+        }
+    }
 }
 
 // Margin on the code cell
