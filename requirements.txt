@@ -1,3 +1,2 @@
-jupyter
-nbconvert
 mkdocs
+nbconvert

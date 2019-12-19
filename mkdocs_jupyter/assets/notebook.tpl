@@ -10,6 +10,7 @@
 
 
 {% block input %}
+    {# Add tags to the cell #}
     <div class="inner_cell">
         {% set cell_tags = cell["metadata"].get("tags", [])%}
         {% if cell_tags %}
