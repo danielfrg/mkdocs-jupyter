@@ -29,7 +29,9 @@ class NotebookFile(mkdocs.structure.files.File):
 
 
 class Plugin(mkdocs.plugins.BasePlugin):
-    config_scheme = ()
+    config_scheme = (
+        ("execute", mkdocs.config.config_options.Type(bool, default=False)),
+    )
 
     def on_files(self, files, config):
         files = Files(
@@ -44,23 +46,19 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
     def on_pre_page(self, page, config, files):
         if str(page.file.abs_src_path).endswith("ipynb"):
+            print("Converting:", page.file.abs_src_path)
+
+            exec_nb = self.config["execute"]
 
             def new_render(self, config, files):
-                body = convert.nb2html(page.file.abs_src_path)
+                # print(config)
+                body = convert.nb2html(page.file.abs_src_path, execute=exec_nb)
                 self.content = body
-
-                body = convert.nb2html(page.file.abs_src_path)
                 self.toc = get_nb_toc(page.file.abs_src_path)
 
             # replace render with new_render for this object only
             page.render = new_render.__get__(page, Page)
         return page
-
-    # TODO we can remove this just here for testing
-    # def on_page_content(self, html, page, config, files):
-    #     print("---")
-    #     print(page.toc)
-    #     return html
 
 
 def get_nb_toc(fpath):

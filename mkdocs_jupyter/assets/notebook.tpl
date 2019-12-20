@@ -2,6 +2,7 @@
 
 {% block header %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    {% include "ipywidgets.html" %}
 
     <style type="text/css">
         {% include "jupyter-fixes.min.css" %}

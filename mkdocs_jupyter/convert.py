@@ -12,6 +12,7 @@ from traitlets.config import Config
 
 from nbconvert.exporters import HTMLExporter, MarkdownExporter
 from nbconvert.preprocessors import Preprocessor, CSSHTMLHeaderPreprocessor
+from nbconvert.preprocessors import ExecutePreprocessor
 
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.nbconvertapp import NbConvertApp
@@ -37,7 +38,8 @@ def add_anchor_lower_id(html, anchor_link_text=u'¶'):
         # failed to parse, just return it unmodified
         return html
     link = _convert_header_id(html2text(h))
-    h.set('id', link.lower())
+    sane_link = link.lower().replace(".", "")
+    h.set('id', sane_link)
     a = Element("a", {"class": "anchor-link", "href": "#" + link})
     try:
         # Test if the anchor link text is HTML (e.g. an image)
@@ -66,10 +68,10 @@ IPythonRenderer.header = new_header
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
-def nb2html(nb_path):
+def nb2html(nb_path, execute=False):
     """Convert a notebook and return html"""
     template = os.path.join(THIS_DIR, "assets", "notebook.tpl")
-    content, info = get_html_from_filepath(nb_path, template=template)
+    content, info = get_html_from_filepath(nb_path, template=template, execute=execute)
 
     # Fix CSS
     html = generate_html(content, info, fix_css=True, ignore_css=False)
@@ -124,7 +126,7 @@ class SubCell(Preprocessor):
         return nbc, resources
 
 
-def get_html_from_filepath(filepath, start=0, end=None, template=None):
+def get_html_from_filepath(filepath, start=0, end=None, template=None, execute=False):
     """Return the HTML from a Jupyter Notebook
     """
     preprocessors_ = [SubCell]
@@ -152,6 +154,10 @@ def get_html_from_filepath(filepath, start=0, end=None, template=None):
             "start": start,
             "end": end
         },
+        # "ExecutePreprocessor": {
+        #     "enabled": execute,
+        #     "store_widget_state": True
+        # }
     })
 
     # Overwrite Custom jinja filters

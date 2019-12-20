@@ -4,6 +4,8 @@
 
 - Add Jupyter Notebooks directly to the mkdocs navigation
 - Feel and look the regular Jupyter Notebook style inside mkdocs pages
+- Option to execute the notebook before converting
+- Show ipywidgets (requires execution of the notebook)
 - Support for mkdocs TOC
 
 ## Usage

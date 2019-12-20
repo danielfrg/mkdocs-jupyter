@@ -18,6 +18,15 @@ pre code {
     background-color: inherit !important;
 }
 
+// Mkdocs material fix: Remove edit button that goes to GitHub
+.md-content a.md-icon.md-content__icon:first-child {
+    display: none;
+}
+
+.rendered_html h1:first-child {
+    margin-top: 0;
+}
+
 // Pygments reset: Back to default since its not set on what Jupyter adds
 .highlight {
     color: #000000;
