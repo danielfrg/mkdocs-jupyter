@@ -92,18 +92,17 @@ div.output_prompt {
     width: 100%;
     height: 29px;
     padding-right: 4px;
-    display: box;
     box-orient: horizontal;
     box-align: stretch;
     display: flex;
     flex-direction: row;
     align-items: stretch;
     box-pack: end;
-    justify-content: flex-end;
+    justify-content: flex-start;
     display: -webkit-flex;
 
     .tags_button_container {
-        width: 100%;
+        // width: 100%;
         display: flex;
 
         .tag-container {
