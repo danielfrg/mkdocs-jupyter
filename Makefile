@@ -11,7 +11,7 @@ all: help
 build:  ## Build Python package
 	python setup.py sdist
 
-.PHONY: upload
+.PHONY: upload-pypi
 upload:  ## Upload package to pypi
 	twine upload dist/*.tar.gz
 
