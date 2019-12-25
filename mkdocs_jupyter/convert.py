@@ -1,6 +1,7 @@
 import os
 import re
 import yaml
+import unicodedata
 from copy import deepcopy
 
 import jinja2
@@ -17,6 +18,7 @@ from nbconvert.preprocessors import ExecutePreprocessor
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.nbconvertapp import NbConvertApp
 
+from .utils import slugify
 from .templates import LATEX_CUSTOM_SCRIPT, GENERATED_MD
 
 # We monkeypath nbconvert.filters.markdown_mistune.IPythonRenderer.header
@@ -25,6 +27,7 @@ from .templates import LATEX_CUSTOM_SCRIPT, GENERATED_MD
 # So this makes the links from the TOC work
 
 from nbconvert.filters.markdown_mistune import IPythonRenderer
+
 
 def add_anchor_lower_id(html, anchor_link_text=u'¶'):
     from ipython_genutils import py3compat
@@ -38,8 +41,7 @@ def add_anchor_lower_id(html, anchor_link_text=u'¶'):
         # failed to parse, just return it unmodified
         return html
     link = _convert_header_id(html2text(h))
-    sane_link = link.lower().replace(".", "")
-    h.set('id', sane_link)
+    h.set("id", slugify(link))
     a = Element("a", {"class": "anchor-link", "href": "#" + link})
     try:
         # Test if the anchor link text is HTML (e.g. an image)
