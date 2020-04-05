@@ -1,0 +1,4 @@
+site_name: whatlies
+site_description: Just used for tests.
+nav: 
+  - Home: index.md
