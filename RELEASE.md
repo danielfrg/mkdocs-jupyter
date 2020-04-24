@@ -1,5 +1,14 @@
-## How to release a new version
+# Release
 
-- Tag version: `git tag 1.0.0`
-- Build: `make build`
-- Upload with twine: `make upload-pypi`
+```
+export VERSION=1.0.0
+
+git commit --allow-empty -am "Release drivers version: ${VERSION}"
+git tag -a ${VERSION} -m "${VERSION}"
+
+make build
+make upload-pypi
+
+git push origin ${VERSION}
+git push
+```
