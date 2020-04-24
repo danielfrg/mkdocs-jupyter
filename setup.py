@@ -22,7 +22,7 @@ setup(
     author_email="df.rodriguez143@gmail.com",
     url="https://github.com/danielfrg/mkdocs-jupyter",
     license="Apache 2.0",
-    python_requires=">=3.0,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*",
+    python_requires=">=3.0,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"",
     install_requires=read_file("requirements.txt").splitlines(),
     keywords=["jupyter", "mkdocs"],
     packages=find_packages(),
@@ -30,5 +30,5 @@ setup(
     zip_safe=False,
     entry_points={
         "mkdocs.plugins": ["mkdocs-jupyter = mkdocs_jupyter.plugin:Plugin"]
-    },
+    }
 )
