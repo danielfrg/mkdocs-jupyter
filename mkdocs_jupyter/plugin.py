@@ -71,5 +71,5 @@ def get_nb_toc(fpath):
     md = markdown.Markdown(extensions=extensions, extension_configs=mdx_configs)
     content = md.convert(body)
 
-    toc = get_toc(getattr(md, "toc", ""))
+    toc = get_toc(getattr(md, "toc_tokens", []))
     return toc

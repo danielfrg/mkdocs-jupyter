@@ -1,10 +1,9 @@
-site_name: whatlies
+site_name: site-with-notebooks
 site_description: Just used for tests.
-nav: 
+
+nav:
   - Home: index.md
   - Notebook: demo.ipynb
-theme:
-  name: material
+
 plugins:
-  - search
   - mkdocs-jupyter

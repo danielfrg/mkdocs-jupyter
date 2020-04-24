@@ -21,7 +21,11 @@ upload-test:  ## Upload package to pypi test repository
 
 .PHONY: clean
 clean:  ## Clean build files
-	@rm -rf dist
+	@rm -rf dist __pycache__
+
+.PHONY: cleanall
+cleanall: clean  ## Clean build files
+	@rm -rf *.egg-info
 
 .PHONY: env
 env:  ## Create virtualenv

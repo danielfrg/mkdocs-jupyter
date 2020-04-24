@@ -130,3 +130,4 @@ dmypy.json
 
 # This project
 mkdocs_jupyter/assets/jupyter-fixes.css
+mkdocs_jupyter/tests/site

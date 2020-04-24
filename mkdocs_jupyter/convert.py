@@ -7,7 +7,6 @@ from copy import deepcopy
 import jinja2
 from pygments.formatters import HtmlFormatter
 
-import IPython
 from traitlets import Integer
 from traitlets.config import Config
 
@@ -21,7 +20,7 @@ from nbconvert.nbconvertapp import NbConvertApp
 from .utils import slugify
 from .templates import LATEX_CUSTOM_SCRIPT, GENERATED_MD
 
-# We monkeypath nbconvert.filters.markdown_mistune.IPythonRenderer.header
+# We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
 # To use a version that makes the id all lowercase
 # because mkdocs uses just lowercase on the TOC to make it url friendly
 # So this makes the links from the TOC work
