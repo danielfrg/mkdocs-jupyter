@@ -1,0 +1,10 @@
+site_name: whatlies
+site_description: Just used for tests.
+nav: 
+  - Home: index.md
+  - Notebook: demo.ipynb
+theme:
+  name: material
+plugins:
+  - search
+  - mkdocs-jupyter
