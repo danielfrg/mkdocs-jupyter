@@ -1,3 +1,25 @@
-mkdocs>=1.1.0
+# Used for CI - It should match environment.yml
+
+# Base conda deps
+setuptools
+setuptools_scm
+pylint
+flake8
+black
+isort
+twine
+wheel
+pytest
+pytest-cov
+
+# This project conda deps
+notebook
 nbconvert
-ipython
+
+pip:
+# This project pip deps
+mkdocs
+mkdocs-material
+mkdocs-minify-plugin
+pygments
+pymdown-extensions

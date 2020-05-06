@@ -1,0 +1,5 @@
+[run]
+omit =
+    mkdocs_jupyter/tests/*
+source =
+    mkdocs_jupyter
