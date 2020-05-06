@@ -43,3 +43,8 @@ jobs:
       if: always()
       run: |
         make test
+
+    - name: Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        file: ./coverage.xml

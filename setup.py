@@ -7,8 +7,7 @@ setup_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 def read_file(filename):
-    this_dir = os.path.abspath(os.path.dirname(__file__))
-    filepath = os.path.join(this_dir, filename)
+    filepath = os.path.join(setup_dir, filename)
     with open(filepath) as file:
         return file.read()
 
@@ -37,10 +36,9 @@ setup(
         "parse": parse_git,
         "write_to": os.path.join("mkdocs_jupyter/_generated_version.py"),
     },
+    python_requires=">=3.6",
     setup_requires=["setuptools_scm"],
     install_requires=read_file("requirements.package.txt").splitlines(),
-    tests_require=["pytest",],
-    python_requires=">=3.6",
     description="",
     long_description=read_file("README.md"),
     long_description_content_type="text/markdown",
