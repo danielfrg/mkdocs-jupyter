@@ -16,7 +16,6 @@ pytest-cov
 notebook
 nbconvert
 
-pip:
 # This project pip deps
 mkdocs
 mkdocs-material
