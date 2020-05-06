@@ -37,7 +37,6 @@ setup(
         "parse": parse_git,
         "write_to": os.path.join("mkdocs_jupyter/_generated_version.py"),
     },
-    test_suite="mkdocs_jupyter/tests",
     setup_requires=["setuptools_scm"],
     install_requires=read_file("requirements.package.txt").splitlines(),
     tests_require=["pytest",],
