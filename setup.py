@@ -31,9 +31,7 @@ setup(
     # package_data={"mkdocs_jupyter": ["includes/*"]},
     # data_files=data_files,
     # cmdclass={"install": InstallCmd},
-    entry_points = {
-        "mkdocs.plugins": ["mkdocs-jupyter = mkdocs_jupyter.plugin:Plugin"]
-    },
+    entry_points={"mkdocs.plugins": ["mkdocs-jupyter = mkdocs_jupyter.plugin:Plugin"]},
     use_scm_version={
         "root": setup_dir,
         "parse": parse_git,

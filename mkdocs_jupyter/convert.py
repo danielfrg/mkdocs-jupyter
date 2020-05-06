@@ -1,41 +1,40 @@
 import os
 import re
-import yaml
 import unicodedata
 from copy import deepcopy
 
 import jinja2
+import yaml
+from nbconvert.exporters import HTMLExporter, MarkdownExporter
+from nbconvert.filters.highlight import _pygments_highlight
+from nbconvert.filters.markdown_mistune import IPythonRenderer
+from nbconvert.nbconvertapp import NbConvertApp
+from nbconvert.preprocessors import (
+    CSSHTMLHeaderPreprocessor,
+    ExecutePreprocessor,
+    Preprocessor,
+)
 from pygments.formatters import HtmlFormatter
-
 from traitlets import Integer
 from traitlets.config import Config
 
-from nbconvert.exporters import HTMLExporter, MarkdownExporter
-from nbconvert.preprocessors import Preprocessor, CSSHTMLHeaderPreprocessor
-from nbconvert.preprocessors import ExecutePreprocessor
-
-from nbconvert.filters.highlight import _pygments_highlight
-from nbconvert.nbconvertapp import NbConvertApp
-
+from .templates import GENERATED_MD, LATEX_CUSTOM_SCRIPT
 from .utils import slugify
-from .templates import LATEX_CUSTOM_SCRIPT, GENERATED_MD
 
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
 # To use a version that makes the id all lowercase
 # because mkdocs uses just lowercase on the TOC to make it url friendly
 # So this makes the links from the TOC work
 
-from nbconvert.filters.markdown_mistune import IPythonRenderer
 
-
-def add_anchor_lower_id(html, anchor_link_text=u'¶'):
+def add_anchor_lower_id(html, anchor_link_text="¶"):
     from ipython_genutils import py3compat
     from defusedxml import cElementTree as ElementTree
     from xml.etree.cElementTree import Element
     from nbconvert.filters.strings import _convert_header_id, html2text
 
     try:
-        h = ElementTree.fromstring(py3compat.cast_bytes_py2(html, encoding='utf-8'))
+        h = ElementTree.fromstring(py3compat.cast_bytes_py2(html, encoding="utf-8"))
     except Exception:
         # failed to parse, just return it unmodified
         return html
@@ -53,13 +52,14 @@ def add_anchor_lower_id(html, anchor_link_text=u'¶'):
     # Known issue of Python3.x, ElementTree.tostring() returns a byte string
     # instead of a text string.  See issue http://bugs.python.org/issue10942
     # Workaround is to make sure the bytes are casted to a string.
-    return py3compat.decode(ElementTree.tostring(h), 'utf-8')
+    return py3compat.decode(ElementTree.tostring(h), "utf-8")
 
 
 def new_header(self, text, level, raw=None):
     html = super(IPythonRenderer, self).header(text, level, raw=raw)
-    anchor_link_text = self.options.get('anchor_link_text', u'¶')
+    anchor_link_text = self.options.get("anchor_link_text", "¶")
     return add_anchor_lower_id(html, anchor_link_text=anchor_link_text)
+
 
 IPythonRenderer.header = new_header
 
@@ -123,7 +123,7 @@ class SubCell(Preprocessor):
 
     def preprocess(self, nb, resources):
         nbc = deepcopy(nb)
-        nbc.cells = nbc.cells[self.start:self.end]
+        nbc.cells = nbc.cells[self.start : self.end]
         return nbc, resources
 
 
@@ -135,31 +135,28 @@ def get_html_from_filepath(filepath, start=0, end=None, template=None, execute=F
     template_file = "basic"
     extra_loaders = []
     if template:
-        extra_loaders.append(
-            jinja2.FileSystemLoader([os.path.dirname(template)]))
+        extra_loaders.append(jinja2.FileSystemLoader([os.path.dirname(template)]))
         template_file = os.path.basename(template)
 
     # Load the user's nbconvert configuration
     app = NbConvertApp()
     app.load_config_file()
 
-    app.config.update({
-        # This Preprocessor changes the pygments css prefixes
-        # from .highlight to .highlight-ipynb
-        "CSSHTMLHeaderPreprocessor": {
-            "enabled": True,
-            "highlight_class": ".highlight-ipynb",
-        },
-        "SubCell": {
-            "enabled": True,
-            "start": start,
-            "end": end
-        },
-        # "ExecutePreprocessor": {
-        #     "enabled": execute,
-        #     "store_widget_state": True
-        # }
-    })
+    app.config.update(
+        {
+            # This Preprocessor changes the pygments css prefixes
+            # from .highlight to .highlight-ipynb
+            "CSSHTMLHeaderPreprocessor": {
+                "enabled": True,
+                "highlight_class": ".highlight-ipynb",
+            },
+            "SubCell": {"enabled": True, "start": start, "end": end},
+            # "ExecutePreprocessor": {
+            #     "enabled": execute,
+            #     "store_widget_state": True
+            # }
+        }
+    )
 
     # Overwrite Custom jinja filters
     # This is broken right now so needs fix from below
@@ -191,7 +188,7 @@ def custom_highlight_code(source, language="python", metadata=None):
     if not language:
         language = "ipython3"
 
-    formatter = HtmlFormatter(cssclass=" highlight highlight-ipynb hl-"+language)
+    formatter = HtmlFormatter(cssclass=" highlight highlight-ipynb hl-" + language)
     output = _pygments_highlight(source, formatter, language, metadata)
     return output
 
@@ -221,16 +218,17 @@ def generate_html(content, info, fix_css=True, ignore_css=False):
             style = style[:index]
 
         style = re.sub(r"color\:\#0+(;)?", "", style)
-        style = re.sub(r"\.rendered_html[a-z0-9,._ ]*\{[a-z0-9:;%.#\-\s\n]+\}",
-                       "", style)
+        style = re.sub(
+            r"\.rendered_html[a-z0-9,._ ]*\{[a-z0-9:;%.#\-\s\n]+\}", "", style
+        )
         return style_tag(style)
 
     if not ignore_css:
-        jupyter_css = "\n".join(
-            style_tag(style) for style in info["inlining"]["css"])
+        jupyter_css = "\n".join(style_tag(style) for style in info["inlining"]["css"])
         if fix_css:
             jupyter_css = "\n".join(
-                filter_css(style) for style in info["inlining"]["css"])
+                filter_css(style) for style in info["inlining"]["css"]
+            )
         content = jupyter_css + content
     content = content + LATEX_CUSTOM_SCRIPT
     return content

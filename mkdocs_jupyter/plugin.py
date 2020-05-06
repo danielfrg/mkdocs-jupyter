@@ -1,10 +1,10 @@
 import os
-import markdown
 
+import markdown
 import mkdocs
-from mkdocs.structure.toc import get_toc
-from mkdocs.structure.pages import Page
 from mkdocs.structure.files import Files
+from mkdocs.structure.pages import Page
+from mkdocs.structure.toc import get_toc
 
 from . import convert
 
@@ -67,7 +67,9 @@ def get_nb_toc(fpath):
     body = convert.nb2md(fpath)
 
     extensions = ["toc", "fenced_code"]  # config['markdown_extensions']
-    mdx_configs = {"toc": {"permalink": True}}  # config['mdx_configs'] or {'toc': {'permalink': True}}
+    mdx_configs = {
+        "toc": {"permalink": True}
+    }  # config['mdx_configs'] or {'toc': {'permalink': True}}
     md = markdown.Markdown(extensions=extensions, extension_configs=mdx_configs)
     content = md.convert(body)
 

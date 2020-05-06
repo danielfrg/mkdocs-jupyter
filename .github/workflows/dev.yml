@@ -7,8 +7,34 @@ on:
     branches: [ master ]
 
 jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+
+    - name: Install package
+      run: |
+        make build
+        pip install dist/*.tar.gz
+        pip freeze
+
+  lint:
+    runs-on: ubuntu-latest
+
+    - name: Check linting
+      run: |
+        make check
+
   test:
     runs-on: ubuntu-latest
+    needs: build
 
     strategy:
       matrix:
