@@ -32,6 +32,11 @@ setup(
     # data_files=data_files,
     # cmdclass={"install": InstallCmd},
     entry_points={"mkdocs.plugins": ["mkdocs-jupyter = mkdocs_jupyter.plugin:Plugin"]},
+    use_scm_version={
+        "root": setup_dir,
+        "parse": parse_git,
+        "write_to": os.path.join("mkdocs_jupyter/_generated_version.py"),
+    },
     test_suite="mkdocs_jupyter/tests",
     setup_requires=["setuptools_scm"],
     install_requires=read_file("requirements.package.txt").splitlines(),
