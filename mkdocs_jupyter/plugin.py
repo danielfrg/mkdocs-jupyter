@@ -1,10 +1,10 @@
 import os
-import markdown
 
+import markdown
 import mkdocs
-from mkdocs.structure.toc import get_toc
-from mkdocs.structure.pages import Page
 from mkdocs.structure.files import Files
+from mkdocs.structure.pages import Page
+from mkdocs.structure.toc import get_toc
 
 from . import convert
 
@@ -46,7 +46,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
     def on_pre_page(self, page, config, files):
         if str(page.file.abs_src_path).endswith("ipynb"):
-            print("Converting:", page.file.abs_src_path)
+            # print("Converting:", page.file.abs_src_path)
 
             exec_nb = self.config["execute"]
 
@@ -64,12 +64,14 @@ class Plugin(mkdocs.plugins.BasePlugin):
 def get_nb_toc(fpath):
     """Converts the notebook to md and get the toc
     """
-    body = convert.nb2md(fpath)
-
     extensions = ["toc", "fenced_code"]  # config['markdown_extensions']
-    mdx_configs = {"toc": {"permalink": True}}  # config['mdx_configs'] or {'toc': {'permalink': True}}
+    mdx_configs = {
+        "toc": {"permalink": True}
+    }  # config['mdx_configs'] or {'toc': {'permalink': True}}
     md = markdown.Markdown(extensions=extensions, extension_configs=mdx_configs)
-    content = md.convert(body)
+
+    # body = convert.nb2md(fpath)
+    # content = md.convert(body)
 
     toc = get_toc(getattr(md, "toc_tokens", []))
     return toc

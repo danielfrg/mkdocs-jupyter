@@ -2,13 +2,29 @@ name: mkdocs-jupyter
 channels:
   - conda-forge
 dependencies:
-  - python=3
+  - python=3.7
   - pip
-  - mkdocs
-  - nbconvert
-  - notebook
+
+  # Base conda deps
+  - setuptools
+  - setuptools_scm
+  - pylint
+  - flake8
+  - black
+  - isort
+  - twine
+  - wheel
   - pytest
+  - pytest-cov
+
+  # This project conda deps
+  - notebook
+  - nbconvert
+  
   - pip:
+    # This project pip deps
+    - mkdocs
     - mkdocs-material
-    - versioneer
-    - twine
+    - mkdocs-minify-plugin
+    - pygments
+    - pymdown-extensions

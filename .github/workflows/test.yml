@@ -1,24 +1,22 @@
-name: testing
+name: test
 
 on:
   push:
-    branches:
-    - master
+    branches: [ master ]
   pull_request:
-    branches:
-    - master
+    branches: [ master ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        python-version: [3.7, 3.8]
-        mkdocs-version: ["1.1"]
+        python-version: [3.6, 3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v2
+    - run: git fetch --prune --unshallow
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
@@ -28,14 +26,25 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -U mkdocs==${{ matrix.mkdocs-version }} pytest nbconvert
+        pip install -r requirements.txt
         pip freeze
 
     - name: Install package
       run: |
-        pip install -e .
+        make build
+        pip install dist/*.tar.gz
         pip freeze
 
-    - name: Run pytest
+    - name: Check linting
       run: |
-        py.test -s -vv
+        make check
+
+    - name: Run tests
+      if: always()
+      run: |
+        make test
+
+    - name: Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        file: ./coverage.xml
