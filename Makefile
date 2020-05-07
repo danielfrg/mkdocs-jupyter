@@ -18,6 +18,7 @@ clean:  ## Clean build files
 	@find . -type f -name '*.py[co]' -delete
 	@find . -type d -name __pycache__ -exec rm -rf {} +
 	@find . -type d -name .ipynb_checkpoints -exec rm -rf {} +
+	@rm -rf mkdocs_jupyter/tests/site
 
 
 .PHONY: cleanall

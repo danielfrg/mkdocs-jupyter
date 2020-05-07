@@ -46,7 +46,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
     def on_pre_page(self, page, config, files):
         if str(page.file.abs_src_path).endswith("ipynb"):
-            print("Converting:", page.file.abs_src_path)
+            # print("Converting:", page.file.abs_src_path)
 
             exec_nb = self.config["execute"]
 
