@@ -1,0 +1,9 @@
+site_name: site-with-notebooks
+site_description: Just used for tests.
+
+nav:
+  - Home: index.md
+  - Notebook: demo.ipynb
+
+plugins:
+  - mkdocs-jupyter
