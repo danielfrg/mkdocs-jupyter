@@ -78,7 +78,7 @@ upload-test:  ## Upload package to test PyPI
 
 .PHONY: test
 test:  ## Run tests
-	pytest -s -vv --pyargs mkdocs_jupyter -k $(TEST_FILTER)
+	pytest -s -vv mkdocs_jupyter/tests -k $(TEST_FILTER)
 
 
 .PHONY: docs
