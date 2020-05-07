@@ -24,7 +24,7 @@ def parse_git(root, **kwargs):
 
 setup(
     name="mkdocs-jupyter",
-    packages=find_packages() + ["mkdocs_jupyter.tests"],
+    packages=find_packages(),
     zip_safe=False,
     include_package_data=True,
     # package_data={"mkdocs_jupyter": ["includes/*"]},
