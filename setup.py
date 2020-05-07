@@ -46,7 +46,7 @@ setup(
     maintainer="Daniel Rodriguez",
     maintainer_email="daniel@danielfrg.com",
     url="https://github.com/danielfrg/mkdocs-jupyter",
-    keywords=[],
+    keywords=["mkdocs", "jupyter", "nbconvert"],
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3.6",
