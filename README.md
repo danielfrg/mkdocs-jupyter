@@ -10,7 +10,7 @@
 - Show ipywidgets (requires execution of the notebook)
 - Support for mkdocs TOC
 
-![mkdocs-jupyter](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/screenshot.png)
+![mkdocs-jupyter](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/screenshot.png)
 
 ## Usage
 
