@@ -55,7 +55,7 @@ package:  ## Build Python package (sdist)
 
 .PHONY: check
 check:  ## Check linting
-	# @flake8 mkdocs_jupyter
+	@flake8 
 	@isort --check-only --diff --recursive --project mkdocs_jupyter --section-default THIRDPARTY mkdocs_jupyter .
 	@black --check mkdocs_jupyter .
 

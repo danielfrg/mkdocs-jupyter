@@ -1,19 +1,13 @@
 import os
 import re
-import unicodedata
 from copy import deepcopy
 
 import jinja2
-import yaml
 from nbconvert.exporters import HTMLExporter, MarkdownExporter
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.filters.markdown_mistune import IPythonRenderer
 from nbconvert.nbconvertapp import NbConvertApp
-from nbconvert.preprocessors import (
-    CSSHTMLHeaderPreprocessor,
-    ExecutePreprocessor,
-    Preprocessor,
-)
+from nbconvert.preprocessors import Preprocessor
 from pygments.formatters import HtmlFormatter
 from traitlets import Integer
 from traitlets.config import Config
@@ -63,7 +57,7 @@ def new_header(self, text, level, raw=None):
 
 IPythonRenderer.header = new_header
 
-## End monkeypath
+# End monkeypatch --------------------------------------------------------------
 
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
