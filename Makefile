@@ -45,7 +45,7 @@ develop:  ## Install package for development
 
 
 .PHONY: build
-build: cleanall package  ## Build everything
+build: package  ## Build everything
 
 
 .PHONY: package

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools_scm", "wheel"]
+requires = ["setuptools>=42", "setuptools_scm[toml]>=3.4", "wheel"]
 
 [tool.setuptools_scm]
 write_to = "mkdocs_jupyter/_generated_version.py"
@@ -9,7 +9,7 @@ parallel = true
 branch = true
 
 [tool.coverage.report]
-omit = ["mkdocs_jupyter/tests/*"]
+omit = ["mkdocs_jupyter/_generated_version.py", "mkdocs_jupyter/tests/*"]
 
 [tool.black]
 target-version = ["py36", "py37", "py38"]
