@@ -36,7 +36,7 @@ setup(
     options={"bdist_wheel": {"universal": "1"}},
     python_requires=">=3.6",
     setup_requires=["setuptools_scm"],
-    install_requires=read_file("requirements.package.txt").splitlines(),
+    install_requires=read_file("requirements-package.txt").splitlines(),
     extras_require={
         "test": ["pytest"],
         "dev": read_file("requirements.txt").splitlines(),
