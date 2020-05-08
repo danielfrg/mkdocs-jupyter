@@ -82,7 +82,7 @@ test:  ## Run tests
 
 
 .PHONY: report
-report:  ## Generate coverage report
+report:  ## Generate coverage reports
 	@coverage xml
 	@coverage html
 
