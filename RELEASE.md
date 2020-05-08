@@ -14,7 +14,7 @@ make build
 make upload-test
 
 # Create venv and install rc version
-pip install --extra-index-url=https://test.pypi.org/simple 'mkdocs_jupyter[test]'==${VERSION}rc0
+pip install --extra-index-url=https://test.pypi.org/simple 'mkdocs-jupyter[test]'==${VERSION}rc0
 pytest --pyargs mkdocs_jupyter
 
 # Delete rc tag
