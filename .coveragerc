@@ -1,9 +1,0 @@
-[run]
-omit =
-    mkdocs_jupyter/tests/*
-source =
-    mkdocs_jupyter
-
-[report]
-omit =
-    mkdocs_jupyter/tests/*

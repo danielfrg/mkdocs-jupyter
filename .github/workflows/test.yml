@@ -32,7 +32,7 @@ jobs:
     - name: Install package
       run: |
         make build
-        pip install dist/*.tar.gz
+        pip install -e .
         pip freeze
 
     - name: Check linting
@@ -43,8 +43,10 @@ jobs:
       if: always()
       run: |
         make test
+        make report
 
     - name: Codecov
       uses: codecov/codecov-action@v1
       with:
         file: ./coverage.xml
+        fail_ci_if_error: true
