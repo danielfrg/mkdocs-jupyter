@@ -15,6 +15,7 @@ from traitlets.config import Config
 from .templates import GENERATED_MD, LATEX_CUSTOM_SCRIPT
 from .utils import slugify
 
+
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
 # To use a version that makes the id all lowercase
 # because mkdocs uses just lowercase on the TOC to make it url friendly

@@ -32,7 +32,7 @@ jobs:
     - name: Install package
       run: |
         make build
-        pip install dist/*.tar.gz
+        pip install -e .
         pip freeze
 
     - name: Check linting

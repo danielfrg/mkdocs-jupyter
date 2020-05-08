@@ -45,7 +45,7 @@ develop:  ## Install package for development
 
 
 .PHONY: build
-build: package  ## Build everything
+build: cleanall package  ## Build everything
 
 
 .PHONY: package
@@ -56,13 +56,13 @@ package:  ## Build Python package (sdist)
 .PHONY: check
 check:  ## Check linting
 	@flake8 
-	@isort --check-only --diff --recursive --project mkdocs_jupyter --section-default THIRDPARTY mkdocs_jupyter .
-	@black --check mkdocs_jupyter .
+	@isort --check-only --diff --recursive --project mkdocs_jupyter --section-default THIRDPARTY .
+	@black --check .
 
 
 .PHONY: fmt
 fmt:  ## Format source
-	@isort --recursive --project mkdocs_jupyter --section-default THIRDPARTY mkdocs_jupyter .
+	@isort --recursive --project mkdocs_jupyter --section-default THIRDPARTY .
 	@black mkdocs_jupyter .
 
 
@@ -73,27 +73,12 @@ upload-pypi:  ## Upload package to PyPI
 
 .PHONY: upload-test
 upload-test:  ## Upload package to test PyPI
-	twine upload --repository testpypi dist/*.tar.gz
+	twine upload --repository test dist/*.tar.gz
 
 
 .PHONY: test
 test:  ## Run tests
-	pytest -s -vv mkdocs_jupyter/tests -k $(TEST_FILTER)
-
-
-.PHONY: docs
-docs:  ## Build mkdocs
-	mkdocs build --config-file $(CURDIR)/mkdocs.yml
-
-
-.PHONY: serve-docs
-serve-docs:  ## Serve docs
-	mkdocs serve
-
-
-.PHONY: netlify
-netlify:  ## Build docs on Netlify
-	$(MAKE) docs
+	pytest -k $(TEST_FILTER)
 
 # ------------------------------------------------------------------------------
 # Project specific

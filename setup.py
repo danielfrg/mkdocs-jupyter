@@ -2,6 +2,7 @@ import os
 
 from setuptools import find_packages, setup
 
+
 setup_dir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -24,6 +25,7 @@ def parse_git(root, **kwargs):
 setup(
     name="mkdocs-jupyter",
     packages=find_packages(),
+    # package_dir={"": "src"},
     zip_safe=False,
     include_package_data=True,
     # package_data={"mkdocs_jupyter": ["includes/*"]},
@@ -35,9 +37,11 @@ setup(
         "parse": parse_git,
         "write_to": os.path.join("mkdocs_jupyter/_generated_version.py"),
     },
+    options={"bdist_wheel": {"universal": "1"}},
     python_requires=">=3.6",
     setup_requires=["setuptools_scm"],
     install_requires=read_file("requirements.package.txt").splitlines(),
+    extras_require={"dev": read_file("requirements.txt").splitlines()},
     description="",
     long_description=read_file("README.md"),
     long_description_content_type="text/markdown",
