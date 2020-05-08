@@ -111,4 +111,4 @@ _generated_version.py
 
 ### Project specific ###
 mkdocs_jupyter/assets/jupyter-fixes.css
-mkdocs_jupyter/tests/site
+mkdocs_jupyter/tests/mkdocs/site
