@@ -80,5 +80,11 @@ upload-test:  ## Upload package to test PyPI
 test:  ## Run tests
 	pytest -k $(TEST_FILTER)
 
+
+.PHONY: report
+report:  ## Generate coverage report
+	@coverage xml
+	@coverage html
+
 # ------------------------------------------------------------------------------
 # Project specific
