@@ -9,7 +9,7 @@ LATEX_CUSTOM_SCRIPT = """
     var mathjaxscript = document.createElement("script");
     mathjaxscript.id = "mathjaxscript_pelican_#%@#$@#";
     mathjaxscript.type = "text/javascript";
-    mathjaxscript.src = "//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    mathjaxscript.src = "//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML";
     mathjaxscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
