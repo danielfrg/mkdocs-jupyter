@@ -8,3 +8,6 @@ nav:
 
 plugins:
   - mkdocs-jupyter
+
+theme:
+  name: 'material'

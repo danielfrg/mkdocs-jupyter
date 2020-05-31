@@ -11,7 +11,9 @@
 - Show ipywidgets (requires execution of the notebook)
 - Support for mkdocs TOC
 
-![mkdocs-jupyter](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/screenshot.png)
+
+<img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/default-theme.png" alt="mkdocs-jupyter default theme"  width=276>
+<img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png" alt="mkdocs-jupyter material theme"  width=276>
 
 ## Usage
 

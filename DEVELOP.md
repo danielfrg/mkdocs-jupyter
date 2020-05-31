@@ -5,7 +5,7 @@ Create dev environment
 ```
 # Create conda env
 make env
-conda activate jupyter-flex
+conda activate mkdocs-jupyter
 make develop
 ```
 
