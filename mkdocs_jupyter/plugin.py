@@ -2,12 +2,11 @@ import os
 
 import markdown
 import mkdocs
+from mkdocs.config import config_options
 from mkdocs.structure.files import Files
 from mkdocs.structure.pages import Page
 from mkdocs.structure.toc import get_toc
 from mkdocs.tests.base import get_markdown_toc
-from mkdocs.config import config_options
-
 
 from . import convert
 
