@@ -6,6 +6,8 @@ from mkdocs.structure.files import Files
 from mkdocs.structure.pages import Page
 from mkdocs.structure.toc import get_toc
 from mkdocs.tests.base import get_markdown_toc
+from mkdocs.config import config_options
+
 
 from . import convert
 
@@ -31,19 +33,20 @@ class NotebookFile(mkdocs.structure.files.File):
 
 class Plugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
-        ("execute", mkdocs.config.config_options.Type(bool, default=False)),
+        ("execute", config_options.Type(bool, default=False)),
+        ("include_source", config_options.Type(bool, default=False)),
     )
 
     def on_files(self, files, config):
-        files = Files(
+        ret = Files(
             [
-                NotebookFile(f, **config)
-                if str(f.abs_src_path).endswith("ipynb")
-                else f
-                for f in files
+                NotebookFile(file, **config)
+                if str(file.abs_src_path).endswith("ipynb")
+                else file
+                for file in files
             ]
         )
-        return files
+        return ret
 
     def on_pre_page(self, page, config, files):
         if str(page.file.abs_src_path).endswith(".ipynb"):
@@ -56,7 +59,30 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             # replace render with new_render for this object only
             page.render = new_render.__get__(page, Page)
+
+            # Add metadata for template
+            self._set_nb_url(page)
         return page
+
+    def _set_nb_url(self, page):
+        from urllib.parse import urljoin
+
+        nb_source = page.file.abs_src_path
+        nb_source_name = os.path.basename(nb_source)
+        page.nb_url = urljoin(page.abs_url, nb_source_name)
+
+    def on_post_page(self, output_content, page, config):
+        # Include source
+        if self.config["include_source"]:
+            from shutil import copyfile
+
+            nb_source = page.file.abs_src_path
+            nb_source_name = os.path.basename(nb_source)
+            nb_target_dir = os.path.dirname(page.file.abs_dest_path)
+            nb_target = os.path.join(nb_target_dir, nb_source_name)
+
+            os.makedirs(nb_target_dir, exist_ok=True)
+            copyfile(nb_source, nb_target)
 
 
 def get_nb_toc(fpath):

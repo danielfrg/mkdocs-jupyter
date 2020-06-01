@@ -1,5 +1,7 @@
 site_name: site-with-notebooks
 site_description: Just used for tests.
+repo_name: danielfrg/mkdocs-jupyter
+repo_url: https://github.com/danielfrg/mkdocs-jupyter
 
 nav:
   - Home: index.md
@@ -7,7 +9,9 @@ nav:
   - Notebook with equations: variational-inference.ipynb
 
 plugins:
-  - mkdocs-jupyter
+  - mkdocs-jupyter:
+      include_source: True
 
 theme:
-  name: 'material'
+  name: material
+  custom_dir: overrides

@@ -17,9 +17,9 @@ from .utils import slugify
 
 
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
-# To use a version that makes the id all lowercase
-# because mkdocs uses just lowercase on the TOC to make it url friendly
-# So this makes the links from the TOC work
+# to use a version that makes the id all lowercase
+# We do this because mkdocs uses all lowercase TOC titles to make it url friendly
+# so this makes the links from the TOC work
 
 
 def add_anchor_lower_id(html, anchor_link_text="¶"):
