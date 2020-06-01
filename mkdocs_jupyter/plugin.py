@@ -1,6 +1,5 @@
 import os
 
-import markdown
 import mkdocs
 from mkdocs.config import config_options
 from mkdocs.structure.files import Files
