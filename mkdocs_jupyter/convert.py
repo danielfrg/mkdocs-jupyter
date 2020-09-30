@@ -85,7 +85,7 @@ def nb2md(nb_path):
 
     defaults = jupyter_path("nbconvert", "templates")
     exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
-    print(exporter.template_paths)
+    # print(exporter.template_paths)
     ## End block
     body, resources = exporter.from_filename(nb_path)
     return body
@@ -135,7 +135,7 @@ def nb2html(nb_path, start=0, end=None, execute=False):
 
     defaults = jupyter_path("nbconvert", "templates")
     exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
-    print(exporter.template_paths)
+    # print(exporter.template_paths)
     ## End block
 
     html, info = exporter.from_filename(nb_path)
@@ -182,47 +182,6 @@ def custom_highlight_code(source, language="python", metadata=None):
     formatter = HtmlFormatter(cssclass=" highlight highlight-ipynb hl-" + language)
     output = _pygments_highlight(source, formatter, language, metadata)
     return output
-
-
-def html_fixes(content, info, fix_css=True, ignore_css=False):
-    """
-    General fixes for the notebook generated html
-    fix_css does basic filter to remove extra CSS from the core Jupyter CSS
-    ignore_css is to not include at all the Jupyter CSS
-    """
-
-    def style_tag(styles):
-        return '<style type="text/css">{0}</style>'.format(styles)
-
-    def filter_css(style):
-        """
-        This is a little bit of a Hack.
-        Jupyter returns a lot of CSS including its own bootstrap.
-        We try to get only the core Jupyter Notebook CSS
-        """
-        index = style.find("/*!\n*\n* IPython notebook\n*\n*/")
-        if index > 0:
-            style = style[index:]
-        index = style.find("/*!\n*\n* IPython notebook webapp\n*\n*/")
-        if index > 0:
-            style = style[:index]
-
-        style = re.sub(r"color\:\#0+(;)?", "", style)
-        style = re.sub(
-            r"\.rendered_html[a-z0-9,._ ]*\{[a-z0-9:;%.#\-\s\n]+\}", "", style
-        )
-        return style_tag(style)
-
-    if not ignore_css:
-        jupyter_css = "\n".join(style_tag(style) for style in info["inlining"]["css"])
-        if fix_css:
-            jupyter_css = "\n".join(
-                filter_css(style) for style in info["inlining"]["css"]
-            )
-        print(info["inlining"]["css"])
-        content = jupyter_css + content
-    content = content + LATEX_CUSTOM_SCRIPT
-    return content
 
 
 if __name__ == "__main__":
