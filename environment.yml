@@ -18,9 +18,9 @@ dependencies:
   - pytest-cov
 
   # This project conda deps
-  - notebook
+  - nbconvert>=6.0.0,<7
   - nbconvert
-  
+
   - pip:
     # This project pip deps
     - mkdocs

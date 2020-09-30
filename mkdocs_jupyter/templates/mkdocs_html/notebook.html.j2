@@ -1,0 +1,22 @@
+{# This is basically our on version of lab/index.html.j2 #}
+
+{%- extends "lab/index.html.j2" -%}
+{% from "base/mathjax.html.j2" import mathjax %}
+
+{%- block header -%}
+
+{% for css in resources.inlining.css -%}
+  <style type="text/css">
+    {{ css }}
+  </style>
+{% endfor %}
+
+{{ resources.include_css("lab/static/index.css") }}
+{{ resources.include_css("static/theme-light.css") }}
+{{ resources.include_css("mkdocs_html/jupyter-fixes.css") }}
+
+{{ mathjax() }}
+{%- endblock header -%}
+
+{% block footer %}
+{% endblock footer %}

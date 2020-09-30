@@ -12,8 +12,8 @@ from pygments.formatters import HtmlFormatter
 from traitlets import Integer
 from traitlets.config import Config
 
-from .templates import GENERATED_MD, LATEX_CUSTOM_SCRIPT
-from .utils import slugify
+from mkdocs_jupyter.utils import slugify
+from mkdocs_jupyter.templates import GENERATED_MD, LATEX_CUSTOM_SCRIPT
 
 
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
@@ -64,38 +64,85 @@ IPythonRenderer.header = new_header
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
-def nb2html(nb_path, execute=False):
-    """Convert a notebook and return html"""
-    template = os.path.join(THIS_DIR, "assets", "notebook.tpl")
-    content, info = get_html_from_filepath(nb_path, template=template, execute=execute)
-
-    # Fix CSS
-    html = generate_html(content, info, fix_css=True, ignore_css=False)
-    return GENERATED_MD.format(html=html)
-
-
 def nb2md(nb_path):
-    """Convert a notebook and return markdown
+    """Convert a notebook to markdown
 
     We use a template that removed all code cells because if the body
     is to big (javascript and stuff) it takes to long to read and parse
     """
     config = Config()
-    template = os.path.join(THIS_DIR, "assets", "md-no-codecell.tpl")
-    template_file = os.path.basename(template)
-    extra_loaders = []
-    extra_loaders.append(jinja2.FileSystemLoader([os.path.dirname(template)]))
+    template_file = "mkdocs_md/md-no-codecell.md.j2"
 
     exporter = MarkdownExporter(
-        config=config,
+        # config=config,
         template_file=template_file,
-        extra_loaders=extra_loaders,
-        # filters=filters,
-        # preprocessors=preprocessors_,
+        # uncomment this line when new nbconvert is released
+        # https://github.com/jupyter/nbconvert/pull/1429
+        # extra_template_paths=[os.path.join(THIS_DIR, "templates")],
     )
+    ## Delete this block when nbconvert is released
+    from jupyter_core.paths import jupyter_path
 
+    defaults = jupyter_path("nbconvert", "templates")
+    exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
+    print(exporter.template_paths)
+    ## End block
     body, resources = exporter.from_filename(nb_path)
     return body
+
+
+def nb2html(nb_path, start=0, end=None, execute=False):
+    """Convert a notebook and return html"""
+
+    # Load the user's nbconvert configuration
+    app = NbConvertApp()
+    app.load_config_file()
+
+    app.config.update(
+        {
+            # This Preprocessor changes the pygments css prefixes
+            # from .highlight to .highlight-ipynb
+            "CSSHTMLHeaderPreprocessor": {
+                "enabled": True,
+                "highlight_class": ".highlight-ipynb",
+            },
+            "SubCell": {"enabled": True, "start": start, "end": end},
+            "ExecutePreprocessor": {"enabled": execute, "store_widget_state": True},
+        }
+    )
+
+    preprocessors_ = [SubCell]
+
+    filters = {
+        "highlight_code": custom_highlight_code,
+    }
+
+    template_file = "mkdocs_html/notebook.html.j2"
+    # template_file = "lab/index.html.j2"
+
+    exporter = HTMLExporter(
+        config=app.config,
+        template_file=template_file,
+        # uncomment this line when new nbconvert is released
+        # https://github.com/jupyter/nbconvert/pull/1429
+        # extra_template_paths=[os.path.join(THIS_DIR, "templates")],
+        preprocessors=preprocessors_,
+        filters=filters,
+    )
+    ## Delete this block when nbconvert is released
+    # https://github.com/jupyter/nbconvert/pull/1429
+    from jupyter_core.paths import jupyter_path
+
+    defaults = jupyter_path("nbconvert", "templates")
+    exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
+    print(exporter.template_paths)
+    ## End block
+
+    html, info = exporter.from_filename(nb_path)
+
+    # HTML and CSS fixes
+    # html = html_fixes(html, info, fix_css=True, ignore_css=False)
+    return GENERATED_MD.format(html=html)
 
 
 class SliceIndex(Integer):
@@ -122,57 +169,6 @@ class SubCell(Preprocessor):
         return nbc, resources
 
 
-def get_html_from_filepath(filepath, start=0, end=None, template=None, execute=False):
-    """Return the HTML from a Jupyter Notebook
-    """
-    preprocessors_ = [SubCell]
-
-    template_file = "basic"
-    extra_loaders = []
-    if template:
-        extra_loaders.append(jinja2.FileSystemLoader([os.path.dirname(template)]))
-        template_file = os.path.basename(template)
-
-    # Load the user's nbconvert configuration
-    app = NbConvertApp()
-    app.load_config_file()
-
-    app.config.update(
-        {
-            # This Preprocessor changes the pygments css prefixes
-            # from .highlight to .highlight-ipynb
-            "CSSHTMLHeaderPreprocessor": {
-                "enabled": True,
-                "highlight_class": ".highlight-ipynb",
-            },
-            "SubCell": {"enabled": True, "start": start, "end": end},
-            # "ExecutePreprocessor": {
-            #     "enabled": execute,
-            #     "store_widget_state": True
-            # }
-        }
-    )
-
-    # Overwrite Custom jinja filters
-    # This is broken right now so needs fix from below
-    # https://github.com/jupyter/nbconvert/pull/877
-    # TODO: is this fixed and released?
-    filters = {
-        "highlight_code": custom_highlight_code,
-    }
-
-    exporter = HTMLExporter(
-        config=app.config,
-        template_file=template_file,
-        preprocessors=preprocessors_,
-        extra_loaders=extra_loaders,
-        filters=filters,
-    )
-    content, info = exporter.from_filename(filepath)
-
-    return content, info
-
-
 def custom_highlight_code(source, language="python", metadata=None):
     """
     Makes the syntax highlighting from pygments in the Notebook output
@@ -188,10 +184,10 @@ def custom_highlight_code(source, language="python", metadata=None):
     return output
 
 
-def generate_html(content, info, fix_css=True, ignore_css=False):
+def html_fixes(content, info, fix_css=True, ignore_css=False):
     """
     General fixes for the notebook generated html
-    fix_css is to do a basic filter to remove extra CSS from the Jupyter CSS
+    fix_css does basic filter to remove extra CSS from the core Jupyter CSS
     ignore_css is to not include at all the Jupyter CSS
     """
 
@@ -202,8 +198,7 @@ def generate_html(content, info, fix_css=True, ignore_css=False):
         """
         This is a little bit of a Hack.
         Jupyter returns a lot of CSS including its own bootstrap.
-        We try to get only the Jupyter Notebook CSS without the base stuff
-        so the site theme doesn't break
+        We try to get only the core Jupyter Notebook CSS
         """
         index = style.find("/*!\n*\n* IPython notebook\n*\n*/")
         if index > 0:
@@ -224,6 +219,11 @@ def generate_html(content, info, fix_css=True, ignore_css=False):
             jupyter_css = "\n".join(
                 filter_css(style) for style in info["inlining"]["css"]
             )
+        print(info["inlining"]["css"])
         content = jupyter_css + content
     content = content + LATEX_CUSTOM_SCRIPT
     return content
+
+
+if __name__ == "__main__":
+    nb2html("tests/mkdocs/docs/demo.ipynb")

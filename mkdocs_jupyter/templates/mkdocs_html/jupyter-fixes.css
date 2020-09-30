@@ -1,0 +1,66 @@
+/* Reset */
+*, *::before, *::after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* Reset */
+.jp-Notebook {
+    padding: unset;
+    /* outline: none; */
+    /* overflow: auto; */
+    background: unset;
+}
+
+/* Reset */
+.jp-RenderedHTMLCommon {
+    padding: 0;
+}
+
+/* Anchor links */
+.anchor-link {
+    display: none;
+}
+h1:hover .anchor-link, h2:hover .anchor-link, h3:hover .anchor-link {
+    display: inline-block;
+}
+
+/* Markdown cells: Remove prompt */
+.jp-Cell-inputWrapper .jp-InputPrompt {
+    display: none;
+}
+
+/* Code cells: Show prompt */
+.jp-CodeCell .jp-Cell-inputWrapper .jp-InputPrompt {
+    display: block;
+}
+
+/* Prompt fixes */
+.jp-InputPrompt, .jp-OutputPrompt{
+    overflow: visible;
+}
+
+/* Lab uses move for the input prompts */
+.jp-Notebook .jp-Cell .jp-InputPrompt {
+    cursor: default;
+}
+
+/* Editor max-width */
+.jp-InputArea-editor {
+    width: 1px;
+}
+
+/* Editor colors */
+.jp-Editor .highlight {
+    margin: 0.4em;
+    background: var(--jp-cell-editor-background);
+    color: var(--jp-mirror-editor-variable-color);
+}
+
+/* Editor colors */
+.jp-Editor .highlight pre {
+    background: none;
+    border: none;
+    margin: 0;
+    overflow-x: auto;
+}

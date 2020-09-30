@@ -1,0 +1,6 @@
+{
+    "base_template": "markdown",
+    "mimetypes": {
+        "text/markdown": true
+    }
+}
