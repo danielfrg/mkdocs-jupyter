@@ -1,8 +1,6 @@
 import os
-import re
 from copy import deepcopy
 
-import jinja2
 from nbconvert.exporters import HTMLExporter, MarkdownExporter
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.filters.markdown_mistune import IPythonRenderer
@@ -10,10 +8,9 @@ from nbconvert.nbconvertapp import NbConvertApp
 from nbconvert.preprocessors import Preprocessor
 from pygments.formatters import HtmlFormatter
 from traitlets import Integer
-from traitlets.config import Config
 
+from mkdocs_jupyter.templates import GENERATED_MD
 from mkdocs_jupyter.utils import slugify
-from mkdocs_jupyter.templates import GENERATED_MD, LATEX_CUSTOM_SCRIPT
 
 
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
@@ -23,9 +20,10 @@ from mkdocs_jupyter.templates import GENERATED_MD, LATEX_CUSTOM_SCRIPT
 
 
 def add_anchor_lower_id(html, anchor_link_text="¶"):
-    from ipython_genutils import py3compat
-    from defusedxml import cElementTree as ElementTree
     from xml.etree.cElementTree import Element
+
+    from defusedxml import cElementTree as ElementTree
+    from ipython_genutils import py3compat
     from nbconvert.filters.strings import _convert_header_id, html2text
 
     try:
@@ -70,23 +68,19 @@ def nb2md(nb_path):
     We use a template that removed all code cells because if the body
     is to big (javascript and stuff) it takes to long to read and parse
     """
-    config = Config()
     template_file = "mkdocs_md/md-no-codecell.md.j2"
 
     exporter = MarkdownExporter(
-        # config=config,
         template_file=template_file,
         # uncomment this line when new nbconvert is released
         # https://github.com/jupyter/nbconvert/pull/1429
         # extra_template_paths=[os.path.join(THIS_DIR, "templates")],
     )
-    ## Delete this block when nbconvert is released
-    from jupyter_core.paths import jupyter_path
-
-    defaults = jupyter_path("nbconvert", "templates")
+    # Delete this block when nbconvert is released
     exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
     # print(exporter.template_paths)
-    ## End block
+    # End block
+
     body, resources = exporter.from_filename(nb_path)
     return body
 
@@ -129,14 +123,11 @@ def nb2html(nb_path, start=0, end=None, execute=False):
         preprocessors=preprocessors_,
         filters=filters,
     )
-    ## Delete this block when nbconvert is released
+    # Delete this block when nbconvert is released
     # https://github.com/jupyter/nbconvert/pull/1429
-    from jupyter_core.paths import jupyter_path
-
-    defaults = jupyter_path("nbconvert", "templates")
     exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
     # print(exporter.template_paths)
-    ## End block
+    # End block
 
     html, info = exporter.from_filename(nb_path)
 
