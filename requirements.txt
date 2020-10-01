@@ -13,7 +13,6 @@ pytest
 pytest-cov
 
 # This project conda deps
-notebook
 nbconvert
 
 # This project pip deps

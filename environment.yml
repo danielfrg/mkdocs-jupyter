@@ -19,11 +19,17 @@ dependencies:
 
   # This project conda deps
   - nbconvert>=6.0.0,<7
-  - nbconvert
+
+  # Devevelopment deps
+  - jupyterlab
+  - pandas
+  - matplotlib
+  - plotly
+  - bokeh
 
   - pip:
     # This project pip deps
-    - mkdocs
+    - mkdocs>=1.1.0
     - mkdocs-material
     - mkdocs-minify-plugin
     - pygments

@@ -25,10 +25,70 @@ In your `mkdocs.yml`:
 
 ```
 nav:
-- Notebook: notebook.ipynb
+- Home: index.md
+- Notebook page: notebook.ipynb
 
 plugins:
   - mkdocs-jupyter
+```
+
+## Styles
+
+This extensions includes some CSS styles to make the Notebook look decent inside an
+mkdoc theme but in general some extra customization needs to be done to make
+the Jupyter Notebook based pages look as native as the markdown ones.
+
+This is usually simple.
+For example in `mkdocs-material`
+(see [customization](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks)),
+you can create a `main.html` file like this:
+```
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+
+<style>
+    .jp-RenderedHTMLCommon p {
+        font-size: .8rem;
+        line-height: 1.6;
+    }
+
+    .jp-RenderedHTMLCommon li {
+        font-size: .8rem;
+        line-height: 1.6;
+    }
+
+    .jp-RenderedHTMLCommon h1 {
+        margin: 0 0 1.25em;
+        color: var(--md-default-fg-color--light);
+        font-weight: 300;
+        font-size: 2em;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+    }
+
+    .jp-RenderedHTMLCommon h2 {
+        margin: 1.6em 0 .64em;
+        font-weight: 300;
+        font-size: 1.965em;
+        line-height: 1.4;
+        letter-spacing: -0.01em;
+    }
+
+    .jp-RenderedHTMLCommon h3 {
+        margin: 1.6em 0 .8em;
+        font-weight: 400;
+        font-size: 1.57em;
+        line-height: 1.5;
+        letter-spacing: -0.01em;
+    }
+
+    .jp-RenderedHTMLCommon hr {
+        border: none;
+    }
+</style>
+{% endblock content %}
 ```
 
 ## Options
@@ -57,7 +117,8 @@ plugins:
 This setting will also create a `page.nb_url` value that you can use in your theme
 to make a link in each page.
 
-For example in `mkdocs-material` (see [customization](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks)),
+For example in `mkdocs-material`
+(see [customization](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks)),
 you can create a `main.html` file like this:
 
 ```
@@ -73,7 +134,5 @@ you can create a `main.html` file like this:
 {{ super() }}
 {% endblock content %}
 ```
-
-With this result:
 
 ![Download Noteboon button](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/download-button.png)

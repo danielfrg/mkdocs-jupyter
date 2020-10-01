@@ -3,6 +3,7 @@
 {%- extends "lab/index.html.j2" -%}
 {% from "base/mathjax.html.j2" import mathjax %}
 
+{# Overwrite the header because lab template outputs a complete HTML page #}
 {%- block header -%}
 
 {% for css in resources.inlining.css -%}
@@ -18,5 +19,27 @@
 {{ mathjax() }}
 {%- endblock header -%}
 
+{# Overwrite the footer because lab template outputs a complete HTML page #}
 {% block footer %}
 {% endblock footer %}
+
+{# We overwrite this to show the tags on the cell toolbar #}
+{% block input %}
+    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        {% set cell_tags = cell["metadata"].get("tags", [])%}
+        {% if cell_tags %}
+            <div class="celltoolbar">
+                {% for cell in cell_tags %}
+                <div class="button_container tags_button_container">
+                    <span class="tag-container">
+                        <span class="cell-tag">{{ cell }}</span>
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="CodeMirror cm-s-jupyter">
+    {{ cell.source | highlight_code(metadata=cell.metadata) }}
+        </div>
+    </div>
+{% endblock %}

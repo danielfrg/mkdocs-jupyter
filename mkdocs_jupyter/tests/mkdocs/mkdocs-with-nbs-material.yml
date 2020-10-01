@@ -15,3 +15,6 @@ plugins:
 theme:
   name: material
   custom_dir: overrides
+
+extra_css:
+  - stylesheets/jupyter.css
