@@ -45,7 +45,6 @@ setup(
     long_description=read_file("README.md"),
     long_description_content_type="text/markdown",
     license="Apache License, Version 2.0",
-    author="Daniel Rodriguez",
     maintainer="Daniel Rodriguez",
     maintainer_email="daniel@danielfrg.com",
     url="https://github.com/danielfrg/mkdocs-jupyter",
