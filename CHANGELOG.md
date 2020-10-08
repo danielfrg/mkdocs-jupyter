@@ -1,6 +1,6 @@
 # mkdocs-jupyter Change Log
 
-## 0.14.0
+## 0.15.0
 
 - Support nbconvert 6.0.0
 
