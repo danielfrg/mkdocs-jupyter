@@ -65,6 +65,47 @@ h1:hover .anchor-link, h2:hover .anchor-link, h3:hover .anchor-link {
     overflow-x: auto;
 }
 
+/* Material mkdocs */
+.jp-RenderedHTMLCommon p {
+    font-size: .8rem;
+    line-height: 1.6;
+}
+
+.jp-RenderedHTMLCommon li {
+    font-size: .8rem;
+    line-height: 1.6;
+}
+
+.jp-RenderedHTMLCommon h1 {
+    margin: 0 0 1.25em;
+    color: var(--md-default-fg-color--light);
+    font-weight: 300;
+    font-size: 2em;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
+.jp-RenderedHTMLCommon h2 {
+    margin: 1.6em 0 .64em;
+    font-weight: 300;
+    font-size: 1.965em;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+}
+
+.jp-RenderedHTMLCommon h3 {
+    margin: 1.6em 0 .8em;
+    font-weight: 400;
+    font-size: 1.57em;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+}
+
+.jp-RenderedHTMLCommon hr {
+    border: none;
+}
+
+
 /* Tags on cells */
 /* Mostly copying this from straight Jupyter */
 .celltoolbar {
@@ -113,13 +154,9 @@ h1:hover .anchor-link, h2:hover .anchor-link, h3:hover .anchor-link {
 }
 
 /* Bokeh plots table no hover */
-.bk-plot-wrapper {
-    tbody {
-        tr {
-            background: none !important;
-        }
-        tr:hover {
-            background: none !important;
-        }
-    }
+.bk-plot-wrapper tbody tr {
+    background: none !important;
+}
+.bk-plot-wrapper tbody tr:hover {
+    background: none !important;
 }

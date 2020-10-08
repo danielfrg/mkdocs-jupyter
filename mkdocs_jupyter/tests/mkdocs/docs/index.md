@@ -1,4 +1,4 @@
-# This is the title of and MD file click on the nav for the notebooks
+# This is a MD file
 
 Text can be **bold**, _italic_, or ~~strikethrough~~. [Links](https://github.com) should be blue with no underlines (unless hovered over).
 

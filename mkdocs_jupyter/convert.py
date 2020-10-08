@@ -74,10 +74,10 @@ def nb2md(nb_path):
         template_file=template_file,
         # uncomment this line when new nbconvert is released
         # https://github.com/jupyter/nbconvert/pull/1429
-        # extra_template_paths=[os.path.join(THIS_DIR, "templates")],
+        extra_template_paths=[os.path.join(THIS_DIR, "templates")],
     )
     # Delete this block when nbconvert is released
-    exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
+    # exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
     # print(exporter.template_paths)
     # End block
 
@@ -119,13 +119,13 @@ def nb2html(nb_path, start=0, end=None, execute=False):
         template_file=template_file,
         # uncomment this line when new nbconvert is released
         # https://github.com/jupyter/nbconvert/pull/1429
-        # extra_template_paths=[os.path.join(THIS_DIR, "templates")],
+        extra_template_paths=[os.path.join(THIS_DIR, "templates")],
         preprocessors=preprocessors_,
         filters=filters,
     )
     # Delete this block when nbconvert is released
     # https://github.com/jupyter/nbconvert/pull/1429
-    exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
+    # exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
     # print(exporter.template_paths)
     # End block
 
