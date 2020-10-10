@@ -39,7 +39,7 @@ jobs:
 
     - name: Check linting
       run: |
-        make check
+        # make check
 
     - name: Run tests
       if: always()
