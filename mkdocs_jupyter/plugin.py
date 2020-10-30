@@ -33,6 +33,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
         ("execute", config_options.Type(bool, default=False)),
         ("include_source", config_options.Type(bool, default=False)),
+        ("kernel_name", config_options.Type(str, default=""))
     )
 
     def on_files(self, files, config):
@@ -49,9 +50,10 @@ class Plugin(mkdocs.plugins.BasePlugin):
     def on_pre_page(self, page, config, files):
         if str(page.file.abs_src_path).endswith(".ipynb"):
             exec_nb = self.config["execute"]
+            kernel_name = self.config["kernel_name"]
 
             def new_render(self, config, files):
-                body = convert.nb2html(page.file.abs_src_path, execute=exec_nb)
+                body = convert.nb2html(page.file.abs_src_path, execute=exec_nb, kernel_name=kernel_name)
                 self.content = body
                 self.toc = get_nb_toc(page.file.abs_src_path)
 

@@ -1,4 +1,5 @@
 import os
+import logging
 from copy import deepcopy
 
 from nbconvert.exporters import HTMLExporter, MarkdownExporter
@@ -11,6 +12,8 @@ from traitlets import Integer
 
 from mkdocs_jupyter.templates import GENERATED_MD
 from mkdocs_jupyter.utils import slugify
+
+logger = logging.getLogger('mkdocs.mkdocs-jupyter')
 
 
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
@@ -85,8 +88,10 @@ def nb2md(nb_path):
     return body
 
 
-def nb2html(nb_path, start=0, end=None, execute=False):
+def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
     """Convert a notebook and return html"""
+
+    logger.info(f"Convert notebook {nb_path}")
 
     # Load the user's nbconvert configuration
     app = NbConvertApp()
@@ -101,7 +106,11 @@ def nb2html(nb_path, start=0, end=None, execute=False):
                 "highlight_class": ".highlight-ipynb",
             },
             "SubCell": {"enabled": True, "start": start, "end": end},
-            "ExecutePreprocessor": {"enabled": execute, "store_widget_state": True},
+            "ExecutePreprocessor": {
+                "enabled": execute,
+                "store_widget_state": True,
+                "kernel_name": kernel_name,
+            },
         }
     )
 

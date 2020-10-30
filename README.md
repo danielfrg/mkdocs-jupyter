@@ -42,6 +42,7 @@ This is usually simple.
 For example in `mkdocs-material`
 (see [customization](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks)),
 you can create a `main.html` file like this:
+
 ```
 {% extends "base.html" %}
 
@@ -101,6 +102,16 @@ You can tell the plugin to execute the notebook before converting, default is `F
 plugins:
   - mkdocs-jupyter:
       execute: True
+```
+
+### Kernel Name
+
+By default the plugin will use the kernel specified in the notebook to execute it. You can specify a custom kernel name to use for all the notebooks:
+
+```
+plugins:
+  - mkdocs-jupyter:
+      kernel_name: python3
 ```
 
 ### Download notebook link
