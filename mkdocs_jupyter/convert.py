@@ -1,7 +1,9 @@
-import os
+import io
 import logging
+import os
 from copy import deepcopy
 
+import jupytext
 from nbconvert.exporters import HTMLExporter, MarkdownExporter
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.filters.markdown_mistune import IPythonRenderer
@@ -13,7 +15,8 @@ from traitlets import Integer
 from mkdocs_jupyter.templates import GENERATED_MD
 from mkdocs_jupyter.utils import slugify
 
-logger = logging.getLogger('mkdocs.mkdocs-jupyter')
+
+logger = logging.getLogger("mkdocs.mkdocs-jupyter")
 
 
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
@@ -65,7 +68,7 @@ IPythonRenderer.header = new_header
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
-def nb2md(nb_path):
+def nb2md(nb_path, convert_to_nb=False):
     """Convert a notebook to markdown
 
     We use a template that removed all code cells because if the body
@@ -84,11 +87,18 @@ def nb2md(nb_path):
     # print(exporter.template_paths)
     # End block
 
-    body, resources = exporter.from_filename(nb_path)
+    if convert_to_nb:
+        nb = jupytext.read(nb_path)
+        nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
+        body, resources = exporter.from_file(nb_file)
+    else:
+        body, resources = exporter.from_filename(nb_path)
     return body
 
 
-def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
+def nb2html(
+    nb_path, start=0, end=None, execute=False, kernel_name="", convert_to_nb=False
+):
     """Convert a notebook and return html"""
 
     logger.info(f"Convert notebook {nb_path}")
@@ -138,7 +148,12 @@ def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
     # print(exporter.template_paths)
     # End block
 
-    html, info = exporter.from_filename(nb_path)
+    if convert_to_nb:
+        nb = jupytext.read(nb_path)
+        nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
+        html, info = exporter.from_file(nb_file)
+    else:
+        html, info = exporter.from_filename(nb_path)
 
     # HTML and CSS fixes
     # html = html_fixes(html, info, fix_css=True, ignore_css=False)

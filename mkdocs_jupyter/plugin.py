@@ -33,7 +33,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
         ("execute", config_options.Type(bool, default=False)),
         ("include_source", config_options.Type(bool, default=False)),
-        ("kernel_name", config_options.Type(str, default=""))
+        ("kernel_name", config_options.Type(str, default="")),
     )
 
     def on_files(self, files, config):
@@ -41,6 +41,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
             [
                 NotebookFile(file, **config)
                 if str(file.abs_src_path).endswith("ipynb")
+                or str(file.abs_src_path).endswith("py")
                 else file
                 for file in files
             ]
@@ -53,9 +54,30 @@ class Plugin(mkdocs.plugins.BasePlugin):
             kernel_name = self.config["kernel_name"]
 
             def new_render(self, config, files):
-                body = convert.nb2html(page.file.abs_src_path, execute=exec_nb, kernel_name=kernel_name)
+                body = convert.nb2html(
+                    page.file.abs_src_path, execute=exec_nb, kernel_name=kernel_name
+                )
                 self.content = body
                 self.toc = get_nb_toc(page.file.abs_src_path)
+
+            # replace render with new_render for this object only
+            page.render = new_render.__get__(page, Page)
+
+            # Add metadata for template
+            self._set_nb_url(page)
+        elif str(page.file.abs_src_path).endswith(".py"):
+            exec_nb = self.config["execute"]
+            kernel_name = self.config["kernel_name"]
+
+            def new_render(self, config, files):
+                body = convert.nb2html(
+                    page.file.abs_src_path,
+                    execute=exec_nb,
+                    kernel_name=kernel_name,
+                    convert_to_nb=True,
+                )
+                self.content = body
+                self.toc = get_nb_toc(page.file.abs_src_path, convert_to_nb=True)
 
             # replace render with new_render for this object only
             page.render = new_render.__get__(page, Page)
@@ -85,11 +107,11 @@ class Plugin(mkdocs.plugins.BasePlugin):
             copyfile(nb_source, nb_target)
 
 
-def get_nb_toc(fpath):
+def get_nb_toc(fpath, convert_to_nb=False):
     """Returns a TOC for the Notebook
     It does that by converting first to MD
     """
-    body = convert.nb2md(fpath)
+    body = convert.nb2md(fpath, convert_to_nb=convert_to_nb)
     md_toc_tokens = get_markdown_toc(body)
     toc = get_toc(md_toc_tokens)
     return toc
