@@ -16,6 +16,7 @@ pytest-cov
 nbconvert
 
 # This project pip deps
+jupytext
 mkdocs
 mkdocs-material
 mkdocs-minify-plugin

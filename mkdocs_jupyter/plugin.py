@@ -33,14 +33,20 @@ class Plugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
         ("execute", config_options.Type(bool, default=False)),
         ("include_source", config_options.Type(bool, default=False)),
-        ("kernel_name", config_options.Type(str, default=""))
+        ("kernel_name", config_options.Type(str, default="")),
     )
 
     def on_files(self, files, config):
+
+        if convert.HAS_JUPYTEXT:
+            extensions = [".ipynb", ".py"]
+        else:
+            extensions = [".ipynb"]
+
         ret = Files(
             [
                 NotebookFile(file, **config)
-                if str(file.abs_src_path).endswith("ipynb")
+                if os.path.splitext(str(file.abs_src_path))[-1] in extensions
                 else file
                 for file in files
             ]
@@ -48,12 +54,20 @@ class Plugin(mkdocs.plugins.BasePlugin):
         return ret
 
     def on_pre_page(self, page, config, files):
-        if str(page.file.abs_src_path).endswith(".ipynb"):
+
+        if convert.HAS_JUPYTEXT:
+            extensions = [".ipynb", ".py"]
+        else:
+            extensions = [".ipynb"]
+
+        if os.path.splitext(str(page.file.abs_src_path))[-1] in extensions:
             exec_nb = self.config["execute"]
             kernel_name = self.config["kernel_name"]
 
             def new_render(self, config, files):
-                body = convert.nb2html(page.file.abs_src_path, execute=exec_nb, kernel_name=kernel_name)
+                body = convert.nb2html(
+                    page.file.abs_src_path, execute=exec_nb, kernel_name=kernel_name
+                )
                 self.content = body
                 self.toc = get_nb_toc(page.file.abs_src_path)
 

@@ -1,5 +1,6 @@
-import os
+import io
 import logging
+import os
 from copy import deepcopy
 
 from nbconvert.exporters import HTMLExporter, MarkdownExporter
@@ -13,7 +14,16 @@ from traitlets import Integer
 from mkdocs_jupyter.templates import GENERATED_MD
 from mkdocs_jupyter.utils import slugify
 
-logger = logging.getLogger('mkdocs.mkdocs-jupyter')
+
+try:
+    import jupytext
+
+    HAS_JUPYTEXT = True
+except ModuleNotFoundError:
+    HAS_JUPYTEXT = False
+
+
+logger = logging.getLogger("mkdocs.mkdocs-jupyter")
 
 
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
@@ -84,7 +94,14 @@ def nb2md(nb_path):
     # print(exporter.template_paths)
     # End block
 
-    body, resources = exporter.from_filename(nb_path)
+    _, extension = os.path.splitext(nb_path)
+
+    if HAS_JUPYTEXT and extension == ".py":
+        nb = jupytext.read(nb_path)
+        nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
+        body, resources = exporter.from_file(nb_file)
+    else:
+        body, resources = exporter.from_filename(nb_path)
     return body
 
 
@@ -138,7 +155,14 @@ def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
     # print(exporter.template_paths)
     # End block
 
-    html, info = exporter.from_filename(nb_path)
+    _, extension = os.path.splitext(nb_path)
+
+    if HAS_JUPYTEXT and extension == ".py":
+        nb = jupytext.read(nb_path)
+        nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
+        html, info = exporter.from_file(nb_file)
+    else:
+        html, info = exporter.from_filename(nb_path)
 
     # HTML and CSS fixes
     # html = html_fixes(html, info, fix_css=True, ignore_css=False)
