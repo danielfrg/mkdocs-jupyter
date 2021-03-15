@@ -3,7 +3,6 @@ import logging
 import os
 from copy import deepcopy
 
-import jupytext
 from nbconvert.exporters import HTMLExporter, MarkdownExporter
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.filters.markdown_mistune import IPythonRenderer
@@ -14,6 +13,14 @@ from traitlets import Integer
 
 from mkdocs_jupyter.templates import GENERATED_MD
 from mkdocs_jupyter.utils import slugify
+
+
+try:
+    import jupytext
+
+    HAS_JUPYTEXT = True
+except ModuleNotFoundError:
+    HAS_JUPYTEXT = False
 
 
 logger = logging.getLogger("mkdocs.mkdocs-jupyter")
@@ -68,7 +75,7 @@ IPythonRenderer.header = new_header
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
-def nb2md(nb_path, convert_to_nb=False):
+def nb2md(nb_path):
     """Convert a notebook to markdown
 
     We use a template that removed all code cells because if the body
@@ -87,7 +94,9 @@ def nb2md(nb_path, convert_to_nb=False):
     # print(exporter.template_paths)
     # End block
 
-    if convert_to_nb:
+    _, extension = os.path.splitext(nb_path)
+
+    if HAS_JUPYTEXT and extension == ".py":
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
         body, resources = exporter.from_file(nb_file)
@@ -96,9 +105,7 @@ def nb2md(nb_path, convert_to_nb=False):
     return body
 
 
-def nb2html(
-    nb_path, start=0, end=None, execute=False, kernel_name="", convert_to_nb=False
-):
+def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
     """Convert a notebook and return html"""
 
     logger.info(f"Convert notebook {nb_path}")
@@ -148,7 +155,9 @@ def nb2html(
     # print(exporter.template_paths)
     # End block
 
-    if convert_to_nb:
+    _, extension = os.path.splitext(nb_path)
+
+    if HAS_JUPYTEXT and extension == ".py":
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
         html, info = exporter.from_file(nb_file)
