@@ -99,7 +99,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
             copyfile(nb_source, nb_target)
 
 
-def get_nb_toc(fpath, convert_to_nb=False):
+def get_nb_toc(fpath):
     """Returns a TOC for the Notebook
     It does that by converting first to MD
     """
