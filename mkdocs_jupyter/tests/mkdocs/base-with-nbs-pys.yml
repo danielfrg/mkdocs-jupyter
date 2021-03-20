@@ -1,0 +1,10 @@
+site_name: site-with-notebooks-and-python-files
+site_description: mkdocs-jupyter test site
+
+nav:
+  - Home: index.md
+  - Demo (nb): demo.ipynb
+  - Equations (py): variational-inference.py
+
+plugins:
+  - mkdocs-jupyter

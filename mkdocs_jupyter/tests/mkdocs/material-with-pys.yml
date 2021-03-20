@@ -1,0 +1,18 @@
+site_name: material-site-with-notebooks
+site_description: mkdocs-jupyter test site
+
+nav:
+  - Home: index.md
+  - Demo (py): demo.py
+  - Equations (py): variational-inference.py
+
+plugins:
+  - mkdocs-jupyter:
+      include_source: True
+
+markdown_extensions:
+    - pymdownx.arithmatex
+
+theme:
+  name: material
+  custom_dir: overrides

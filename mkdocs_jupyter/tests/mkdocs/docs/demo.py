@@ -3,16 +3,17 @@
 #   jupytext:
 #     text_representation:
 #       extension: .py
-#       format_name: light
-#       format_version: '1.5'
-#       jupytext_version: 1.10.3
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
 #     name: python3
 # ---
 
-# This is markdown
+# %% [markdown]
+# # Demo notebook
 #
 # ## Header 2
 #
@@ -62,55 +63,63 @@
 #
 # Sed vestibulum justo et turpis ullamcorper, a interdum sapien tristique. Donec ullamcorper ipsum ac scelerisque lacinia. Quisque et eleifend odio. Curabitur vel enim at mi dictum venenatis eget eu nulla. Suspendisse potenti. Etiam vitae nibh a odio dictum aliquam. Sed sit amet adipiscing leo, vitae euismod arcu.
 
+# %% [markdown]
 # ## Code cells
 #
 # This first code cells have some tags
 
-# + tags=["tag1"]
+# %% tags=["tag1"]
 a = 1
 
-# + tags=["tag1", "tag2"]
+# %% tags=["tag1", "tag2"]
 a
 
-# + tags=["tag1", "tag2", "tag3"]
+# %% tags=["tag1", "tag2", "tag3"]
 b = "pew"
-# -
 
+# %%
 b
 
+# %%
 import re
 
-
+# %%
 text = "foo bar\t baz \tqux"
 
+# %%
 re.split("\s+", text)
 
-# + language="latex"
+# %% language="latex"
 # \begin{align}
 # \nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} & = \frac{4\pi}{c}\vec{\mathbf{j}} \\
 # \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
 # \nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
 # \nabla \cdot \vec{\mathbf{B}} & = 0
 # \end{align}
-# -
 
+# %%
 import numpy as np
 import pandas as pd
 
-
+# %%
 dates = pd.date_range("20130101", periods=6)
 df = pd.DataFrame(np.random.randn(6, 4), index=dates, columns=list("ABCD"))
 df
 
+# %%
 # %matplotlib inline
 
+# %%
 import matplotlib.pyplot as plt
+
+# %%
 from pylab import *
 
-
+# %%
 x = linspace(0, 5, 10)
 y = x ** 2
 
+# %%
 figure()
 plot(x, y, "r")
 xlabel("x")
@@ -118,30 +127,40 @@ ylabel("y")
 title("title")
 show()
 
+# %%
 num_points = 130
 y = np.random.random(num_points)
 plt.plot(y)
 
+# %% [markdown]
 # This is some text, here comes some latex
 
+# %% [markdown]
 # ## Javascript plots
 
+# %% [markdown]
 # ### plotly
 
+# %%
 import plotly.express as px
 
-
+# %%
 df = px.data.iris()
 fig = px.scatter(df, x="sepal_width", y="sepal_length")
 fig.show()
 
+# %% [markdown]
 # ### bokeh
 
+# %%
 from bokeh.plotting import figure, output_notebook, show
 
-
+# %%
 output_notebook()
 
+# %%
 p = figure()
 p.line([1, 2, 3, 4, 5], [6, 7, 2, 4, 5], line_width=2)
 show(p)
+
+# %%

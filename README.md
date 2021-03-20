@@ -6,11 +6,13 @@
 [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/danielfrg/mkdocs-jupyter/blob/master/LICENSE.txt)
 
 - Add Jupyter Notebooks directly to the mkdocs navigation
-- Feel and look the regular Jupyter Notebook style inside mkdocs pages
+- Support for multiple formats:
+    - `.ipynb` and `.py` files (using [jupytext](https://github.com/mwouts/jupytext))
+- Same style as regular Jupyter Notebooks
 - Option to execute the notebook before converting
-- Show ipywidgets (requires execution of the notebook)
+- Support for [ipywidgets](https://github.com/jupyter-widgets/ipywidgets)
 - Support for mkdocs TOC
-- Include notebook source
+- Option to include notebook source
 
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png" alt="mkdocs-jupyter default theme"  width="410"></a>
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png" alt="mkdocs-jupyter material theme"  width="410"></a>
@@ -27,69 +29,10 @@ In your `mkdocs.yml`:
 nav:
 - Home: index.md
 - Notebook page: notebook.ipynb
+- Python file: python_script.py
 
 plugins:
   - mkdocs-jupyter
-```
-
-## Styles
-
-This extensions includes some CSS styles to make the Notebook look decent inside an
-mkdoc theme but in general some extra customization needs to be done to make
-the Jupyter Notebook based pages look as native as the markdown ones.
-
-This is usually simple.
-For example in `mkdocs-material`
-(see [customization](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks)),
-you can create a `main.html` file like this:
-
-```
-{% extends "base.html" %}
-
-{% block content %}
-{{ super() }}
-
-<style>
-    .jp-RenderedHTMLCommon p {
-        font-size: .8rem;
-        line-height: 1.6;
-    }
-
-    .jp-RenderedHTMLCommon li {
-        font-size: .8rem;
-        line-height: 1.6;
-    }
-
-    .jp-RenderedHTMLCommon h1 {
-        margin: 0 0 1.25em;
-        color: var(--md-default-fg-color--light);
-        font-weight: 300;
-        font-size: 2em;
-        line-height: 1.3;
-        letter-spacing: -0.01em;
-    }
-
-    .jp-RenderedHTMLCommon h2 {
-        margin: 1.6em 0 .64em;
-        font-weight: 300;
-        font-size: 1.965em;
-        line-height: 1.4;
-        letter-spacing: -0.01em;
-    }
-
-    .jp-RenderedHTMLCommon h3 {
-        margin: 1.6em 0 .8em;
-        font-weight: 400;
-        font-size: 1.57em;
-        line-height: 1.5;
-        letter-spacing: -0.01em;
-    }
-
-    .jp-RenderedHTMLCommon hr {
-        border: none;
-    }
-</style>
-{% endblock content %}
 ```
 
 ## Options
@@ -147,3 +90,65 @@ you can create a `main.html` file like this:
 ```
 
 ![Download Noteboon button](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/download-button.png)
+
+## Styles
+
+This extensions includes some CSS styles to make the Notebook look "decent" inside a generic
+mkdoc theme but in general some extra customization needs to be done to make
+the Jupyter Notebook based pages look as good and native as the markdown ones.
+This is usually simple CSS tweaks.
+
+### Material theme
+
+For popular the `mkdocs-material` please take a look at their [customization docs](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks))
+
+Create a `main.html` file like:
+
+```
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+
+<style>
+    .jp-RenderedHTMLCommon p {
+        font-size: .8rem;
+        line-height: 1.6;
+    }
+
+    .jp-RenderedHTMLCommon li {
+        font-size: .8rem;
+        line-height: 1.6;
+    }
+
+    .jp-RenderedHTMLCommon h1 {
+        margin: 0 0 1.25em;
+        color: var(--md-default-fg-color--light);
+        font-weight: 300;
+        font-size: 2em;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+    }
+
+    .jp-RenderedHTMLCommon h2 {
+        margin: 1.6em 0 .64em;
+        font-weight: 300;
+        font-size: 1.965em;
+        line-height: 1.4;
+        letter-spacing: -0.01em;
+    }
+
+    .jp-RenderedHTMLCommon h3 {
+        margin: 1.6em 0 .8em;
+        font-weight: 400;
+        font-size: 1.57em;
+        line-height: 1.5;
+        letter-spacing: -0.01em;
+    }
+
+    .jp-RenderedHTMLCommon hr {
+        border: none;
+    }
+</style>
+{% endblock content %}
+```

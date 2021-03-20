@@ -38,10 +38,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
     def on_files(self, files, config):
 
-        if convert.HAS_JUPYTEXT:
-            extensions = [".ipynb", ".py"]
-        else:
-            extensions = [".ipynb"]
+        extensions = [".ipynb", ".py"]
 
         ret = Files(
             [
@@ -55,10 +52,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
     def on_pre_page(self, page, config, files):
 
-        if convert.HAS_JUPYTEXT:
-            extensions = [".ipynb", ".py"]
-        else:
-            extensions = [".ipynb"]
+        extensions = [".ipynb", ".py"]
 
         if os.path.splitext(str(page.file.abs_src_path))[-1] in extensions:
             exec_nb = self.config["execute"]

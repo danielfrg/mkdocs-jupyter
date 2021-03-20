@@ -1,0 +1,10 @@
+site_name: site-with-python-files
+site_description: mkdocs-jupyter test site
+
+nav:
+  - Home: index.md
+  - Demo (py): demo.py
+  - Equations (py): variational-inference.py
+
+plugins:
+  - mkdocs-jupyter

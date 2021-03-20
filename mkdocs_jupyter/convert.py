@@ -3,33 +3,26 @@ import logging
 import os
 from copy import deepcopy
 
+import jupytext
+from traitlets import Integer
+from pygments.formatters import HtmlFormatter
 from nbconvert.exporters import HTMLExporter, MarkdownExporter
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.filters.markdown_mistune import IPythonRenderer
 from nbconvert.nbconvertapp import NbConvertApp
 from nbconvert.preprocessors import Preprocessor
-from pygments.formatters import HtmlFormatter
-from traitlets import Integer
 
 from mkdocs_jupyter.templates import GENERATED_MD
 from mkdocs_jupyter.utils import slugify
 
 
-try:
-    import jupytext
-
-    HAS_JUPYTEXT = True
-except ModuleNotFoundError:
-    HAS_JUPYTEXT = False
-
-
 logger = logging.getLogger("mkdocs.mkdocs-jupyter")
 
 
+# This makes the links from the TOC work:
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
 # to use a version that makes the id all lowercase
 # We do this because mkdocs uses all lowercase TOC titles to make it url friendly
-# so this makes the links from the TOC work
 
 
 def add_anchor_lower_id(html, anchor_link_text="¶"):
@@ -81,22 +74,19 @@ def nb2md(nb_path):
     We use a template that removed all code cells because if the body
     is to big (javascript and stuff) it takes to long to read and parse
     """
+    # Use the templates included in this package
+    # We dont expose these templates since are pretty special
+    extra_template_paths = [os.path.join(THIS_DIR, "templates")]
     template_file = "mkdocs_md/md-no-codecell.md.j2"
 
     exporter = MarkdownExporter(
         template_file=template_file,
-        # uncomment this line when new nbconvert is released
-        # https://github.com/jupyter/nbconvert/pull/1429
-        extra_template_paths=[os.path.join(THIS_DIR, "templates")],
+        extra_template_paths=extra_template_paths,
     )
-    # Delete this block when nbconvert is released
-    # exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
-    # print(exporter.template_paths)
-    # End block
 
     _, extension = os.path.splitext(nb_path)
 
-    if HAS_JUPYTEXT and extension == ".py":
+    if extension == ".py":
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
         body, resources = exporter.from_file(nb_file)
@@ -137,27 +127,22 @@ def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
         "highlight_code": custom_highlight_code,
     }
 
+    # Use the templates included in this package
+    # We dont expose these templates since are pretty special
+    extra_template_paths = [os.path.join(THIS_DIR, "templates")]
     template_file = "mkdocs_html/notebook.html.j2"
-    # template_file = "lab/index.html.j2"
 
     exporter = HTMLExporter(
         config=app.config,
         template_file=template_file,
-        # uncomment this line when new nbconvert is released
-        # https://github.com/jupyter/nbconvert/pull/1429
-        extra_template_paths=[os.path.join(THIS_DIR, "templates")],
+        extra_template_paths=extra_template_paths,
         preprocessors=preprocessors_,
         filters=filters,
     )
-    # Delete this block when nbconvert is released
-    # https://github.com/jupyter/nbconvert/pull/1429
-    # exporter.template_paths.append(os.path.join(THIS_DIR, "templates"))
-    # print(exporter.template_paths)
-    # End block
 
     _, extension = os.path.splitext(nb_path)
 
-    if HAS_JUPYTEXT and extension == ".py":
+    if extension == ".py":
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
         html, info = exporter.from_file(nb_file)

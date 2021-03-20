@@ -2,7 +2,7 @@ name: mkdocs-jupyter
 channels:
   - conda-forge
 dependencies:
-  - python=3.7
+  - python=3.8
   - pip
 
   # Base conda deps
@@ -34,3 +34,4 @@ dependencies:
     - mkdocs-minify-plugin
     - pygments
     - pymdown-extensions
+    - jupytext
