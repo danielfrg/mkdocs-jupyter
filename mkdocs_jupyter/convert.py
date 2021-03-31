@@ -1,5 +1,7 @@
 from nbconvert.filters.markdown_mistune import IPythonRenderer
+
 from mkdocs_jupyter.utils import slugify
+
 
 # ------------------------------------------------------------------------------
 # This makes the links from the TOC work

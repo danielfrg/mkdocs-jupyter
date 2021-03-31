@@ -4,6 +4,10 @@ requires = ["setuptools>=42", "setuptools_scm[toml]>=3.4", "wheel"]
 [tool.setuptools_scm]
 write_to = "mkdocs_jupyter/_generated_version.py"
 
+[tool.pytest.ini_options]
+norecursedirs = ".git,dist,build,env,venv"
+addopts = "mkdocs_jupyter/tests --cov=mkdocs_jupyter --cov-report term-missing"
+
 [tool.coverage.run]
 parallel = true
 branch = true
@@ -12,7 +16,7 @@ branch = true
 omit = ["mkdocs_jupyter/_generated_version.py", "mkdocs_jupyter/tests/*"]
 
 [tool.black]
-target-version = ["py36", "py37", "py38"]
+target-version = ["py37", "py38"]
 exclude = '''
 (
     asv_bench/env
@@ -27,14 +31,16 @@ exclude = '''
   | buck-out
   | build
   | dist
+  | node_modules
 )
 '''
 
 [tool.isort]
 # https://black.readthedocs.io/en/stable/the_black_code_style.html#how-black-wraps-lines
-multi_line_output=3
+multi_line_output = 3
 lines_after_imports = 2
 force_grid_wrap = 0
 include_trailing_comma = "true"
 use_parentheses = "true"
 line_length = 88
+skip_glob = "mkdocs_jupyter/tests/mkdocs/*"

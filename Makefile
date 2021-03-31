@@ -11,29 +11,12 @@ TEST_FILTER ?= ""
 
 first: help
 
-clean:  ## Clean build files
-	@rm -rf build dist site htmlcov .pytest_cache .eggs
-	@rm -f .coverage coverage.xml mkdocs_jupyter/_generated_version.py
-	@find . -type f -name '*.py[co]' -delete
-	@find . -type d -name __pycache__ -exec rm -rf {} +
-	@find . -type d -name .ipynb_checkpoints -exec rm -rf {} +
-	@rm -rf mkdocs_jupyter/tests/site
-
-
-cleanall: clean   ## Clean everything
-	@rm -rf *.egg-info
-
-
-help:  ## Show this help menu
-	@grep -E '^[0-9a-zA-Z_-]+:.*?##.*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?##"; OFS="\t\t"}; {printf "\033[36m%-30s\033[0m %s\n", $$1, ($$2==""?"":$$2)}'
-
-
 # ------------------------------------------------------------------------------
-# Package build, test and docs
+# Env, build, test and docs
 
 
 env:  ## Create dev environment
-	conda env create
+	mamba env create
 
 
 develop:  ## Install package for development
@@ -41,21 +24,18 @@ develop:  ## Install package for development
 
 
 build: package  ## Build everything
-
-
-package:  ## Build Python package (sdist)
 	python setup.py sdist
 
 
 check:  ## Check linting
-	@flake8
-	@isort --check-only --diff --recursive --project mkdocs_jupyter --section-default THIRDPARTY .
-	@black --check .
+	flake8
+	isort . --project mkdocs_jupyter --check-only --diff
+	black . --check
 
 
 fmt:  ## Format source
-	@isort --recursive --project mkdocs_jupyter --section-default THIRDPARTY .
-	@black mkdocs_jupyter .
+	isort . --project mkdocs_jupyter
+	black .
 
 
 upload-pypi:  ## Upload package to PyPI
@@ -74,5 +54,23 @@ report:  ## Generate coverage reports
 	@coverage xml
 	@coverage html
 
+
 # ------------------------------------------------------------------------------
-# Project specific
+# Other
+
+clean:  ## Clean build files
+	@rm -rf build dist site htmlcov .pytest_cache .eggs
+	@rm -f .coverage coverage.xml mkdocs_jupyter/_generated_version.py
+	@find . -type f -name '*.py[co]' -delete
+	@find . -type d -name __pycache__ -exec rm -rf {} +
+	@find . -type d -name .ipynb_checkpoints -exec rm -rf {} +
+	@rm -rf mkdocs_jupyter/tests/site
+
+
+reset: cleanall  ## Same as cleanall
+cleanall: clean   ## Clean everything
+	@rm -rf *.egg-info
+
+
+help:  ## Show this help menu
+	@grep -E '^[0-9a-zA-Z_-]+:.*?##.*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?##"; OFS="\t\t"}; {printf "\033[36m%-30s\033[0m %s\n", $$1, ($$2==""?"":$$2)}'

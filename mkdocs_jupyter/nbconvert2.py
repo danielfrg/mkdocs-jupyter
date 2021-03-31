@@ -8,14 +8,15 @@ import os
 from copy import deepcopy
 
 import jupytext
-from traitlets import Integer
-from pygments.formatters import HtmlFormatter
 from nbconvert.exporters import HTMLExporter, MarkdownExporter
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.nbconvertapp import NbConvertApp
 from nbconvert.preprocessors import Preprocessor
+from pygments.formatters import HtmlFormatter
+from traitlets import Integer
 
 from mkdocs_jupyter.templates import GENERATED_MD
+
 
 # ---
 # Variables

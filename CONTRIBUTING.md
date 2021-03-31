@@ -1,16 +1,15 @@
-# Contrinuting
+# How to Contribute
 
-## Dev environment
+## Development environment
 
-The development is based on conda on the `environment.yml` file.
-To createand activate the environment:
+Create Python env
 
 ```
 make env
 conda activate mkdocs-jupyter
 ```
 
-After that install the package in editable mode using:
+Install the package in editable mode using:
 
 ```
 make develop
@@ -18,11 +17,15 @@ make develop
 
 ## Testing
 
+Check linting and format
+
 ```
-# Check linting and format
 make check
 make fmt
+```
 
-# Run tests
+Run tests
+
+````
 make test
 ```

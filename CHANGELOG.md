@@ -1,5 +1,9 @@
 # mkdocs-jupyter Change Log
 
+## 0.16.0
+
+- Support plain Python `.py` using Jupytext
+
 ## 0.15.0
 
 - Support nbconvert 6.0.0
