@@ -9,23 +9,21 @@ make env
 conda activate mkdocs-jupyter
 ```
 
-Install the package in editable mode using:
+Install package for developmentt
 
 ```
 make develop
 ```
 
-## Testing
+## Tests
+
+````
+make test
+```
 
 Check linting and format
 
 ```
 make check
 make fmt
-```
-
-Run tests
-
-````
-make test
 ```

@@ -20,7 +20,7 @@ jobs:
     - uses: actions/checkout@v2
     - run: git fetch --prune --unshallow
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Setup Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
@@ -36,7 +36,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip --version
-        pip install -r requirements-dev.txt
+        pip install -U -r requirements-dev.txt
         pip freeze
 
     - name: Build package
@@ -48,12 +48,7 @@ jobs:
         pip install dist/*.tar.gz
         pip freeze
 
-    - name: Check linting
-      run: |
-        # make check
-
     - name: Run tests
-      if: always()
       run: |
         make test
         make report
@@ -62,4 +57,3 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         file: ./coverage.xml
-

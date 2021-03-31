@@ -10,10 +10,6 @@ isort
 twine
 wheel
 
-# Testing
-pytest
-pytest-cov
-
 # Examples
 jupyterlab
 pandas
@@ -27,6 +23,8 @@ nbconvert>=6.0.7,<7
 jupytext>=1.11.0,<2
 
 # Testing
+pytest
+pytest-cov
 mkdocs-material
 mkdocs-minify-plugin
 pygments

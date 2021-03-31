@@ -15,10 +15,6 @@ dependencies:
   - twine
   - wheel
 
-  # Testing
-  - pytest
-  - pytest-cov
-
   # Examples
   - jupyterlab
   - pandas
@@ -33,6 +29,8 @@ dependencies:
     - jupytext>=1.11.0,<2
 
     # Testing
+    - pytest
+    - pytest-cov
     - mkdocs-material
     - mkdocs-minify-plugin
     - pygments

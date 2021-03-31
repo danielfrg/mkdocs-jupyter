@@ -32,6 +32,7 @@ exclude = '''
   | buck-out
   | build
   | dist
+  | _generated_version.py
   | node_modules
 )
 '''
