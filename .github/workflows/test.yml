@@ -2,9 +2,9 @@ name: test
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
   schedule:
     - cron: "0 5 * * *"
   workflow_dispatch:
@@ -26,20 +26,25 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Print Python versions
+        run: |
+          which python
+          which pip
+          python --version
+          pip --version
+
     - name: Install dependencies
       run: |
-        which python
-        which pip
-        python --version
-        pip --version
         python -m pip install --upgrade pip
         pip install -r requirements-dev.txt
         pip freeze
 
-    - name: Install package
+    - name: Build package
       run: |
         make build
-        pip install -e .
+
+    - name: Install package
+        pip install dist/*.tar.gz
         pip freeze
 
     - name: Check linting
