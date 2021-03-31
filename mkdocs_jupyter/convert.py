@@ -1,28 +1,11 @@
-import io
-import logging
-import os
-from copy import deepcopy
-
-import jupytext
-from traitlets import Integer
-from pygments.formatters import HtmlFormatter
-from nbconvert.exporters import HTMLExporter, MarkdownExporter
-from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.filters.markdown_mistune import IPythonRenderer
-from nbconvert.nbconvertapp import NbConvertApp
-from nbconvert.preprocessors import Preprocessor
-
-from mkdocs_jupyter.templates import GENERATED_MD
 from mkdocs_jupyter.utils import slugify
 
-
-logger = logging.getLogger("mkdocs.mkdocs-jupyter")
-
-
-# This makes the links from the TOC work:
+# ------------------------------------------------------------------------------
+# This makes the links from the TOC work
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
 # to use a version that makes the id all lowercase
-# We do this because mkdocs uses all lowercase TOC titles to make it url friendly
+# We do this because mkdocs uses all lowercase TOC titles (to make it url-friendly)
 
 
 def add_anchor_lower_id(html, anchor_link_text="¶"):
@@ -64,134 +47,4 @@ IPythonRenderer.header = new_header
 
 # End monkeypatch --------------------------------------------------------------
 
-
-THIS_DIR = os.path.dirname(os.path.realpath(__file__))
-
-
-def nb2md(nb_path):
-    """Convert a notebook to markdown
-
-    We use a template that removed all code cells because if the body
-    is to big (javascript and stuff) it takes to long to read and parse
-    """
-    # Use the templates included in this package
-    # We dont expose these templates since are pretty special
-    extra_template_paths = [os.path.join(THIS_DIR, "templates")]
-    template_file = "mkdocs_md/md-no-codecell.md.j2"
-
-    exporter = MarkdownExporter(
-        template_file=template_file,
-        extra_template_paths=extra_template_paths,
-    )
-
-    _, extension = os.path.splitext(nb_path)
-
-    if extension == ".py":
-        nb = jupytext.read(nb_path)
-        nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
-        body, resources = exporter.from_file(nb_file)
-    else:
-        body, resources = exporter.from_filename(nb_path)
-    return body
-
-
-def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
-    """Convert a notebook and return html"""
-
-    logger.info(f"Convert notebook {nb_path}")
-
-    # Load the user's nbconvert configuration
-    app = NbConvertApp()
-    app.load_config_file()
-
-    app.config.update(
-        {
-            # This Preprocessor changes the pygments css prefixes
-            # from .highlight to .highlight-ipynb
-            "CSSHTMLHeaderPreprocessor": {
-                "enabled": True,
-                "highlight_class": ".highlight-ipynb",
-            },
-            "SubCell": {"enabled": True, "start": start, "end": end},
-            "ExecutePreprocessor": {
-                "enabled": execute,
-                "store_widget_state": True,
-                "kernel_name": kernel_name,
-            },
-        }
-    )
-
-    preprocessors_ = [SubCell]
-
-    filters = {
-        "highlight_code": custom_highlight_code,
-    }
-
-    # Use the templates included in this package
-    # We dont expose these templates since are pretty special
-    extra_template_paths = [os.path.join(THIS_DIR, "templates")]
-    template_file = "mkdocs_html/notebook.html.j2"
-
-    exporter = HTMLExporter(
-        config=app.config,
-        template_file=template_file,
-        extra_template_paths=extra_template_paths,
-        preprocessors=preprocessors_,
-        filters=filters,
-    )
-
-    _, extension = os.path.splitext(nb_path)
-
-    if extension == ".py":
-        nb = jupytext.read(nb_path)
-        nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
-        html, info = exporter.from_file(nb_file)
-    else:
-        html, info = exporter.from_filename(nb_path)
-
-    # HTML and CSS fixes
-    # html = html_fixes(html, info, fix_css=True, ignore_css=False)
-    return GENERATED_MD.format(html=html)
-
-
-class SliceIndex(Integer):
-    """An integer trait that accepts None"""
-
-    default_value = None
-
-    def validate(self, obj, value):
-        if value is None:
-            return value
-        else:
-            return super(SliceIndex, self).validate(obj, value)
-
-
-class SubCell(Preprocessor):
-    """A preprocessor to select a slice of the cells of a notebook"""
-
-    start = SliceIndex(0, config=True, help="First cell of notebook")
-    end = SliceIndex(None, config=True, help="Last cell of notebook")
-
-    def preprocess(self, nb, resources):
-        nbc = deepcopy(nb)
-        nbc.cells = nbc.cells[self.start : self.end]
-        return nbc, resources
-
-
-def custom_highlight_code(source, language="python", metadata=None):
-    """
-    Makes the syntax highlighting from pygments in the Notebook output
-    have the prefix(`highlight-ipynb`).
-    So it doesn't break the theme pygments
-    This modifies only html content, not css
-    """
-    if not language:
-        language = "ipython3"
-
-    formatter = HtmlFormatter(cssclass=" highlight highlight-ipynb hl-" + language)
-    output = _pygments_highlight(source, formatter, language, metadata)
-    return output
-
-
-if __name__ == "__main__":
-    nb2html("tests/mkdocs/docs/demo.ipynb")
+from .nbconvert2 import *

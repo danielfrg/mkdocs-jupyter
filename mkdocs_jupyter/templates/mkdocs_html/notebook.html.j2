@@ -1,29 +1,57 @@
-{# This is basically our on version of lab/index.html.j2 #}
+{# Ovewrites: https://github.com/jupyter/nbconvert/blob/master/share/jupyter/nbconvert/templates/lab/index.html.j2 #}
 
-{%- extends "index.html.j2" -%}
+{%- extends "lab/index.html.j2" -%}
 {% from "base/mathjax.html.j2" import mathjax %}
 
 {# Overwrite the header because lab template outputs a complete HTML page #}
+{# CHANGE: Overwrite the header because lab/index.html outputs a complete HTML page #}
+{# We want just the body content #}
 {%- block header -%}
+
+{% block jupyter_widgets %}
+  {%- if "widgets" in nb.metadata -%}
+    {{ jupyter_widgets(resources.jupyter_widgets_base_url, resources.html_manager_semver_range) }}
+  {%- endif -%}
+{% endblock jupyter_widgets %}
 
 {% for css in resources.inlining.css -%}
   <style type="text/css">
-    {{ css }}
+    {# CHANGE: replace .highlight with .highlight-ipynb #}
+    {{ css | replace(".highlight ", ".highlight-ipynb " ) }}
   </style>
 {% endfor %}
 
-{{ resources.include_css("lab/static/index.css") }}
-{{ resources.include_css("static/theme-light.css") }}
-{{ resources.include_css("mkdocs_html/jupyter-fixes.css") }}
+{% block notebook_css %}
+{{ resources.include_css("static/index.css") }}
+{% if resources.theme == 'dark' %}
+    {{ resources.include_css("static/theme-dark.css") }}
+{% else %}
+    {{ resources.include_css("static/theme-light.css") }}
+{% endif %}
+{%- endblock notebook_css %}
+
+{# CHANGE: Add the jupyter-fixes.css #}
+<style>
+{% include "mkdocs_html/jupyter-fixes.css" %}
+</style>
 
 {{ mathjax() }}
 {%- endblock header -%}
 
-{# Overwrite the footer because lab template outputs a complete HTML page #}
+{# CHANGE: Overwrite the footer because lab template outputs a complete HTML page #}
 {% block footer %}
 {% endblock footer %}
 
-{# We overwrite this to show the tags on the cell toolbar #}
+{# CHANGE: Overwrite body header and footer to include a div wrapper #}
+{%- block body_header -%}
+<div class="jupyter-notebook">
+{%- endblock body_header -%}
+
+{% block body_footer %}
+</div>
+{% endblock body_footer %}
+
+{# ADDED: We overwrite this to show the tags on the cell toolbar #}
 {% block input %}
     <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         {% set cell_tags = cell["metadata"].get("tags", [])%}

@@ -18,54 +18,60 @@
 }
 
 /* Anchor links */
-.anchor-link {
+.jupyter-notebook .anchor-link {
     display: none;
 }
 h1:hover .anchor-link, h2:hover .anchor-link, h3:hover .anchor-link {
     display: inline-block;
 }
 
-/* Markdown cells: Remove prompt */
+/* Markdown cells: Remove Input prompt */
 .jp-Cell-inputWrapper .jp-InputPrompt {
     display: none;
 }
 
-/* Code cells: Show prompt */
+/* Code cells: Show Input prompt */
 .jp-CodeCell .jp-Cell-inputWrapper .jp-InputPrompt {
     display: block;
 }
 
-/* Prompt fixes */
+/* Code pre block scroll horizontaly */
 .jp-InputPrompt, .jp-OutputPrompt{
     overflow: visible;
 }
 
-/* Lab uses move for the input prompts */
+/* Lab uses move cursor for the input prompts */
 .jp-Notebook .jp-Cell .jp-InputPrompt {
     cursor: default;
 }
 
-/* Editor max-width */
+/* Code cell max-width */
 .jp-InputArea-editor {
     width: 1px;
 }
 
-/* Editor colors */
-.jp-Editor .highlight {
-    margin: 0.4em;
-    background: var(--jp-cell-editor-background);
-    color: var(--jp-mirror-editor-variable-color);
+/* Code cell Fix pre margin */
+.jp-InputArea-editor .highlight-ipynb pre {
+    margin: 0;
+    padding: 5px 10px;
 }
 
 /* Editor colors */
-.jp-Editor .highlight pre {
+/* .jp-Editor .highlight {
+    margin: 0.4em;
+    background: var(--jp-cell-editor-background);
+    color: var(--jp-mirror-editor-variable-color);
+} */
+
+/* Editor colors */
+/* .jp-Editor .highlight pre {
     background: none;
     border: none;
     margin: 0;
     overflow-x: auto;
-}
+} */
 
-/* Material mkdocs */
+/* MKDocs Material theme defaults */
 .jp-RenderedHTMLCommon p {
     font-size: .8rem;
     line-height: 1.6;
@@ -105,9 +111,12 @@ h1:hover .anchor-link, h2:hover .anchor-link, h3:hover .anchor-link {
     border: none;
 }
 
+.jp-RenderedHTMLCommon .admonition p:not(:first-child) {
+    margin: 1em 0;
+}
 
 /* Tags on cells */
-/* Mostly copying this from straight Jupyter */
+/* Mostly copying this from straight from Jupyter */
 .celltoolbar {
     border: none;
     background: #EEE;
@@ -153,7 +162,7 @@ h1:hover .anchor-link, h2:hover .anchor-link, h3:hover .anchor-link {
     display: inline-block;
 }
 
-/* Bokeh plots table no hover */
+/* Fix: Bokeh plots table no hover */
 .bk-plot-wrapper tbody tr {
     background: none !important;
 }
