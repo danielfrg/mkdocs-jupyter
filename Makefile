@@ -23,7 +23,7 @@ develop:  ## Install package for development
 	python -m pip install --no-build-isolation -e .
 
 
-build: package  ## Build everything
+build:  ## Build everything
 	python setup.py sdist
 
 
