@@ -1,24 +1,3 @@
-# Used for CI - It should match environment.yml
-
-# Base conda deps
-setuptools
-setuptools_scm
-pylint
-flake8
-black
-isort
-twine
-wheel
-pytest
-pytest-cov
-
-# This project conda deps
-nbconvert
-
-# This project pip deps
-jupytext
-mkdocs
-mkdocs-material
-mkdocs-minify-plugin
-pygments
-pymdown-extensions
+mkdocs>=1.1.0
+nbconvert>=6.0.7,<7
+jupytext>=1.11.0

@@ -7,10 +7,11 @@ on:
     branches: [ master ]
   schedule:
     - cron: "0 5 * * *"
+  workflow_dispatch:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     strategy:
       matrix:
@@ -21,14 +22,18 @@ jobs:
     - run: git fetch --prune --unshallow
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
+        which python
+        which pip
+        python --version
+        pip --version
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
         pip freeze
 
     - name: Install package
