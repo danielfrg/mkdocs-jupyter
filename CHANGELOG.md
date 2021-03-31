@@ -1,6 +1,6 @@
 # mkdocs-jupyter Change Log
 
-## [Unreleased]
+## Unreleased
 
 - Support Python 3.9
 - Use new JupyterLab template as base

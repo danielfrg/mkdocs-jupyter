@@ -57,6 +57,11 @@ test-all:  ## Run all tests
 	pytest -k $(TEST_FILTER)
 
 
+report:  ## Generate coverage reports
+	coverage xml
+	coverage html
+
+
 # ------------------------------------------------------------------------------
 # Other
 
