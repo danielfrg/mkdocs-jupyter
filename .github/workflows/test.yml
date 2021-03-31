@@ -27,7 +27,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Print Python versions
-        run: |
+      run: |
           which python
           which pip
           python --version
