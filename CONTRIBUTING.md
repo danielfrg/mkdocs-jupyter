@@ -1,4 +1,4 @@
-# How to Contribute
+# Contributing
 
 ## Development environment
 
