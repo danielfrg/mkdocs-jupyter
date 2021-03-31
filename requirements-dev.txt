@@ -1,6 +1,6 @@
-# Used for CI - It should match environment.yml
+# Used for CI: It should match environment.yml
 
-# Base conda deps
+# Dev tools
 setuptools
 setuptools_scm
 pylint
@@ -9,15 +9,24 @@ black
 isort
 twine
 wheel
+
+# Testing
 pytest
 pytest-cov
 
-# This project conda deps
-nbconvert
+# Examples
+jupyterlab
+pandas
+matplotlib
+plotly
+bokeh
 
-# This project pip deps
-jupytext
-mkdocs
+# Package deps
+mkdocs>=1.1.0,<2
+nbconvert>=6.0.7,<7
+jupytext>=1.11.0,<2
+
+# Testing
 mkdocs-material
 mkdocs-minify-plugin
 pygments

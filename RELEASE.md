@@ -1,4 +1,4 @@
-# How to release a new version
+# Releasing
 
 ## Upload to test PyPI
 

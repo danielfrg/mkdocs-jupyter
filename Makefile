@@ -5,17 +5,17 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
-PWD := $(shell pwd)
 TEST_FILTER ?= ""
+TEST_MARKERS ?= ""
 
 
 first: help
 
+
 # ------------------------------------------------------------------------------
-# Env, build, test and docs
+# Build
 
-
-env:  ## Create dev environment
+env:  ## Create Python env
 	mamba env create
 
 
@@ -23,9 +23,20 @@ develop:  ## Install package for development
 	python -m pip install --no-build-isolation -e .
 
 
-build:  ## Build everything
+build:  ## Build package
 	python setup.py sdist
 
+
+upload-pypi:  ## Upload package to PyPI
+	twine upload dist/*.tar.gz
+
+
+upload-test:  ## Upload package to test PyPI
+	twine upload --repository test dist/*.tar.gz
+
+
+# ------------------------------------------------------------------------------
+# Testing
 
 check:  ## Check linting
 	flake8
@@ -38,21 +49,12 @@ fmt:  ## Format source
 	black .
 
 
-upload-pypi:  ## Upload package to PyPI
-	twine upload dist/*.tar.gz
-
-
-upload-test:  ## Upload package to test PyPI
-	twine upload --repository test dist/*.tar.gz
-
-
 test:  ## Run tests
+	pytest -k $(TEST_FILTER) -m $(TEST_MARKERS)
+
+
+test-all:  ## Run all tests
 	pytest -k $(TEST_FILTER)
-
-
-report:  ## Generate coverage reports
-	coverage xml
-	coverage html
 
 
 # ------------------------------------------------------------------------------
@@ -67,9 +69,8 @@ clean:  ## Clean build files
 	rm -rf mkdocs_jupyter/tests/site
 
 
-reset: cleanall  ## Same as cleanall
 cleanall: clean   ## Clean everything
-	@rm -rf *.egg-info
+	rm -rf *.egg-info
 
 
 help:  ## Show this help menu

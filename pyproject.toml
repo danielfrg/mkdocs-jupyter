@@ -6,7 +6,12 @@ write_to = "mkdocs_jupyter/_generated_version.py"
 
 [tool.pytest.ini_options]
 norecursedirs = ".git,dist,build,env,venv"
-addopts = "mkdocs_jupyter/tests --cov=mkdocs_jupyter --cov-report term-missing"
+addopts = "mkdocs_jupyter/tests -s -vv --cov-config=pyproject.toml --cov=mkdocs_jupyter --cov-report term-missing"
+markers = []
+
+[tool.coverage.run]
+parallel = true
+branch = true
 
 [tool.coverage.report]
 omit = ["mkdocs_jupyter/_generated_version.py", "mkdocs_jupyter/tests/*"]
