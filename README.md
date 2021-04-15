@@ -35,6 +35,47 @@ plugins:
   - mkdocs-jupyter
 ```
 
+### Table of Contents
+
+In order to see the table of contents located in the right sidebar note you need to maintain a hierarchical headers structure in your notebooks. You must use h2 `##` headers and not `#`. So instead of this:
+
+```markdown
+# This H1 title won't show in the table of contens
+```
+
+You should do:
+
+```markdown
+## This H2 title will show in the table of contents
+```
+
+If you want to **nest headers** in the toc you need to add additional levels later in the same markdown cell or new bottom markdown cells:
+
+This works:
+
+```markdown
+## This header will show as top level in the table of contents
+
+Some content
+
+### This one will be displayed inside the above level
+```
+
+This also works:
+
+```markdown
+## This header will show as top level in the table of contents
+
+Some content of cell 1
+
+```
+
+```markdown
+### This one will be displayed inside the above level
+
+Some content of cell 2
+```
+
 ## Options
 
 ### Execute Notebook
