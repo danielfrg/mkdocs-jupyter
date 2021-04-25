@@ -22,7 +22,7 @@
 {% endfor %}
 
 {% block notebook_css %}
-{{ resources.include_css("static/index.css") }}
+{{ resources.include_css("mkdocs_html/dist/styles/jupyter-lab.css") }}
 {% if resources.theme == 'dark' %}
     {{ resources.include_css("static/theme-dark.css") }}
 {% else %}
@@ -44,7 +44,7 @@
 
 {# CHANGE: Overwrite body header and footer to include a div wrapper #}
 {%- block body_header -%}
-<div class="jupyter-notebook">
+<div class="jupyter-wrapper">
 {%- endblock body_header -%}
 
 {% block body_footer %}
