@@ -41,6 +41,9 @@ npm-install:  ##
 npm-build:  ##
 	cd js; npm run build
 
+npm-clean:  ##
+	cd js; npm run clean
+
 # ------------------------------------------------------------------------------
 # Testing
 
