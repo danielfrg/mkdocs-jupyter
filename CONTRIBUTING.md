@@ -46,7 +46,7 @@ In another terminal run `mkdocs`, for example one of the tests
 
 ## Tests
 
-````
+```
 make test
 ```
 
@@ -56,4 +56,3 @@ Check linting and format
 make check
 make fmt
 ```
-````
