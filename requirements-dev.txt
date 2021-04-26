@@ -16,6 +16,7 @@ pandas
 matplotlib
 plotly
 bokeh
+ipywidgets
 
 # Package deps
 mkdocs>=1.1.0,<2

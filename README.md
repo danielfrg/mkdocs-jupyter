@@ -116,7 +116,7 @@ you can create a `main.html` file like this:
 {% endblock content %}
 ```
 
-![Download Noteboon button](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/download-button.png)
+![Download Notebook button](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/download-button.png)
 
 ## Styles
 

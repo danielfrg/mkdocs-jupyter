@@ -21,6 +21,7 @@ dependencies:
   - matplotlib
   - plotly
   - bokeh
+  - ipywidgets
 
   - pip:
     # Package deps
