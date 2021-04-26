@@ -13,7 +13,7 @@ const pythonPkgStatic = path.resolve(
     "mkdocs_jupyter",
     "templates",
     "mkdocs_html",
-    "dist"
+    "styles"
 )
 
 module.exports = (env, argv) => {
@@ -43,7 +43,7 @@ module.exports = (env, argv) => {
                     onEnd: {
                         copy: [
                             {
-                                source: "./dist/",
+                                source: "./dist/styles",
                                 destination: pythonPkgStatic,
                             },
                         ],
