@@ -5,14 +5,14 @@
 [![coverage](https://codecov.io/gh/danielfrg/mkdocs-jupyter/branch/master/graph/badge.svg)](https://codecov.io/gh/danielfrg/mkdocs-jupyter?branch=master)
 [![license](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/danielfrg/mkdocs-jupyter/blob/master/LICENSE.txt)
 
-- Add Jupyter Notebooks directly to the mkdocs navigation
-- Support for multiple formats:
-    - `.ipynb` and `.py` files (using [jupytext](https://github.com/mwouts/jupytext))
-- Same style as regular Jupyter Notebooks
-- Option to execute the notebook before converting
-- Support for [ipywidgets](https://github.com/jupyter-widgets/ipywidgets)
-- Support for mkdocs TOC
-- Option to include notebook source
+-   Add Jupyter Notebooks directly to the mkdocs navigation
+-   Support for multiple formats:
+    -   `.ipynb` and `.py` files (using [jupytext](https://github.com/mwouts/jupytext))
+-   Same style as regular Jupyter Notebooks
+-   Option to execute the notebook before converting
+-   Support for [ipywidgets](https://github.com/jupyter-widgets/ipywidgets)
+-   Support for mkdocs TOC
+-   Option to include notebook source
 
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png" alt="mkdocs-jupyter default theme"  width="410"></a>
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png" alt="mkdocs-jupyter material theme"  width="410"></a>
@@ -37,19 +37,20 @@ plugins:
 
 ### Table of Contents
 
-In order to see the table of contents located in the right sidebar note you need to maintain a hierarchical headers structure in your notebooks. You must use h2 `##` headers and not `#`. So instead of this:
+In order to see the table of contents you need to maintain a hierarchical headers structure in your notebooks.
+
+You must use h2 (`##`) headers and not h1 (`#`)
 
 ```markdown
-# This H1 title won't show in the table of contens
+# This H1 title won't show in the table of contents
 ```
-
-You should do:
 
 ```markdown
 ## This H2 title will show in the table of contents
 ```
 
-If you want to **nest headers** in the toc you need to add additional levels later in the same markdown cell or new bottom markdown cells:
+If you want to **nest headers** in the TOC you need to add additional levels later
+in the same markdown cell or new bottom markdown cells:
 
 This works:
 
@@ -59,21 +60,6 @@ This works:
 Some content
 
 ### This one will be displayed inside the above level
-```
-
-This also works:
-
-```markdown
-## This header will show as top level in the table of contents
-
-Some content of cell 1
-
-```
-
-```markdown
-### This one will be displayed inside the above level
-
-Some content of cell 2
 ```
 
 ## Options
@@ -134,14 +120,12 @@ you can create a `main.html` file like this:
 
 ## Styles
 
-This extensions includes some CSS styles to make the Notebook look "decent" inside a generic
-mkdoc theme but in general some extra customization needs to be done to make
-the Jupyter Notebook based pages look as good and native as the markdown ones.
-This is usually simple CSS tweaks.
+This extensions includes the Juptyer Lab nbconvert CSS styles and does some changes
+to make it as generic as possible in order for it to work with a variety of mkdocs themes.
+This is not always possible and the theme we test the most is [mkdocs-material](https://squidfunk.github.io/mkdocs-material).
 
-### Material theme
-
-For popular the `mkdocs-material` please take a look at their [customization docs](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks))
+It's possible you might need to do some CSS changes to make it look as good as you
+want, for example for the material theme take a look at their [customization docs](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks).
 
 Create a `main.html` file like:
 
@@ -152,44 +136,12 @@ Create a `main.html` file like:
 {{ super() }}
 
 <style>
-    .jp-RenderedHTMLCommon p {
-        font-size: .8rem;
-        line-height: 1.6;
-    }
+// Do whatever changes you need here
 
-    .jp-RenderedHTMLCommon li {
-        font-size: .8rem;
-        line-height: 1.6;
-    }
+.jp-RenderedHTMLCommon p {
+    color: red
+}
 
-    .jp-RenderedHTMLCommon h1 {
-        margin: 0 0 1.25em;
-        color: var(--md-default-fg-color--light);
-        font-weight: 300;
-        font-size: 2em;
-        line-height: 1.3;
-        letter-spacing: -0.01em;
-    }
-
-    .jp-RenderedHTMLCommon h2 {
-        margin: 1.6em 0 .64em;
-        font-weight: 300;
-        font-size: 1.965em;
-        line-height: 1.4;
-        letter-spacing: -0.01em;
-    }
-
-    .jp-RenderedHTMLCommon h3 {
-        margin: 1.6em 0 .8em;
-        font-weight: 400;
-        font-size: 1.57em;
-        line-height: 1.5;
-        letter-spacing: -0.01em;
-    }
-
-    .jp-RenderedHTMLCommon hr {
-        border: none;
-    }
 </style>
 {% endblock content %}
 ```
