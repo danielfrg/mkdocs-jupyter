@@ -35,7 +35,7 @@ git commit -am "Release ${VERSION}" --allow-empty
 git tag ${VERSION}
 
 make cleanall
-npm-build
+make npm-build
 make build
 make upload-pypi
 git push origin ${VERSION}
