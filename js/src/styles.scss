@@ -300,7 +300,13 @@
     h6 {
         .anchor-link {
             display: none;
-            margin-left: 10px;
+            margin-left: 0.5rem;
+            color: var(--md-default-fg-color--lighter);
+
+            &:hover {
+                text-decoration: none;
+                color: var(--md-accent-fg-color);
+            }
         }
 
         &:hover {
@@ -383,6 +389,9 @@
     }
     .jp-OutputPrompt {
         overflow: unset;
+    }
+    .jp-RenderedText {
+        font-size: var(--jp-code-font-size);
     }
 
     .highlight-ipynb {

@@ -1,6 +1,6 @@
 # This is a MD file
 
-Text can be **bold**, _italic_, or ~~strikethrough~~. [Links](https://github.com) should be blue with no underlines (unless hovered over).
+Text can be **bold**, _italic_, or strikethrough. [Links](https://github.com) should be blue with no underlines (unless hovered over).
 
 Even LaTex expression work: $\delta_{\alpha}$.
 
@@ -14,7 +14,7 @@ There should be whitespace between paragraphs. There should be whitespace betwee
 >
 > There should be no margin below this final sentence.
 
-# Header 1
+## Header 2
 
 This is a normal paragraph following a header. Bacon ipsum dolor sit amet t-bone doner shank drumstick, pork belly porchetta chuck sausage brisket ham hock rump pig. Chuck kielbasa leberkas, pork bresaola ham hock filet mignon cow shoulder short ribs biltong.
 
@@ -135,6 +135,13 @@ Code can also be shown in a block element.
 var foo = "bar";
 ```
 
+```text
+| Language    | Code               |
+|-------------|--------------------|
+| Javascript  | `var foo = "bar";` |
+| Ruby        | `foo = "bar"`      |
+```
+
 Code can also use syntax highlighting.
 
 ```javascript
@@ -147,6 +154,24 @@ Long, single-line code blocks should not wrap. They should horizontally scroll i
 
 ```javascript
 var foo = "The same thing is true for code with syntax highlighting. A single line of code should horizontally scroll if it is really long.";
+```
+
+```python
+class CustomMarkdownRendered(IPythonRenderer):
+    def block_code(self, code, lang):
+        if lang:
+            try:
+                lexer = get_lexer_by_name(lang, stripall=True)
+            except ClassNotFound:
+                code = lang + "\n" + code
+                lang = None
+                lexer = None
+
+        if not lang:
+            return "\n<pre><code>%s</code></pre>\n" % mistune.escape(code)
+
+        formatter = CodeHtmlFormatter()
+        return highlight(code, lexer, formatter)
 ```
 
 Inline code inside table cells should still be distinguishable.

@@ -2,5 +2,4 @@
 package.json
 package-lock.json
 public
-*.yml
-*.in
+mkdocs_jupyter/
