@@ -1,0 +1,27 @@
+{
+  "name": "mkdocs_jupyter",
+  "version": "1.0.0",
+  "description": "Utils for mkdocs-jupyter",
+  "author": "Daniel Rodriguez",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode=development --watch",
+    "build": "webpack --mode=production",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf dist/ ../mkdocs_jupyter/templates/mkdocs_html/dist/*"
+  },
+  "devDependencies": {
+    "sass": "^1.32.11",
+    "sass-loader": "^11.0.1",
+    "webpack": "^5.35.1",
+    "webpack-cli": "^4.6.0"
+  },
+  "dependencies": {
+    "css-loader": "^5.2.4",
+    "filemanager-webpack-plugin": "^4.0.0",
+    "mini-css-extract-plugin": "^1.5.0",
+    "style-loader": "^2.0.0",
+    "webpack-fix-style-only-entries": "^0.6.1"
+  }
+}

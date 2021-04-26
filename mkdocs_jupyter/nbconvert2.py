@@ -149,7 +149,7 @@ class SubCell(Preprocessor):
 def custom_highlight_code(source, language="python", metadata=None):
     """
     Makes the class of the div that contains the `<pre>`
-    be `highlight-ipynb` instaed of `highlight`.
+    be `.highlight-ipynb` instead of `.highlight`.
 
     So it doesn't break the website theme
     This modifies only html content, not CSS

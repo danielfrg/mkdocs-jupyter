@@ -2,9 +2,9 @@ site_name: site-with-python-files
 site_description: mkdocs-jupyter test site
 
 nav:
-  - Home: index.md
-  - Demo (py): demo.py
-  - Equations (py): variational-inference.py
+    - Home: index.md
+    - Demo (py): demo-script.py
+    - Equations (py): variational-inference-script.py
 
 plugins:
-  - mkdocs-jupyter
+    - mkdocs-jupyter

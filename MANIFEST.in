@@ -1,0 +1,3 @@
+# We add these files here because they are not tracked in git (listed on .gitignore)
+
+include mkdocs_jupyter/templates/mkdocs_html/styles/*
