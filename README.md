@@ -41,20 +41,18 @@ In order to see the table of contents you need to maintain a hierarchical header
 
 You must use h2 (`##`) headers and not h1 (`#`)
 
-```markdown
+```
 # This H1 title won't show in the table of contents
 ```
 
-```markdown
+```
 ## This H2 title will show in the table of contents
 ```
 
 If you want to **nest headers** in the TOC you need to add additional levels later
 in the same markdown cell or new bottom markdown cells:
 
-This works:
-
-```markdown
+```
 ## This header will show as top level in the table of contents
 
 Some content

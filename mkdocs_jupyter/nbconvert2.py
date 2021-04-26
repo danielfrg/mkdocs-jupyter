@@ -1,7 +1,8 @@
 """
-This modules is a Wrapper around nbconvert
-It provides a cleaner version of the HTML content that can be embeded into other websites.
+This modules is a wrapper around nbconvert
+It provides a cleaner version of the HTML content that can be embedded into existing HTML pages.
 """
+
 import io
 import logging
 import os
@@ -15,19 +16,23 @@ from nbconvert.preprocessors import Preprocessor
 from pygments.formatters import HtmlFormatter
 from traitlets import Integer
 
-from mkdocs_jupyter.templates import GENERATED_MD
 
-
-# ---
 # Variables
 logger = logging.getLogger("mkdocs.mkdocs-jupyter")
-# ---
+
+# END variables
+
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
-    """Convert a notebook and return html"""
+    """Convert a notebook
+
+    Returns
+    -------
+        HTML content
+    """
     logger.info(f"Converting notebook: {nb_path}")
 
     app = get_nbconvert_app(
@@ -42,6 +47,7 @@ def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
     preprocessors_ = [SubCell]
     filters = {
         "highlight_code": custom_highlight_code,
+        "markdown2html": custom_markdown2html,
     }
 
     exporter = HTMLExporter(
@@ -61,7 +67,7 @@ def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
     else:
         html, info = exporter.from_filename(nb_path)
 
-    return GENERATED_MD.format(html=html)
+    return html
 
 
 def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):
@@ -148,12 +154,11 @@ class SubCell(Preprocessor):
 
 def custom_highlight_code(source, language="python", metadata=None):
     """
-    Makes the class of the div that contains the `<pre>`
+    Makes the CSS class of the div that contains the `<pre>`
     be `.highlight-ipynb` instead of `.highlight`.
 
-    So it doesn't break the website theme
-    This modifies only html content, not CSS
-    On the notebook.html.js we modify this
+    This modifies only HTML content not CSS
+    On the notebook.html.js we modify the CSS styles
     """
     if not language:
         language = "python"
@@ -163,5 +168,53 @@ def custom_highlight_code(source, language="python", metadata=None):
     return output
 
 
+# This sections creates a new markdown2html filter
+# This filter uses a Custom Rendered that uses a custom CodeHtmlFormatter
+# All this does is to wrap the language blocks into a div and a pre
+# So that it's the same that for regular non-language sections
+
+import mistune
+from pygments import highlight
+from pygments.util import ClassNotFound
+from pygments.lexers import get_lexer_by_name
+from nbconvert.filters.markdown_mistune import MarkdownWithMath, IPythonRenderer
+
+
+def custom_markdown2html(source):
+    return MarkdownWithMath(renderer=CustomMarkdownRendered(escape=False)).render(
+        source
+    )
+
+
+class CustomMarkdownRendered(IPythonRenderer):
+    def block_code(self, code, lang):
+        if lang:
+            try:
+                lexer = get_lexer_by_name(lang, stripall=True)
+            except ClassNotFound:
+                code = lang + "\n" + code
+                lang = None
+                lexer = None
+
+        if not lang:
+            return "\n<pre><code>%s</code></pre>\n" % mistune.escape(code)
+
+        formatter = CodeHtmlFormatter()
+        return highlight(code, lexer, formatter)
+
+
+class CodeHtmlFormatter(HtmlFormatter):
+    def wrap(self, source, outfile):
+        return self._wrap_code(source)
+
+    def _wrap_code(self, source):
+        yield 0, '<div class="codehilite"><pre><code>'
+        for i, t in source:
+            yield i, t
+        yield 0, "</code></pre></div>"
+
+
 if __name__ == "__main__":
-    nb2html("tests/mkdocs/docs/demo.ipynb")
+    content = nb2html("tests/mkdocs/docs/demo.ipynb")
+    with open("./demo.html", "w") as f:
+        f.write(content)

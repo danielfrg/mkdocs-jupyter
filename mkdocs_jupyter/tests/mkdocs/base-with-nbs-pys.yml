@@ -8,3 +8,10 @@ nav:
 
 plugins:
     - mkdocs-jupyter
+
+markdown_extensions:
+    - codehilite:
+          guess_lang: false
+    - pymdownx.highlight:
+          use_pygments: true
+    - pymdownx.arithmatex

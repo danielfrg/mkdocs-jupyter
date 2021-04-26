@@ -11,6 +11,8 @@ plugins:
           include_source: True
 
 markdown_extensions:
+    - toc:
+          permalink: true
     - codehilite:
           guess_lang: false
     - pymdownx.highlight:
@@ -22,4 +24,4 @@ theme:
     # custom_dir: overrides
 
 extra_css:
-    - extras/codehilite.css
+    - extras/default.css

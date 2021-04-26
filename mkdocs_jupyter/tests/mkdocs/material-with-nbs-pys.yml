@@ -11,6 +11,10 @@ plugins:
           include_source: True
 
 markdown_extensions:
+    - codehilite:
+          guess_lang: false
+    - pymdownx.highlight:
+          use_pygments: true
     - pymdownx.arithmatex
 
 theme:

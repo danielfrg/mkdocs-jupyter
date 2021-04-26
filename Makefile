@@ -38,8 +38,13 @@ npm-install:  ##
 	cd js; npm install
 
 
+npm-dev:  ##
+	cd js; npm run dev
+
+
 npm-build:  ##
 	cd js; npm run build
+
 
 npm-clean:  ##
 	cd js; npm run clean
