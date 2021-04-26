@@ -12,7 +12,7 @@ plugins:
 
 markdown_extensions:
     - codehilite:
-      guess_lang: false
+          guess_lang: false
     - pymdownx.highlight:
           use_pygments: true
     - pymdownx.arithmatex
