@@ -34,6 +34,12 @@ upload-pypi:  ## Upload package to PyPI
 upload-test:  ## Upload package to test PyPI
 	twine upload --repository test dist/*.tar.gz
 
+npm-install:  ##
+	cd js; npm install
+
+
+npm-build:  ##
+	cd js; npm run build
 
 # ------------------------------------------------------------------------------
 # Testing

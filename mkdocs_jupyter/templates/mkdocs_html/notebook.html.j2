@@ -3,9 +3,8 @@
 {%- extends "lab/index.html.j2" -%}
 {% from "base/mathjax.html.j2" import mathjax %}
 
-{# Overwrite the header because lab template outputs a complete HTML page #}
 {# CHANGE: Overwrite the header because lab/index.html outputs a complete HTML page #}
-{# We want just the body content #}
+{# We want just the notebook content not a full html page #}
 {%- block header -%}
 
 {% block jupyter_widgets %}
@@ -16,11 +15,12 @@
 
 {% for css in resources.inlining.css -%}
   <style type="text/css">
-    {# CHANGE: replace .highlight with .highlight-ipynb #}
+    {# CHANGE: replace CSS classes: .highlight -> .highlight-ipynb #}
     {{ css | replace(".highlight ", ".highlight-ipynb " ) }}
   </style>
 {% endfor %}
 
+{# CHANGE: Replace the default styles for our own #}
 {% block notebook_css %}
 {{ resources.include_css("mkdocs_html/dist/styles/jupyter-lab.css") }}
 {% if resources.theme == 'dark' %}
@@ -29,11 +29,6 @@
     {{ resources.include_css("static/theme-light.css") }}
 {% endif %}
 {%- endblock notebook_css %}
-
-{# CHANGE: Add the jupyter-fixes.css #}
-<style>
-{% include "mkdocs_html/jupyter-fixes.css" %}
-</style>
 
 {{ mathjax() }}
 {%- endblock header -%}
@@ -70,4 +65,4 @@
     {{ cell.source | highlight_code(metadata=cell.metadata) }}
         </div>
     </div>
-{% endblock %}
+{% endblock input %}
