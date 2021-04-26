@@ -25,8 +25,8 @@ Merge branch when CI passes
 
 ## Upload to PyPI
 
-- Update `CHANGELOG.md`
-- Update `README.md` and docs
+-   Update `CHANGELOG.md`
+-   Update `README.md` and docs
 
 ```
 export VERSION=1.0.0
@@ -35,6 +35,7 @@ git commit -am "Release ${VERSION}" --allow-empty
 git tag ${VERSION}
 
 make cleanall
+npm-build
 make build
 make upload-pypi
 git push origin ${VERSION}
