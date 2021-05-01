@@ -63,7 +63,9 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     page.file.abs_src_path, execute=exec_nb, kernel_name=kernel_name
                 )
                 self.content = body
-                self.toc = get_nb_toc(page.file.abs_src_path)
+                toc, title = get_nb_toc(page.file.abs_src_path)
+                self.toc = toc
+                self.title = title
 
             # replace render with new_render for this object only
             page.render = new_render.__get__(page, Page)
@@ -100,4 +102,8 @@ def get_nb_toc(fpath):
     body = convert.nb2md(fpath)
     md_toc_tokens = get_markdown_toc(body)
     toc = get_toc(md_toc_tokens)
-    return toc
+    title = None
+    for token in md_toc_tokens:
+        if token["level"]==1 and title is None:
+            title = token["name"]
+    return toc, title
