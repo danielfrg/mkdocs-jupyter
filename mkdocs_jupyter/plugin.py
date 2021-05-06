@@ -32,6 +32,7 @@ class NotebookFile(mkdocs.structure.files.File):
 class Plugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
         ("execute", config_options.Type(bool, default=False)),
+        ("ignore_h1_titles", config_options.Type(bool, default=False)),
         ("include_source", config_options.Type(bool, default=False)),
         ("kernel_name", config_options.Type(str, default="")),
     )
@@ -56,6 +57,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
         if os.path.splitext(str(page.file.abs_src_path))[-1] in extensions:
             exec_nb = self.config["execute"]
+            ignore_h1_titles = self.config["ignore_h1_titles"]
             kernel_name = self.config["kernel_name"]
 
             def new_render(self, config, files):
@@ -65,7 +67,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path)
                 self.toc = toc
-                if title is not None:
+                if title is not None and self.config["ignore_h1_titles"] == False
                     self.title = title
 
             # replace render with new_render for this object only

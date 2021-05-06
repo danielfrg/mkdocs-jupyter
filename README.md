@@ -35,15 +35,24 @@ plugins:
   - mkdocs-jupyter
 ```
 
-### Table of Contents
+### Titles and Table of Contents
+
+The first h1 (`#`) header in your notebook will be used as the title. 
+
+```
+# This H1 title will be the the title.
+```
+
+This can be turned off in the configuration (in which case the filename will be used as title):
+
+```
+plugins:
+  - mkdocs-jupyter:
+      ignore_h1_titles: True
+```
 
 In order to see the table of contents you need to maintain a hierarchical headers structure in your notebooks.
-
 You must use h2 (`##`) headers and not h1 (`#`)
-
-```
-# This H1 title won't show in the table of contents
-```
 
 ```
 ## This H2 title will show in the table of contents
