@@ -67,7 +67,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path)
                 self.toc = toc
-                if title is not None and self.config["ignore_h1_titles"] == False:
+                if title is not None and not ignore_h1_titles:
                     self.title = title
 
             # replace render with new_render for this object only
