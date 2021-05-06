@@ -65,7 +65,8 @@ class Plugin(mkdocs.plugins.BasePlugin):
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path)
                 self.toc = toc
-                self.title = title
+                if title is not None:
+                    self.title = title
 
             # replace render with new_render for this object only
             page.render = new_render.__get__(page, Page)
