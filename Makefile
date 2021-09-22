@@ -5,8 +5,8 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
-TEST_FILTER ?= ""
-TEST_MARKERS ?= ""
+PYTEST_K ?= ""
+PYTEST_MARKERS ?= ""
 
 
 first: help
@@ -16,15 +16,11 @@ first: help
 # Build
 
 env:  ## Create Python env
-	mamba env create
-
-
-develop:  ## Install package for development
-	python -m pip install --no-build-isolation -e .
+	poetry install
 
 
 build:  ## Build package
-	python setup.py sdist
+	poetry build
 
 
 upload-pypi:  ## Upload package to PyPI
@@ -33,6 +29,7 @@ upload-pypi:  ## Upload package to PyPI
 
 upload-test:  ## Upload package to test PyPI
 	twine upload --repository test dist/*.tar.gz
+
 
 npm-install:  ##
 	cd js; npm install
@@ -53,22 +50,22 @@ npm-clean:  ##
 # Testing
 
 check:  ## Check linting
+	isort --check-only --diff .
+	black --check --diff .
 	flake8
-	isort . --project mkdocs_jupyter --check-only --diff
-	black . --check
 
 
 fmt:  ## Format source
-	isort . --project mkdocs_jupyter
+	isort .
 	black .
 
 
 test:  ## Run tests
-	pytest -k $(TEST_FILTER) -m $(TEST_MARKERS)
+	pytest -k $(PYTEST_K) -m $(PYTEST_MARKERS)
 
 
 test-all:  ## Run all tests
-	pytest -k $(TEST_FILTER)
+	pytest -k $(PYTEST_K)
 
 
 report:  ## Generate coverage reports
