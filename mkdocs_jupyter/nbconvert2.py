@@ -26,7 +26,9 @@ logger = logging.getLogger("mkdocs.mkdocs-jupyter")
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
-def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
+def nb2html(
+    nb_path, start=0, end=None, execute=False, kernel_name="", theme=None
+):
     """Convert a notebook
 
     Returns
@@ -56,6 +58,7 @@ def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
         extra_template_paths=extra_template_paths,
         preprocessors=preprocessors_,
         filters=filters,
+        theme=theme,
     )
 
     _, extension = os.path.splitext(nb_path)
@@ -63,11 +66,11 @@ def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
     if extension == ".py":
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
-        html, info = exporter.from_file(nb_file)
+        content, resources = exporter.from_file(nb_file)
     else:
-        html, info = exporter.from_filename(nb_path)
+        content, resources = exporter.from_filename(nb_path)
 
-    return html
+    return content
 
 
 def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):

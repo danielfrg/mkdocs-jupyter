@@ -6,13 +6,6 @@ Create Python env
 
 ```
 make env
-conda activate mkdocs-jupyter
-```
-
-Install package for development
-
-```
-make develop
 ```
 
 ## JupyterLab styles
@@ -34,15 +27,15 @@ To update the original styles:
 
 To change the styles
 
--   `cd js`
--   `npm install`
--   `npm run dev`
+- `cd js`
+- `npm install`
+- `npm run dev`
 
 In another terminal run `mkdocs`, for example one of the tests
 
--   `cd mkdocs_jupyter/tests/mkdocs/`
--   `mkdocs serve -f material-with-nbs.yml`
--   Change styles and rebuild the site to see the changes
+- `cd mkdocs_jupyter/tests/mkdocs/`
+- `mkdocs serve -f material-with-nbs.yml`
+- Change styles and rebuild the site to see the changes
 
 ## Tests
 

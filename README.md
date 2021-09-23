@@ -5,14 +5,15 @@
 [![coverage](https://codecov.io/gh/danielfrg/mkdocs-jupyter/branch/master/graph/badge.svg)](https://codecov.io/gh/danielfrg/mkdocs-jupyter?branch=master)
 [![license](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/danielfrg/mkdocs-jupyter/blob/master/LICENSE.txt)
 
--   Add Jupyter Notebooks directly to the mkdocs navigation
--   Support for multiple formats:
-    -   `.ipynb` and `.py` files (using [jupytext](https://github.com/mwouts/jupytext))
--   Same style as regular Jupyter Notebooks
--   Option to execute the notebook before converting
--   Support for [ipywidgets](https://github.com/jupyter-widgets/ipywidgets)
--   Support for mkdocs TOC
--   Option to include notebook source
+- Add Jupyter Notebooks directly to the mkdocs navigation
+- Support for multiple formats:
+  - `.ipynb` and `.py` files (using [jupytext](https://github.com/mwouts/jupytext))
+- Same style as regular Jupyter Notebooks
+  - Support Jupyter Themes
+- Option to execute the notebook before converting
+- Support for [ipywidgets](https://github.com/jupyter-widgets/ipywidgets)
+- Support for mkdocs TOC
+- Option to include notebook source
 
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png" alt="mkdocs-jupyter default theme"  width="410"></a>
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png" alt="mkdocs-jupyter material theme"  width="410"></a>
@@ -96,6 +97,22 @@ You can specify a custom kernel name to use for all the notebooks:
 plugins:
   - mkdocs-jupyter:
       kernel_name: python3
+```
+
+### Jupyter themes
+
+You can configure the different Jupyter themes.
+For example if using material with `slate` color scheme you can use the Jupyter Lab `dark` theme:
+
+```yml
+plugins:
+  - mkdocs-jupyter:
+      theme: dark
+
+theme:
+  name: material
+  palette:
+    scheme: slate
 ```
 
 ### Download notebook link
