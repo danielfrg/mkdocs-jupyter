@@ -63,7 +63,7 @@ def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
     if extension == ".py":
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
-        html, info = exporter.from_file(nb_file, resources={"theme": "dark"})
+        html, info = exporter.from_file(nb_file)
     else:
         html, info = exporter.from_filename(nb_path)
 
