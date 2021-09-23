@@ -8,15 +8,15 @@ nav:
 
 plugins:
     - mkdocs-jupyter:
-          include_source: True
+        include_source: True
 
 markdown_extensions:
     - toc:
-          permalink: true
+        permalink: true
     - codehilite:
-          guess_lang: false
+        guess_lang: false
     - pymdownx.highlight:
-          use_pygments: true
+        use_pygments: true
     - pymdownx.arithmatex
 
 theme:

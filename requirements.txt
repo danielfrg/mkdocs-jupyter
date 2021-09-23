@@ -1,3 +1,0 @@
-mkdocs>=1.1.0,<2
-nbconvert>=6.0.7,<7
-jupytext>=1.11.0,<2
