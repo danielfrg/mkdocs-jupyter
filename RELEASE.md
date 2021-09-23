@@ -1,5 +1,7 @@
 # Releasing
 
+Update version on `mkdocs_jupyter/__init__.py`.
+
 ## Upload to test PyPI
 
 ```
@@ -25,8 +27,8 @@ Merge branch when CI passes
 
 ## Upload to PyPI
 
--   Update `CHANGELOG.md`
--   Update `README.md` and docs
+- Update `CHANGELOG.md`
+- Update `README.md` and docs
 
 ```
 export VERSION=1.0.0
@@ -34,7 +36,7 @@ export VERSION=1.0.0
 git commit -am "Release ${VERSION}" --allow-empty
 git tag ${VERSION}
 
-make cleanall
+make clean
 make npm-build
 make build
 make upload-pypi

@@ -1,6 +1,11 @@
 # mkdocs-jupyter Change Log
 
-## Unreleased
+## 0.17.4
+
+- Support Jupyter themes
+- Option to ignore some notebooks to be executed
+
+## 0.17.0
 
 - Support Python 3.9
 - Use new JupyterLab template as base

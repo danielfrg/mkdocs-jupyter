@@ -9,7 +9,7 @@
     "dev": "webpack --mode=development --watch",
     "build": "webpack --mode=production",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rm -rf dist/ ../mkdocs_jupyter/templates/mkdocs_html/dist/*"
+    "clean": "rm -rf dist/ ../mkdocs_jupyter/templates/mkdocs_html/styles"
   },
   "devDependencies": {
     "sass": "^1.32.11",

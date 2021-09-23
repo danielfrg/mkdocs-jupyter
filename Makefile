@@ -72,21 +72,20 @@ report:  ## Generate coverage reports
 	coverage xml
 	coverage html
 
-
 # ------------------------------------------------------------------------------
 # Other
 
-clean:  ## Clean build files
+
+clean: npm-clean  ## Clean build files
 	rm -rf build dist site htmlcov .pytest_cache .eggs
-	rm -f .coverage coverage.xml mkdocs_jupyter/_generated_version.py
+	rm -f .coverage coverage.xml
 	find . -type f -name '*.py[co]' -delete
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type d -name .ipynb_checkpoints -exec rm -rf {} +
-	rm -rf mkdocs_jupyter/tests/site
+	rm -rf mkdocs_jupyter/tests/mkdocs/site
 
 
-cleanall: clean   ## Clean everything
-	rm -rf *.egg-info
+cleanall: clean  ## Clean everything
 
 
 help:  ## Show this help menu
