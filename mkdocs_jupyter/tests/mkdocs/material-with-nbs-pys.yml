@@ -23,3 +23,7 @@ theme:
   palette:
     scheme: slate
   # custom_dir: overrides
+
+extra_css:
+  - extras/material.css
+  - extras/styles.css

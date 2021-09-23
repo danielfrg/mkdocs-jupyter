@@ -26,4 +26,5 @@ theme:
   # custom_dir: overrides
 
 extra_css:
-  - extras/default.css
+  - extras/material.css
+  - extras/styles.css
