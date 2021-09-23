@@ -36,7 +36,8 @@ class NotebookFile(mkdocs.structure.files.File):
 class Plugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
         ("execute", config_options.Type(bool, default=False)),
-        ("execute_ignore", config_options.Type(str, default="*")),
+        ("execute_ignore", config_options.Type(str, default="")),
+        ("theme", config_options.Type(str, default="")),
         ("kernel_name", config_options.Type(str, default="")),
         ("include_source", config_options.Type(bool, default=False)),
         ("ignore_h1_titles", config_options.Type(bool, default=False)),
@@ -66,18 +67,22 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             exec_nb = self.config["execute"]
 
-            ignore_pattern = self.config["execute_ignore"]
-            exceute_ignore = pathlib.PurePath(page.file.abs_src_path).match(
-                ignore_pattern
-            )
-            if exceute_ignore:
-                exec_nb = False
+            if self.config["execute_ignore"]:
+                ignore_pattern = self.config["execute_ignore"]
+                execute_ignore = pathlib.PurePath(
+                    page.file.abs_src_path
+                ).match(ignore_pattern)
+                if execute_ignore:
+                    exec_nb = False
+
+            theme = self.config["theme"]
 
             def new_render(self, config, files):
                 body = convert.nb2html(
                     page.file.abs_src_path,
                     execute=exec_nb,
                     kernel_name=kernel_name,
+                    theme=theme,
                 )
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path)

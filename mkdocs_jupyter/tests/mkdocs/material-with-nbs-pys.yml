@@ -9,6 +9,7 @@ nav:
 plugins:
   - mkdocs-jupyter:
       include_source: True
+      theme: dark
 
 markdown_extensions:
   - codehilite:
@@ -19,9 +20,6 @@ markdown_extensions:
 
 theme:
   name: material
-<<<<<<< HEAD
   palette:
     scheme: slate
-=======
->>>>>>> main
   # custom_dir: overrides
