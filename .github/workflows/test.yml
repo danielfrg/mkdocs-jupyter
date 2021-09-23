@@ -41,6 +41,10 @@ jobs:
         run: |
           make npm-install
 
+    - name: Build JS Styles
+      run: |
+        make npm-build
+
       # ------------------------------------------------------------------------
       # Python env
 
