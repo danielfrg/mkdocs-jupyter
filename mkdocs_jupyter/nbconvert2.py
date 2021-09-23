@@ -63,7 +63,7 @@ def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
     if extension == ".py":
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
-        html, info = exporter.from_file(nb_file)
+        html, info = exporter.from_file(nb_file, resources={"theme": "dark"})
     else:
         html, info = exporter.from_filename(nb_path)
 
@@ -120,6 +120,7 @@ def get_nbconvert_app(start=0, end=None, execute=False, kernel_name=""):
                 "enabled": execute,
                 "store_widget_state": True,
                 "kernel_name": kernel_name,
+                "allow_errors": True,
             },
         }
     )
