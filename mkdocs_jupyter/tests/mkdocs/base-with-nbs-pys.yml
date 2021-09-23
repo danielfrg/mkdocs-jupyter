@@ -2,16 +2,16 @@ site_name: site-with-notebooks-and-python-files
 site_description: mkdocs-jupyter test site
 
 nav:
-    - Home: index.md
-    - Demo (nb): demo.ipynb
-    - Equations (py): variational-inference-script.py
+  - Home: index.md
+  - Demo (nb): demo.ipynb
+  - Equations (py): variational-inference-script.py
 
 plugins:
-    - mkdocs-jupyter
+  - mkdocs-jupyter
 
 markdown_extensions:
-    - codehilite:
-          guess_lang: false
-    - pymdownx.highlight:
-          use_pygments: true
-    - pymdownx.arithmatex
+  - codehilite:
+      guess_lang: false
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.arithmatex

@@ -2,26 +2,28 @@ site_name: material-site-with-notebooks
 site_description: mkdocs-jupyter test site
 
 nav:
-    - Home: index.md
-    - Demo (nb): demo.ipynb
-    - Equations (nb): variational-inference.ipynb
+  - Home: index.md
+  - Demo (nb): demo.ipynb
+  - Equations (nb): variational-inference.ipynb
 
 plugins:
-    - mkdocs-jupyter:
-        include_source: True
+  - mkdocs-jupyter:
+      include_source: True
+      execute: True
+      execute_ignore: "*.py"
 
 markdown_extensions:
-    - toc:
-        permalink: true
-    - codehilite:
-        guess_lang: false
-    - pymdownx.highlight:
-        use_pygments: true
-    - pymdownx.arithmatex
+  - toc:
+      permalink: true
+  - codehilite:
+      guess_lang: false
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.arithmatex
 
 theme:
-    name: material
-    # custom_dir: overrides
+  name: material
+# custom_dir: overrides
 
 extra_css:
-    - extras/default.css
+  - extras/default.css

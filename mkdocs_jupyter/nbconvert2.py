@@ -33,7 +33,7 @@ def nb2html(nb_path, start=0, end=None, execute=False, kernel_name=""):
     -------
         HTML content
     """
-    logger.info(f"Converting notebook: {nb_path}")
+    logger.info(f"Converting notebook (execute={execute}): {nb_path}")
 
     app = get_nbconvert_app(
         start=start, end=end, execute=execute, kernel_name=kernel_name
@@ -177,13 +177,16 @@ import mistune
 from pygments import highlight
 from pygments.util import ClassNotFound
 from pygments.lexers import get_lexer_by_name
-from nbconvert.filters.markdown_mistune import MarkdownWithMath, IPythonRenderer
+from nbconvert.filters.markdown_mistune import (
+    MarkdownWithMath,
+    IPythonRenderer,
+)
 
 
 def custom_markdown2html(source):
-    return MarkdownWithMath(renderer=CustomMarkdownRendered(escape=False)).render(
-        source
-    )
+    return MarkdownWithMath(
+        renderer=CustomMarkdownRendered(escape=False)
+    ).render(source)
 
 
 class CustomMarkdownRendered(IPythonRenderer):
