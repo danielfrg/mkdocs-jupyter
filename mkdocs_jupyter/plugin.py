@@ -1,4 +1,6 @@
 import os
+import re
+import pathlib
 
 import mkdocs
 from mkdocs.config import config_options
@@ -19,7 +21,9 @@ class NotebookFile(mkdocs.structure.files.File):
     def __init__(self, file, use_directory_urls, site_dir, **kwargs):
         self.file = file
         self.dest_path = self._get_dest_path(use_directory_urls)
-        self.abs_dest_path = os.path.normpath(os.path.join(site_dir, self.dest_path))
+        self.abs_dest_path = os.path.normpath(
+            os.path.join(site_dir, self.dest_path)
+        )
         self.url = self._get_url(use_directory_urls)
 
     def __getattr__(self, item):
@@ -32,9 +36,10 @@ class NotebookFile(mkdocs.structure.files.File):
 class Plugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
         ("execute", config_options.Type(bool, default=False)),
-        ("ignore_h1_titles", config_options.Type(bool, default=False)),
-        ("include_source", config_options.Type(bool, default=False)),
+        ("execute_ignore", config_options.Type(str, default="*")),
         ("kernel_name", config_options.Type(str, default="")),
+        ("include_source", config_options.Type(bool, default=False)),
+        ("ignore_h1_titles", config_options.Type(bool, default=False)),
     )
 
     def on_files(self, files, config):
@@ -56,13 +61,23 @@ class Plugin(mkdocs.plugins.BasePlugin):
         extensions = [".ipynb", ".py"]
 
         if os.path.splitext(str(page.file.abs_src_path))[-1] in extensions:
-            exec_nb = self.config["execute"]
             ignore_h1_titles = self.config["ignore_h1_titles"]
             kernel_name = self.config["kernel_name"]
 
+            exec_nb = self.config["execute"]
+
+            ignore_pattern = self.config["execute_ignore"]
+            exceute_ignore = pathlib.PurePath(page.file.abs_src_path).match(
+                ignore_pattern
+            )
+            if exceute_ignore:
+                exec_nb = False
+
             def new_render(self, config, files):
                 body = convert.nb2html(
-                    page.file.abs_src_path, execute=exec_nb, kernel_name=kernel_name
+                    page.file.abs_src_path,
+                    execute=exec_nb,
+                    kernel_name=kernel_name,
                 )
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path)
@@ -107,6 +122,6 @@ def get_nb_toc(fpath):
     toc = get_toc(md_toc_tokens)
     title = None
     for token in md_toc_tokens:
-        if token["level"]==1 and title is None:
+        if token["level"] == 1 and title is None:
             title = token["name"]
     return toc, title

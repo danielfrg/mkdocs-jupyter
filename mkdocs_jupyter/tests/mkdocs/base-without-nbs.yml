@@ -2,4 +2,4 @@ site_name: base-site-without-notebooks
 site_description: mkdocs-jupyter test site
 
 nav:
-    - Home: index.md
+  - Home: index.md
