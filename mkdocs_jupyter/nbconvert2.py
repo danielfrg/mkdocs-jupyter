@@ -35,7 +35,7 @@ def nb2html(
     -------
         HTML content
     """
-    logger.info(f"Converting notebook: {nb_path}")
+    logger.info(f"Converting notebook (execute={execute}): {nb_path}")
 
     app = get_nbconvert_app(
         start=start, end=end, execute=execute, kernel_name=kernel_name
@@ -123,6 +123,7 @@ def get_nbconvert_app(start=0, end=None, execute=False, kernel_name=""):
                 "enabled": execute,
                 "store_widget_state": True,
                 "kernel_name": kernel_name,
+                "allow_errors": True,
             },
         }
     )

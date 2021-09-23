@@ -30,10 +30,9 @@ source = "init"
 
 [tool.poetry.dependencies]
 python = ">=3.7.1,<4"
-mkdocs = ">=1.1.0,<2"
 nbconvert = ">=6.0.7,<7"
 jupytext = ">=1.11.0,<2"
-pymdown-extensions = "^8.2"
+mkdocs = ">=1.1.0,<2"
 mkdocs-material = "^7.2.8"
 
 [tool.poetry.dev-dependencies]
@@ -50,6 +49,8 @@ pylint = "^2.11.1"
 # [tool.poetry.group.test.dependencies]
 pytest = "^6.2.5"
 pytest-cov = "^2.12.1"
+ipykernel = "^6.4.1"
+pymdown-extensions = "^8.2"
 
 [tool.pytest.ini_options]
 addopts = [

@@ -19,13 +19,13 @@
 
 ## Usage
 
-```
+```shell
 pip install mkdocs-jupyter
 ```
 
 In your `mkdocs.yml`:
 
-```
+```yaml
 nav:
 - Home: index.md
 - Notebook page: notebook.ipynb
@@ -37,34 +37,34 @@ plugins:
 
 ### Titles and Table of Contents
 
-The first h1 (`#`) header in your notebook will be used as the title. 
+The first h1 header (`#`) in your notebook will be used as the title.
 
-```
-# This H1 title will be the the title.
+```md
+# This H1 header will be the the title.
 ```
 
 This can be turned off in the configuration (in which case the filename will be used as title):
 
-```
+```yaml
 plugins:
   - mkdocs-jupyter:
       ignore_h1_titles: True
 ```
 
 In order to see the table of contents you need to maintain a hierarchical headers structure in your notebooks.
-You must use h2 (`##`) headers and not h1 (`#`)
+You must use h2 headers (`##`) and not h1 (`#`)
 
-```
+```md
 ## This H2 title will show in the table of contents
 ```
 
 If you want to **nest headers** in the TOC you need to add additional levels later
 in the same markdown cell or new bottom markdown cells:
 
-```
+```md
 ## This header will show as top level in the table of contents
 
-Some content
+<content>
 
 ### This one will be displayed inside the above level
 ```
@@ -75,17 +75,24 @@ Some content
 
 You can tell the plugin to execute the notebook before converting, default is `False`:
 
-```
+```yaml
 plugins:
   - mkdocs-jupyter:
       execute: True
 ```
 
-### Kernel Name
+You can tell the plugin to ignore the execution of some files (with glob matching):
 
-By default the plugin will use the kernel specified in the notebook to execute it. You can specify a custom kernel name to use for all the notebooks:
-
+```yaml
+plugins:
+  - mkdocs-jupyter:
+      execute_ignore: "my-secret-files/*.ipynb"
 ```
+
+By default the plugin will use the kernel specified in the notebook to execute it.
+You can specify a custom kernel name to use for all the notebooks:
+
+```yaml
 plugins:
   - mkdocs-jupyter:
       kernel_name: python3
@@ -96,7 +103,7 @@ plugins:
 You can tell the plugin to include the notebook source to make it easy to show
 a download button in the theme, default is `False`:
 
-```
+```yml
 plugins:
   - mkdocs-jupyter:
       include_source: True
