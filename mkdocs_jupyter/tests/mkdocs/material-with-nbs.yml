@@ -20,8 +20,8 @@ markdown_extensions:
     - pymdownx.arithmatex
 
 theme:
-    name: material
-    # custom_dir: overrides
+  name: material
+  # custom_dir: overrides
 
 extra_css:
     - extras/default.css

@@ -9,6 +9,7 @@ nav:
 plugins:
     - mkdocs-jupyter:
           include_source: True
+          include_source: True
 
 markdown_extensions:
     - codehilite:
@@ -18,5 +19,7 @@ markdown_extensions:
     - pymdownx.arithmatex
 
 theme:
-    name: material
-    # custom_dir: overrides
+  name: material
+  palette:
+    scheme: slate
+  # custom_dir: overrides
