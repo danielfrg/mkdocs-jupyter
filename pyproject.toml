@@ -72,8 +72,8 @@ omit = ["./.venv/*"]
 
 [tool.coverage.paths]
 source = [
-    ".venv/*/lib/python*/site-packages/mkdocs_jupyter",
     "mkdocs_jupyter",
+    ".venv/*/lib/python*/site-packages/mkdocs_jupyter",
 ]
 
 [tool.coverage.report]
