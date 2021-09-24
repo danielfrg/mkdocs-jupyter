@@ -275,7 +275,7 @@
 }
 
 .jupyter-wrapper {
-    @import "jlab/index.scss";
+    @import "./jupyter-lab.scss";
 
     .jp-DownloadNB {
         // TODO
@@ -403,43 +403,76 @@
         }
     }
 
-    // DataFrame
-    // From: https://github.com/jupyter/notebook/blob/master/notebook/static/notebook/less/renderedhtml.less
-    table.dataframe {
-        margin-left: auto;
-        margin-right: auto;
-        border: none;
-        border-collapse: collapse;
-        border-spacing: 0;
-        color: black;
-        font-size: 12px;
-        table-layout: fixed;
-        thead {
-            border-bottom: 1px solid black;
-            vertical-align: bottom;
+    // // DataFrame
+    // // From: https://github.com/jupyter/notebook/blob/master/notebook/static/notebook/less/renderedhtml.less
+    // table.dataframe {
+    //     margin-left: auto;
+    //     margin-right: auto;
+    //     border: none;
+    //     border-collapse: collapse;
+    //     border-spacing: 0;
+    //     color: black;
+    //     font-size: 12px;
+    //     table-layout: fixed;
+    //     thead {
+    //         border-bottom: 1px solid black;
+    //         vertical-align: bottom;
+    //     }
+    //     tr,
+    //     th,
+    //     td {
+    //         text-align: right;
+    //         vertical-align: middle;
+    //         padding: 0.5em 0.5em;
+    //         line-height: normal;
+    //         white-space: normal;
+    //         max-width: none;
+    //         border: none;
+    //     }
+    //     th {
+    //         font-weight: bold;
+    //     }
+    //     tbody tr:nth-child(odd) {
+    //         background: #f5f5f5;
+    //     }
+    //     tbody tr:hover {
+    //         background: rgba(66, 165, 245, 0.2);
+    //     }
+    // }
+    // * + table {
+    //     margin-top: 1em;
+    // }
+
+    // Clipboard copy
+
+    .jp-InputArea-editor {
+        // To make the clipboard button position possible
+        position: relative;
+    }
+
+    .zeroclipboard-container {
+        position: absolute;
+        top: -3px;
+        right: 0;
+        z-index: 1000;
+
+        clipboard-copy {
+            -webkit-appearance: button;
+            -moz-appearance: button;
+            padding: 7px 5px;
+            font: 11px system-ui, sans-serif;
+            display: inline-block;
+            cursor: default;
         }
-        tr,
-        th,
-        td {
-            text-align: right;
-            vertical-align: middle;
-            padding: 0.5em 0.5em;
-            line-height: normal;
-            white-space: normal;
-            max-width: none;
-            border: none;
-        }
-        th {
-            font-weight: bold;
-        }
-        tbody tr:nth-child(odd) {
-            background: #f5f5f5;
-        }
-        tbody tr:hover {
-            background: rgba(66, 165, 245, 0.2);
+
+        .clipboard-copy-icon {
+            padding: 4px 4px 2px;
+            color: rgb(87, 96, 106);
+            vertical-align: text-bottom;
         }
     }
-    * + table {
-        margin-top: 1em;
+
+    .clipboard-copy-txt {
+        display: none;
     }
 }

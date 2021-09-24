@@ -1,9 +1,10 @@
 # mkdocs-jupyter Change Log
 
-## 0.17.4
+## 0.18.0
 
 - Support Jupyter themes
 - Option to ignore some notebooks to be executed
+- Add copy to clipboard button to cells
 
 ## 0.17.0
 

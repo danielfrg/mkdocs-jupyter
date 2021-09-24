@@ -13,19 +13,24 @@ const pythonPkgStatic = path.resolve(
     "mkdocs_jupyter",
     "templates",
     "mkdocs_html",
-    "styles"
+    "assets"
 )
 
 module.exports = (env, argv) => {
     const IS_PRODUCTION = argv.mode === "production"
 
-    const config_css = {
-        entry: path.resolve(__dirname, "src", "styles.scss"),
+    const config_lib = {
+        entry: path.resolve(__dirname, "src", "index.js"),
         output: {
-            path: path.resolve(__dirname, "dist", "styles"),
+            path: path.resolve(pythonPkgStatic),
+            filename: "mkdocs-jupyter.js",
         },
         module: {
             rules: [
+                {
+                    test: /\.(js)$/,
+                    exclude: /node_modules/,
+                },
                 {
                     test: /\.s?[ac]ss$/,
                     use: [extractPlugin, "css-loader", "sass-loader"],
@@ -33,33 +38,16 @@ module.exports = (env, argv) => {
             ],
         },
         plugins: [
-            new FixStyleOnlyEntriesPlugin(),
             new MiniCssExtractPlugin({
-                filename: "jupyter-lab.css",
-            }),
-            // Copy the output to the Python Package
-            new FileManagerPlugin({
-                events: {
-                    onEnd: {
-                        copy: [
-                            {
-                                source: "./dist/styles",
-                                destination: pythonPkgStatic,
-                            },
-                        ],
-                    },
-                },
+                filename: "mkdocs-jupyter.css",
             }),
         ],
-        optimization: {
-            minimize: false,
-        },
-        // mode: IS_PRODUCTION ? "production" : "development",
+        mode: IS_PRODUCTION ? "production" : "development",
         devtool: "source-map",
     }
 
     let config = []
-    config.push(config_css)
+    config.push(config_lib)
 
     return config
 }

@@ -9,8 +9,6 @@ nav:
 plugins:
   - mkdocs-jupyter:
       include_source: True
-      execute: True
-      execute_ignore: "*.py"
 
 markdown_extensions:
   - toc:
