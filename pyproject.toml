@@ -68,7 +68,7 @@ norecursedirs = ["site-packages", "dist-packages", "dist"]
 
 [tool.coverage.run]
 branch = true
-omit = [".venv"]
+omit = ["./.venv/*"]
 
 [tool.coverage.report]
 ignore_errors = false
