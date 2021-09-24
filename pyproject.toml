@@ -66,6 +66,14 @@ addopts = [
 xfail_strict = true
 norecursedirs = ["site-packages", "dist-packages", "dist"]
 
+[tool.coverage.run]
+branch = true
+omit = [".venv"]
+
+[tool.coverage.report]
+ignore_errors = false
+show_missing = true
+
 [tool.black]
 line_length = 79
 skip_string_normalization = true
