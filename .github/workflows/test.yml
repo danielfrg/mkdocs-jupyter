@@ -83,6 +83,7 @@ jobs:
           python --version
           which pip
           pip --version
+          pip freeze
 
       # ------------------------------------------------------------------------
       # Test
