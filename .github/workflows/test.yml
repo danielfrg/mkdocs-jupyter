@@ -114,7 +114,7 @@ jobs:
         uses: actions/upload-artifact@v1
         if: always()
         with:
-          name: test-results
+          name: test-results-${{ matrix.python-version }}
           path: htmlcov
 
       - name: Codecov

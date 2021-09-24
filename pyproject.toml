@@ -73,6 +73,7 @@ omit = ["./.venv/*"]
 [tool.coverage.report]
 ignore_errors = false
 show_missing = true
+omit = ["./.venv/*"]
 
 [tool.black]
 line_length = 79
