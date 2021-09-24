@@ -9,7 +9,7 @@ def test_import():
     assert len(mkdocs_jupyter.__version__) > 0
 
 
-def test_styles_included():
+def test_assets_included():
     import mkdocs_jupyter
 
     module_dir = os.path.dirname(mkdocs_jupyter.__file__)
@@ -24,7 +24,11 @@ def test_styles_included():
     )
     assert os.path.exists(
         os.path.join(
-            module_dir, "templates", "mkdocs_html", "styles", "jupyter-lab.css"
+            module_dir,
+            "templates",
+            "mkdocs_html",
+            "assets",
+            "clipboard.umd.js",
         )
     )
     assert os.path.exists(
@@ -32,8 +36,35 @@ def test_styles_included():
             module_dir,
             "templates",
             "mkdocs_html",
-            "styles",
-            "jupyter-lab.css.map",
+            "assets",
+            "mkdocs-jupyter.css",
+        )
+    )
+    assert os.path.exists(
+        os.path.join(
+            module_dir,
+            "templates",
+            "mkdocs_html",
+            "assets",
+            "mkdocs-jupyter.css.map",
+        )
+    )
+    assert os.path.exists(
+        os.path.join(
+            module_dir,
+            "templates",
+            "mkdocs_html",
+            "assets",
+            "mkdocs-jupyter.js",
+        )
+    )
+    assert os.path.exists(
+        os.path.join(
+            module_dir,
+            "templates",
+            "mkdocs_html",
+            "assets",
+            "mkdocs-jupyter.js.map",
         )
     )
     assert os.path.exists(
