@@ -45,9 +45,7 @@ ipykernel = "^6.4.1"
 pymdown-extensions = "^8.2"
 
 [tool.pytest.ini_options]
-testpaths = [
-    "mkdocs_jupyter/tests",
-]
+testpaths = ["mkdocs_jupyter/tests"]
 addopts = [
   "-s", "-vv",
   "--ignore=dist",
