@@ -58,15 +58,15 @@ def test_assets_included():
             "mkdocs-jupyter.js",
         )
     )
-    assert os.path.exists(
-        os.path.join(
-            module_dir,
-            "templates",
-            "mkdocs_html",
-            "assets",
-            "mkdocs-jupyter.js.map",
-        )
-    )
+    # assert os.path.exists(
+    #     os.path.join(
+    #         module_dir,
+    #         "templates",
+    #         "mkdocs_html",
+    #         "assets",
+    #         "mkdocs-jupyter.js.map",
+    #     )
+    # )
     assert os.path.exists(
         os.path.join(module_dir, "templates", "mkdocs_md", "conf.json")
     )
