@@ -110,6 +110,13 @@ jobs:
           make test
           make report
 
+      - name: Upload test restuls
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: test-results
+          path: htmlcov
+
       - name: Codecov
         uses: codecov/codecov-action@v2
         with:

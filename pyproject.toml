@@ -66,10 +66,6 @@ addopts = [
 xfail_strict = true
 norecursedirs = ["site-packages", "dist-packages", "dist"]
 
-[tool.coverage.run]
-parallel = true
-branch = true
-
 [tool.black]
 line_length = 79
 skip_string_normalization = true
