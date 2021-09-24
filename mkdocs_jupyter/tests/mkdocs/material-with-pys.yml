@@ -9,6 +9,8 @@ nav:
 plugins:
   - mkdocs-jupyter:
       include_source: True
+      execute: True
+      execute_ignore: "*.ipynb"
 
 markdown_extensions:
   - codehilite:

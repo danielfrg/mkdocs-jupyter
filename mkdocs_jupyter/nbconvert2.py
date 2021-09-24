@@ -25,6 +25,8 @@ logger = logging.getLogger("mkdocs.mkdocs-jupyter")
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
+cell_id = 0
+
 
 def nb2html(
     nb_path, start=0, end=None, execute=False, kernel_name="", theme=None
@@ -36,6 +38,9 @@ def nb2html(
         HTML content
     """
     logger.info(f"Converting notebook (execute={execute}): {nb_path}")
+
+    global cell_id
+    cell_id = 0  # Reset this global value
 
     app = get_nbconvert_app(
         start=start, end=end, execute=execute, kernel_name=kernel_name
@@ -164,12 +169,17 @@ def custom_highlight_code(source, language="python", metadata=None):
     This modifies only HTML content not CSS
     On the notebook.html.js we modify the CSS styles
     """
+    global cell_id
+    cell_id = cell_id + 1
     if not language:
         language = "python"
 
     formatter = HtmlFormatter(cssclass="highlight-ipynb hl-" + language)
     output = _pygments_highlight(source, formatter, language, metadata)
-    return output
+
+    clipboard_copy_txt = f"""<div id="cell-{cell_id}" class="clipboard-copy-txt">{source}</div>
+    """
+    return output + clipboard_copy_txt
 
 
 # This sections creates a new markdown2html filter

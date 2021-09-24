@@ -7,11 +7,34 @@
 {# We want just the notebook content not a full html page #}
 {%- block header -%}
 
+{# CHANGE:
+1. Remove Require.JS (incompatible with the clipboard-copy)
+2.
+#}
+{%- block html_head_js -%}
+{%- block html_head_js_requirejs -%}
+{# <script src="{{ resources.require_js_url }}"></script> #}
+{%- endblock html_head_js_requirejs -%}
+{{ resources.include_js("mkdocs_html/assets/clipboard.umd.js") }}
+<script>
+      document.addEventListener('clipboard-copy', function(event) {
+        const notice = event.target.querySelector('.notice')
+        notice.hidden = false
+        setTimeout(function() {
+          notice.hidden = true
+        }, 1000)
+      })
+</script>
+{%- endblock html_head_js -%}
+
 {% block jupyter_widgets %}
   {%- if "widgets" in nb.metadata -%}
-    {{ jupyter_widgets(resources.jupyter_widgets_base_url, resources.html_manager_semver_range) }}
+    {{ jupyter_widgets(resources.jupyter_widgets_base_url, resources.html_manager_semver_range, resources.widget_renderer_url) }}
   {%- endif -%}
 {% endblock jupyter_widgets %}
+
+{% block extra_css %}
+{% endblock extra_css %}
 
 {% for css in resources.inlining.css -%}
   <style type="text/css">
@@ -20,9 +43,9 @@
   </style>
 {% endfor %}
 
-{# CHANGE: Replace the default styles for our own #}
 {% block notebook_css %}
-{{ resources.include_css("mkdocs_html/styles/jupyter-lab.css") }}
+{# CHANGE: Replace the default styles for our own that overwrite some things #}
+{{ resources.include_css("mkdocs_html/assets/mkdocs-jupyter.css") }}
 {% if resources.theme == 'dark' %}
     {{ resources.include_css("static/theme-dark.css") }}
 {% else %}
@@ -46,8 +69,14 @@
 </div>
 {% endblock body_footer %}
 
-{# ADDED: We overwrite this to show the tags on the cell toolbar #}
+{# ADDED:
+1. Show the tags on the cell toolbar
+2. Add clipboard-copy button
+    1. Add a wrapper with the ID for the clipboard button
+#}
+{%- set vars = {"cell_id": 0 } -%}
 {% block input %}
+    {%- set _ = vars.update({"cell_id": vars.cell_id + 1 }) -%}
     <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         {% set cell_tags = cell["metadata"].get("tags", [])%}
         {% if cell_tags %}
@@ -61,8 +90,30 @@
                 {% endfor %}
             </div>
         {% endif %}
+        <div class="zeroclipboard-container">
+            <clipboard-copy for="cell-{{ vars.cell_id }}">
+            <div>
+                <span class="notice" hidden>Copied!</span>
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                    <path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                </svg>
+                </div>
+            </clipboard-copy>
+        </div>
         <div class="CodeMirror cm-s-jupyter">
-    {{ cell.source | highlight_code(metadata=cell.metadata) }}
+            {{ cell.source | highlight_code(metadata=cell.metadata) }}
         </div>
     </div>
 {% endblock input %}
+
+{% block codecell %}
+{%- if not cell.outputs -%}
+{%- set no_output_class="jp-mod-noOutputs" -%}
+{%- endif -%}
+{%- if not resources.global_content_filter.include_input -%}
+{%- set no_input_class="jp-mod-noInput" -%}
+{%- endif -%}
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell {{ no_output_class }} {{ no_input_class }} {{ celltags(cell) }}">
+{{ super() }}
+</div>
+{%- endblock codecell %}
