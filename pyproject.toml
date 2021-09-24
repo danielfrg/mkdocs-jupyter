@@ -70,6 +70,12 @@ norecursedirs = ["site-packages", "dist-packages", "dist"]
 branch = true
 omit = ["./.venv/*"]
 
+[tool.coverage.paths]
+source = [
+    "mkdocs_jupyter",
+    ".venv/*/lib/python*/site-packages/mkdocs_jupyter",
+]
+
 [tool.coverage.report]
 ignore_errors = false
 show_missing = true
