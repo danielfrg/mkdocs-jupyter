@@ -53,33 +53,40 @@ ipykernel = "^6.4.1"
 pymdown-extensions = "^8.2"
 
 [tool.pytest.ini_options]
+testpaths = [
+    "mkdocs_jupyter/tests",
+]
 addopts = [
   "-s", "-vv",
-  "--ignore=site-packages",
-  "--ignore=dist-packages",
   "--ignore=dist",
+  "--ignore=site-packages",
   "--strict-markers",
   "--cov=mkdocs_jupyter",
-  "--cov-report=term-missing",
+  "--cov-report=term",
   "--cov-config=pyproject.toml",
 ]
 xfail_strict = true
-norecursedirs = ["site-packages", "dist-packages", "dist"]
+norecursedirs = ["dist", "site-packages"]
 
 [tool.coverage.run]
 branch = true
-omit = ["./.venv/*"]
+parallel = true
+# omit = ["./.venv/*",  "tests"]
+
+[tool.coverage.report]
+show_missing = true
+ignore_errors = false
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError"
+]
+omit = ["mkdocs_jupyter/tests/*"]
 
 [tool.coverage.paths]
 source = [
     "mkdocs_jupyter",
-    ".venv/*/lib/python*/site-packages/mkdocs_jupyter",
+    ".venv/lib/python*/site-packages/mkdocs_jupyter",
 ]
-
-[tool.coverage.report]
-ignore_errors = false
-show_missing = true
-omit = ["./.venv/*"]
 
 [tool.black]
 line_length = 79
