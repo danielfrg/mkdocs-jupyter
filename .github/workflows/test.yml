@@ -93,11 +93,6 @@ jobs:
           source .venv/bin/activate
           make build
 
-      - name: Build package
-        run: |
-          source .venv/bin/activate
-          make build
-
       - name: Install package
         run: |
           source .venv/bin/activate
