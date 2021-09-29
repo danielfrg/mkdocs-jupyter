@@ -41,7 +41,7 @@ jobs:
         run: |
           make npm-install
 
-      - name: Build JS Styles
+      - name: Build JS
         run: |
           make npm-build
 
