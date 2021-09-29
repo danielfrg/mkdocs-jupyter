@@ -1,7 +1,6 @@
 {
-    "arrowParens": "avoid",
-    "semi": false,
     "tabWidth": 4,
+    "useTabs": false,
     "overrides": [
         {
             "files": ["*.html"],

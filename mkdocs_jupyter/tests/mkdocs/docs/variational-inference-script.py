@@ -317,14 +317,12 @@ import tensorflow as tf
 import tensorflow_probability as tfp
 from scipy.stats import expon, uniform
 
-
 plt.style.use("seaborn-darkgrid")
 
 from tensorflow_probability.python.mcmc.transformed_kernel import (
     make_transform_fn,
     make_transformed_log_prob,
 )
-
 
 tfb = tfp.bijectors
 tfd = tfp.distributions
@@ -442,7 +440,9 @@ def build_mf_advi():
     for i, parameter in enumerate(parameters):
         shape = parameter[0].shape
         loc = tf.Variable(
-            tf.random.normal(shape, dtype=dtype), name=f"meanfield_{i}_loc", dtype=dtype
+            tf.random.normal(shape, dtype=dtype),
+            name=f"meanfield_{i}_loc",
+            dtype=dtype,
         )
         scale = tfp.util.TransformedVariable(
             tf.fill(shape, value=tf.constant(0.02, dtype=dtype)),

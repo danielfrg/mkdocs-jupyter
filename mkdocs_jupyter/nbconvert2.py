@@ -16,7 +16,6 @@ from nbconvert.preprocessors import Preprocessor
 from pygments.formatters import HtmlFormatter
 from traitlets import Integer
 
-
 # Variables
 logger = logging.getLogger("mkdocs.mkdocs-jupyter")
 
@@ -188,13 +187,13 @@ def custom_highlight_code(source, language="python", metadata=None):
 # So that it's the same that for regular non-language sections
 
 import mistune
-from pygments import highlight
-from pygments.util import ClassNotFound
-from pygments.lexers import get_lexer_by_name
 from nbconvert.filters.markdown_mistune import (
-    MarkdownWithMath,
     IPythonRenderer,
+    MarkdownWithMath,
 )
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.util import ClassNotFound
 
 
 def custom_markdown2html(source):
