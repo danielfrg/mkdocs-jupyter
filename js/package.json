@@ -1,27 +1,26 @@
 {
-  "name": "mkdocs_jupyter",
-  "version": "1.0.0",
-  "description": "Utils for mkdocs-jupyter",
-  "author": "Daniel Rodriguez",
-  "license": "MIT",
-  "main": "index.js",
-  "scripts": {
-    "dev": "webpack --mode=development --watch",
-    "build": "webpack --mode=production",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rm -rf dist/ ../mkdocs_jupyter/templates/mkdocs_html/styles"
-  },
-  "devDependencies": {
-    "sass": "^1.32.11",
-    "sass-loader": "^11.0.1",
-    "webpack": "^5.35.1",
-    "webpack-cli": "^4.6.0"
-  },
-  "dependencies": {
-    "css-loader": "^5.2.4",
-    "filemanager-webpack-plugin": "^4.0.0",
-    "mini-css-extract-plugin": "^1.5.0",
-    "style-loader": "^2.0.0",
-    "webpack-fix-style-only-entries": "^0.6.1"
-  }
+    "name": "mkdocskjupyter",
+    "version": "1.0.0",
+    "description": "Utilities for mkdocs-jupyter",
+    "author": "Daniel Rodriguez",
+    "license": "Apache-2.0",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack --mode=production",
+        "dev": "webpack --mode=development --watch",
+        "clean": "rm -rf .cache/ dist/ lib/",
+        "reset": "npm run clean && rm -rf node_modules"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "css-loader": "^5.2.4",
+        "filemanager-webpack-plugin": "^4.0.0",
+        "mini-css-extract-plugin": "^1.5.0",
+        "sass": "^1.32.11",
+        "sass-loader": "^11.0.1",
+        "style-loader": "^2.0.0",
+        "webpack": "^5.35.1",
+        "webpack-cli": "^4.8.0",
+        "webpack-fix-style-only-entries": "^0.6.1"
+    }
 }

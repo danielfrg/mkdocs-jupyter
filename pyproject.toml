@@ -22,23 +22,23 @@ include = ["mkdocs_jupyter/**/assets/*"]
 
 [tool.poetry.dependencies]
 python = ">=3.7.1,<4"
-nbconvert = ">=6.2.0,<7"
-jupytext = ">=1.11.0,<2"
-mkdocs = ">=1.1.0,<2"
-mkdocs-material = "^7.2.8"
+nbconvert = "^6.2.0"
+jupytext = "^1.11.02"
+mkdocs = "^1.1.0"
+mkdocs-material = "^7.3.0"
 
-[tool.poetry.dev-dependencies]
-# [tool.poetry.group.dev]
-# optional = true
-# [tool.poetry.group.dev.dependencies]
-black = "21.9b0"
-flake8 = "^3"
-isort = "^5"
-pylint = "^2.11.1"
+[tool.poetry.group.dev]
+optional = true
+[tool.poetry.group.dev.dependencies]
+pylint = "^2.10.2"
+black = "^21.8b0"
+isort = "^5.9.3"
+flake8 = "^3.9.2"
+twine = "^3.4.2"
 
-# [tool.poetry.group.test]
-# optional = true
-# [tool.poetry.group.test.dependencies]
+[tool.poetry.group.test]
+optional = true
+[tool.poetry.group.test.dependencies]
 pytest = "^6.2.5"
 pytest-cov = "^2.12.1"
 ipykernel = "^6.4.1"
@@ -50,7 +50,7 @@ addopts = [
   "-s", "-vv",
   "--ignore=dist",
   "--ignore=site-packages",
-  "--strict-markers",
+  # "--strict-markers",
   "--cov=mkdocs_jupyter",
   "--cov-report=term",
   "--cov-config=pyproject.toml",
@@ -82,16 +82,16 @@ skip_string_normalization = true
 
 [tool.isort]
 ensure_newline_before_comments = true
+include_trailing_comma = true
 line_length = 79
 multi_line_output = 3
-include_trailing_comma = true
 profile = "black"
 
 [tool.pydocstyle]
-inherit = false
-convention = "numpy"
-match_dir = "mkdocs_jupyter"
 add_ignore = ["D100", "D101", "D102", "D103", "D104", "D105"]
+convention = "numpy"
+inherit = false
+match_dir = "mkdocs_jupyter"
 
 [tool.poetry.plugins]
 [tool.poetry.plugins."mkdocs.plugins"]
@@ -101,5 +101,5 @@ add_ignore = ["D100", "D101", "D102", "D103", "D104", "D105"]
 source = "init"
 
 [build-system]
-requires = ["poetry>=1.1", "setuptools>=57,<58"]
+requires = ["poetry>=1.2.0a2", "setuptools>=57,<58"]
 build-backend = "poetry.masonry.api"

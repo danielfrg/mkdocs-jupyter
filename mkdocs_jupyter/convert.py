@@ -2,12 +2,12 @@ from nbconvert.filters.markdown_mistune import IPythonRenderer
 
 from mkdocs_jupyter.utils import slugify
 
-
 # ------------------------------------------------------------------------------
 # This makes the links from the TOC work
 # We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
 # to use a version that makes the id all lowercase
-# We do this because mkdocs uses all lowercase TOC titles (to make it url-friendly)
+# We do this because mkdocs uses all lowercase TOC titles
+# (to make them url-friendly)
 
 
 def add_anchor_lower_id(html, anchor_link_text="¶"):
@@ -18,7 +18,9 @@ def add_anchor_lower_id(html, anchor_link_text="¶"):
     from nbconvert.filters.strings import _convert_header_id, html2text
 
     try:
-        h = ElementTree.fromstring(py3compat.cast_bytes_py2(html, encoding="utf-8"))
+        h = ElementTree.fromstring(
+            py3compat.cast_bytes_py2(html, encoding="utf-8")
+        )
     except Exception:
         # failed to parse, just return it unmodified
         return html

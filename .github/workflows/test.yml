@@ -30,14 +30,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Load cached node_modules
-        id: cached-node_modules-dependencies
+        id: cached-node_modules
         uses: actions/cache@v2
         with:
           path: js/node_modules
-          key: node_modules-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('js/package*.json') }}
+          key: node_modules-${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('js/package*.json') }}
 
       - name: Install JS deps
-        if: steps.cached-node_modules-dependencies.outputs.cache-hit != 'true'
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
           make npm-install
 
@@ -46,7 +46,7 @@ jobs:
           make npm-build
 
       # ------------------------------------------------------------------------
-      # Python env
+      # Python
 
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -61,20 +61,23 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Load cached venv
-        id: cached-poetry-dependencies
+        id: cached-python-env
         uses: actions/cache@v2
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.jupyter-version }}-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Ensure cache is healthy
-        if: steps.cached-poetry-dependencies.outputs.cache-hit == 'true'
-        shell: bash
-        run: poetry run python --version || rm -rf .venv
+        id: cache-reset
+        continue-on-error: true
+        if: steps.cached-python-env.outputs.cache-hit == 'true'
+        run: poetry run python --version
 
       - name: Install Python dependencies
+        if: steps.cached-python-env.outputs.cache-hit != 'true' || steps.cache-reset.conclusion != 'success'
         run: |
-          poetry install --no-interaction --no-root
+          rm -rf .venv || true
+          poetry install --no-interaction --no-root --with test
 
       - name: Print Python info
         run: |
@@ -88,7 +91,7 @@ jobs:
       # ------------------------------------------------------------------------
       # Test
 
-      - name: Build package
+      - name: Build Python package
         run: |
           source .venv/bin/activate
           make build
@@ -102,14 +105,21 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          make test
+          make test-all
           make report
 
-      - name: Upload test restuls
-        uses: actions/upload-artifact@v1
+      - name: Upload package
+        uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: test-results-${{ matrix.python-version }}
+          name: pkg-py${{ matrix.python-version }}
+          path: dist
+
+      - name: Upload test restuls
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: test-results-py${{ matrix.python-version }}
           path: htmlcov
 
       - name: Codecov

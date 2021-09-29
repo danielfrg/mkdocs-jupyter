@@ -12,42 +12,19 @@ PYTEST_MARKERS ?= ""
 first: help
 
 
+all: npm-build build  ## Build JS and Python
+
+
 # ------------------------------------------------------------------------------
-# Build
+# Python
 
 env:  ## Create Python env
-	poetry install
+	poetry install --with dev --with test
 
 
 build:  ## Build package
 	poetry build
 
-
-upload-pypi:  ## Upload package to PyPI
-	twine upload dist/*.tar.gz
-
-
-upload-test:  ## Upload package to test PyPI
-	twine upload --repository test dist/*.tar.gz
-
-
-npm-install:  ##
-	cd js; npm install
-
-
-npm-dev:  ##
-	cd js; npm run dev
-
-
-npm-build:  ##
-	cd js; npm run build
-
-
-npm-clean:  ##
-	cd js; npm run clean
-
-# ------------------------------------------------------------------------------
-# Testing
 
 check:  ## Check linting
 	isort --check-only --diff .
@@ -60,32 +37,64 @@ fmt:  ## Format source
 	black .
 
 
-test:  ## Run tests
-	pytest -k $(PYTEST_K) -m $(PYTEST_MARKERS)
+test-%:  ## Run tests
+	pytest -k $(PYTEST_K) -m $(subst test-,,$@)
 
 
 test-all:  ## Run all tests
-	pytest -k $(PYTEST_K)
+	pytest
 
 
 report:  ## Generate coverage reports
 	coverage xml
 	coverage html
 
-# ------------------------------------------------------------------------------
-# Other
+
+upload-pypi:  ## Upload package to PyPI
+	twine upload dist/*.tar.gz
 
 
-clean: npm-clean  ## Clean build files
-	rm -rf build dist site htmlcov .pytest_cache .eggs
+cleanpython:  ## Clean Python build files
+	rm -rf .eggs .pytest_cache dist htmlcov test-results
 	rm -f .coverage coverage.xml
 	find . -type f -name '*.py[co]' -delete
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type d -name .ipynb_checkpoints -exec rm -rf {} +
-	rm -rf mkdocs_jupyter/tests/mkdocs/site
 
 
-cleanall: clean  ## Clean everything
+resetpython: cleanpython  ## Reset Python
+	rm -rf .venv
+
+# ------------------------------------------------------------------------------
+# Javascript
+
+npm-i: npm-install
+npm-install:  ## JS: Install dependencies
+	cd $(CURDIR)/js; npm install
+
+
+npm-build:  ## JS: BUild
+	cd $(CURDIR)/js; npm run build
+
+
+npm-dev:  ## JS: Build dev mode
+	cd $(CURDIR)/js; npm run dev
+
+
+cleanjs:  ## JS: Clean build files
+	# cd $(CURDIR)/js; npm run clean
+	cd $(CURDIR)/mkdocs_jupyter/templates/mkdocs_html/assets/; rm -rf mkdocs-jupyter.*
+
+
+resetjs:  ## JS: Reset
+	cd $(CURDIR)/js; npm run reset
+
+
+# ------------------------------------------------------------------------------
+# Other
+
+
+cleanall: cleanjs cleanpython  ## Clean everything
 
 
 help:  ## Show this help menu

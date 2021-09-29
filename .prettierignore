@@ -1,7 +1,6 @@
 .cache
-package.json
-package-lock.json
 public
 mkdocs_jupyter/
 *.md
 *.yml
+*.html
