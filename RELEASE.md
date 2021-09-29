@@ -1,45 +1,26 @@
 # Releasing
 
-Update version on `mkdocs_jupyter/__init__.py`.
-
-## Upload to test PyPI
-
-```
-export VERSION=1.0.0
-git checkout -b release-${VERSION}
-
-git commit -am "Release ${VERSION}.rc0" --allow-empty
-git tag ${VERSION}.rc0
-
-make cleanall
-make build
-make upload-test
-
-# Create venv and install rc version
-pip install --extra-index-url=https://test.pypi.org/simple 'mkdocs-jupyter[test]'==${VERSION}rc0
-pytest --pyargs mkdocs_jupyter
-
-# Delete rc tag
-git tag -d ${VERSION}.rc0
-```
-
-Merge branch when CI passes
-
 ## Upload to PyPI
 
+- Update version on `__init__.py`
+- Update version on `pyproject.toml`
 - Update `CHANGELOG.md`
-- Update `README.md` and docs
+- Update `README.md`
 
-```
+```shell
 export VERSION=1.0.0
+
+# Optional reset
+make cleanall resetjs
+make npm-install
+
+# Build
+make all
+make upload-pypi
 
 git commit -am "Release ${VERSION}" --allow-empty
 git tag ${VERSION}
 
-make clean
-make npm-build
-make build
-make upload-pypi
 git push origin ${VERSION}
 git push
 ```

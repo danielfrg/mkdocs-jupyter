@@ -12,7 +12,7 @@ PYTEST_MARKERS ?= ""
 first: help
 
 
-all: npm-build build  ## Build JS and Python
+all: npm-build pkg  ## Build JS and Python
 
 
 # ------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ env:  ## Create Python env
 	poetry install --with dev --with test
 
 
-build:  ## Build package
+pkg:  ## Build package
 	poetry build
 
 
@@ -42,7 +42,7 @@ test-%:  ## Run tests
 
 
 test-all:  ## Run all tests
-	pytest
+	pytest -k $(PYTEST_K) -m $(PYTEST_MARKERS)
 
 
 report:  ## Generate coverage reports

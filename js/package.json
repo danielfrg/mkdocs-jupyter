@@ -1,5 +1,5 @@
 {
-    "name": "mkdocskjupyter",
+    "name": "mkdocs-jupyter",
     "version": "1.0.0",
     "description": "Utilities for mkdocs-jupyter",
     "author": "Daniel Rodriguez",

@@ -91,10 +91,10 @@ jobs:
       # ------------------------------------------------------------------------
       # Test
 
-      - name: Build Python package
+      - name: Build package
         run: |
           source .venv/bin/activate
-          make build
+          make pkg
 
       - name: Install package
         run: |
