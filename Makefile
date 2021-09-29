@@ -65,15 +65,16 @@ cleanpython:  ## Clean Python build files
 resetpython: cleanpython  ## Reset Python
 	rm -rf .venv
 
+
 # ------------------------------------------------------------------------------
 # Javascript
 
-npm-i: npm-install
 npm-install:  ## JS: Install dependencies
 	cd $(CURDIR)/js; npm install
+npm-i: npm-install
 
 
-npm-build:  ## JS: BUild
+npm-build:  ## JS: Build
 	cd $(CURDIR)/js; npm run build
 
 
@@ -82,7 +83,7 @@ npm-dev:  ## JS: Build dev mode
 
 
 cleanjs:  ## JS: Clean build files
-	# cd $(CURDIR)/js; npm run clean
+	cd $(CURDIR)/js; npm run clean
 	cd $(CURDIR)/mkdocs_jupyter/templates/mkdocs_html/assets/; rm -rf mkdocs-jupyter.*
 
 
@@ -92,7 +93,6 @@ resetjs:  ## JS: Reset
 
 # ------------------------------------------------------------------------------
 # Other
-
 
 cleanall: cleanjs cleanpython  ## Clean everything
 
