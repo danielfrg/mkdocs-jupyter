@@ -68,13 +68,13 @@ jobs:
           key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Ensure cache is healthy
-        id: cache-reset
+        id: cached-python-env-check
         continue-on-error: true
         if: steps.cached-python-env.outputs.cache-hit == 'true'
         run: poetry run python --version
 
       - name: Install Python dependencies
-        if: steps.cached-python-env.outputs.cache-hit != 'true' || steps.cache-reset.conclusion != 'success'
+        if: steps.cached-python-env.outputs.cache-hit != 'true' || steps.cached-python-env-check.conclusion != 'success'
         run: |
           rm -rf .venv || true
           poetry install --no-interaction --no-root --with test
@@ -115,7 +115,7 @@ jobs:
           name: pkg-py${{ matrix.python-version }}
           path: dist
 
-      - name: Upload test restuls
+      - name: Upload test results
         uses: actions/upload-artifact@v2
         if: always()
         with:
