@@ -1,6 +1,5 @@
 import os
 import pathlib
-import re
 
 import mkdocs
 from mkdocs.config import config_options
