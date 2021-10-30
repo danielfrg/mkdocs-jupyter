@@ -5,7 +5,6 @@
 - Update version on `__init__.py`
 - Update version on `pyproject.toml`
 - Update `CHANGELOG.md`
-- Update `README.md`
 
 ```shell
 export VERSION=1.0.0

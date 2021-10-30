@@ -1,5 +1,9 @@
 # mkdocs-jupyter Change Log
 
+## 0.18.1
+
+- Support multiple languages syntax highlighting
+
 ## 0.18.0
 
 - Support Jupyter themes

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mkdocs-jupyter"
-version = "0.18.0"
+version = "0.18.1"
 packages = [{ include = "mkdocs_jupyter" }]
 homepage = "https://github.com/danielfrg/mkdocs-jupyter"
 repository = "https://github.com/danielfrg/mkdocs-jupyter"
