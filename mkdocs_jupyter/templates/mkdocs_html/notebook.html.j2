@@ -9,7 +9,6 @@
 
 {# CHANGE:
 1. Remove Require.JS (incompatible with the clipboard-copy)
-2.
 #}
 {%- block html_head_js -%}
 {%- block html_head_js_requirejs -%}
@@ -60,7 +59,7 @@
 {% block footer %}
 {% endblock footer %}
 
-{# CHANGE: Overwrite body header and footer to include a div wrapper #}
+{# CHANGE: Overwrite body header and footer to include a .jupyter-wrapper div wrapper #}
 {%- block body_header -%}
 <div class="jupyter-wrapper">
 {%- endblock body_header -%}

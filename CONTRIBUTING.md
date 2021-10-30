@@ -4,24 +4,23 @@
 
 Create Python env
 
-```
+```shell
 make env
 ```
 
 ## JupyterLab styles
 
-We use the original JuptyerLab styles for the notebook plus some modifications
+We use the JuptyerLab styles with some minor modifications
 to make them more integrated with the mkdocs themes.
 
-We also wrap all notebook content and styles into a `.jupyter-wrapper` CSS class
-to make not break other theme features/CSS.
+We wrap those styles into the `.jupyter-wrapper` CSS class
+to make not break regular theme CSS.
 
 To update the original styles:
 
--   Install `jupyterlab` Python package
--   Copy the nbconvert templates to `js/src/jlab/`
--   Rename the `.css` files to `.scss`
--   Look at the `CHANGES` comments in styles we have here and update accordingly
+- Install `jupyterlab` Python package
+- Copy the nbconvert CSS to `js/src/jupyter-lab.scss`
+- Look at the `CHANGE:` comments in that file and update accordingly
 
 ## Dev cycle
 
@@ -39,13 +38,13 @@ In another terminal run `mkdocs`, for example one of the tests
 
 ## Tests
 
-```
+```shell
 make test
 ```
 
 Check linting and format
 
-```
+```shell
 make check
 make fmt
 ```

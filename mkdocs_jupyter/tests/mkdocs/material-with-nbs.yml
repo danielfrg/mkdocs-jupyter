@@ -3,8 +3,9 @@ site_description: mkdocs-jupyter test site
 
 nav:
   - Home: index.md
-  - Demo (nb): demo.ipynb
-  - Equations (nb): variational-inference.ipynb
+  # - Demo (nb): demo.ipynb
+  # - Equations (nb): variational-inference.ipynb
+  - Ruby (nb): ruby.ipynb
 
 plugins:
   - mkdocs-jupyter:
