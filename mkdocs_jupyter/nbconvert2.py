@@ -96,9 +96,12 @@ def nb2html(
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
         content, resources = exporter.from_file(nb_file)
     else:
-        with open(nb_path, "r") as f:
-            nb_json = json.load(f)
-            kernel_lang = nb_json["metadata"]["kernelspec"]["language"]
+        try:
+            with open(nb_path, "r") as f:
+                nb_json = json.load(f)
+                kernel_lang = nb_json["metadata"]["kernelspec"]["language"]
+        except KeyError:
+            pass
         content, resources = exporter.from_filename(nb_path)
 
     return content
