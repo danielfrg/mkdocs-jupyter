@@ -65,7 +65,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .venv
-          key: venv2-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}-1
 
       - name: Ensure cache is healthy
         id: cached-python-env-check
