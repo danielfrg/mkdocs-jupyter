@@ -1,9 +1,24 @@
-# mkdocs-jupyter: Use Jupyter Notebooks in mkdocs
+<p align="center">
+    <img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/main/docs/logo.png" width="450px">
+</p>
 
-[![pypi](https://badge.fury.io/py/mkdocs-jupyter.svg)](https://pypi.org/project/mkdocs-jupyter/)
-[![build](https://github.com/danielfrg/mkdocs-jupyter/workflows/test/badge.svg)](https://github.com/danielfrg/mkdocs-jupyter/actions/workflows/test.yml)
-[![coverage](https://codecov.io/gh/danielfrg/mkdocs-jupyter/branch/main/graph/badge.svg)](https://codecov.io/gh/danielfrg/mkdocs-jupyter?branch=main)
-[![license](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/danielfrg/mkdocs-jupyter/blob/master/LICENSE.txt)
+<p align="center">
+    <a href="https://pypi.org/project/mkdocs-jupyter/">
+        <img src="https://badge.fury.io/py/mkdocs-jupyter.svg">
+    </a>
+    <a href="https://github.com/danielfrg/mkdocs-jupyter/actions/workflows/test.yml">
+        <img src="https://github.com/danielfrg/mkdocs-jupyter/workflows/test/badge.svg">
+    </a>
+    <a href="https://codecov.io/gh/danielfrg/mkdocs-jupyter?branch=main">
+        <img src="https://codecov.io/gh/danielfrg/mkdocs-jupyter/branch/main/graph/badge.svg">
+    </a>
+    <a href="http://github.com/danielfrg/mkdocs-jupyter/blob/main/LICENSE.txt">
+        <img src="https://img.shields.io/:license-Apache%202-blue.svg">
+    </a>
+</p>
+
+
+# mkdocs-jupyter: Use Jupyter Notebooks in mkdocs
 
 - Add Jupyter Notebooks directly to the mkdocs navigation
 - Support for multiple formats:
