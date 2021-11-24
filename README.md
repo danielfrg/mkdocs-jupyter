@@ -33,13 +33,15 @@
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png" alt="mkdocs-jupyter default theme"  width="410"></a>
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png" alt="mkdocs-jupyter material theme"  width="410"></a>
 
-## Usage
+## Installation
 
 ```shell
 pip install mkdocs-jupyter
 ```
 
-In your `mkdocs.yml`:
+## Configuration
+
+In the `mkdocs.yml` use Jupyter notebooks (`.ipynb`) or Python scripts (`.py`) as pages:
 
 ```yaml
 nav:
@@ -85,8 +87,6 @@ in the same markdown cell or new bottom markdown cells:
 ### This one will be displayed inside the above level
 ```
 
-## Options
-
 ### Execute Notebook
 
 You can tell the plugin to execute the notebook before converting, default is `False`:
@@ -104,6 +104,8 @@ plugins:
   - mkdocs-jupyter:
       execute_ignore: "my-secret-files/*.ipynb"
 ```
+
+#### Kernel
 
 By default the plugin will use the kernel specified in the notebook to execute it.
 You can specify a custom kernel name to use for all the notebooks:
@@ -148,7 +150,7 @@ For example in `mkdocs-material`
 (see [customization](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks)),
 you can create a `main.html` file like this:
 
-```
+```jinja
 {% extends "base.html" %}
 
 {% block content %}
@@ -164,9 +166,9 @@ you can create a `main.html` file like this:
 
 ![Download Notebook button](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/download-button.png)
 
-## Styles
+### Styles
 
-This extensions includes the Juptyer Lab nbconvert CSS styles and does some changes
+This extensions includes the Jupyter Lab nbconvert CSS styles and does some changes
 to make it as generic as possible in order for it to work with a variety of mkdocs themes.
 This is not always possible and the theme we test the most is [mkdocs-material](https://squidfunk.github.io/mkdocs-material).
 
@@ -175,7 +177,7 @@ want, for example for the material theme take a look at their [customization doc
 
 Create a `main.html` file like:
 
-```
+```jinja
 {% extends "base.html" %}
 
 {% block content %}
