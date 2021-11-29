@@ -71,7 +71,14 @@ jobs:
         id: cached-python-env-check
         continue-on-error: true
         if: steps.cached-python-env.outputs.cache-hit == 'true'
-        run: poetry run python --version
+        run: |
+          .venv/bin/activate/bin/python --version
+          # poetry run python --version
+
+      - name: Debug options
+        run: |
+          echo ${{ steps.cached-python-env.outputs.cache-hit }}
+          echo ${{ steps.cached-python-env-check.outcome }}
 
       - name: Install Python dependencies
         if: steps.cached-python-env.outputs.cache-hit != 'true' || steps.cached-python-env-check.conclusion != 'success'
