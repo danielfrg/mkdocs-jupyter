@@ -1,5 +1,9 @@
 # mkdocs-jupyter Change Log
 
+## 0.19
+
+- Support mkdocs-material 8
+
 ## 0.18.1
 
 - Support multiple languages syntax highlighting
