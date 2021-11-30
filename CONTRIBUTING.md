@@ -2,7 +2,7 @@
 
 ## Development environment
 
-The following requires poetry 1.2.0a2 or newer these poetry `config.toml`
+The following requires poetry 1.2.0a2 or newer and these poetry `config.toml`
 settings:
 
 ```toml
