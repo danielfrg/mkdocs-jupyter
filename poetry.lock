@@ -164,6 +164,9 @@ category = "dev"
 optional = false
 python-versions = ">=3.6"
 
+[package.dependencies]
+tomli = {version = "*", optional = true, markers = "extra == \"toml\""}
+
 [package.extras]
 toml = ["tomli"]
 
@@ -1304,7 +1307,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<4"
-content-hash = "10168303da6417ba34cf24d3d0ab20a524ea52e7fde67a9f785d31539d2df4e1"
+content-hash = "7dd631feb470509b04bb59b34753275bb703a3b70dbef6c1f90a5ee652f95971"
 
 [metadata.files]
 appnope = [

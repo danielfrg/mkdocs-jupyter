@@ -43,6 +43,7 @@ pytest = "^6.2.5"
 pytest-cov = "^2.12.1"
 ipykernel = "^6.4.1"
 pymdown-extensions = "^9.0"
+coverage = {version = "^6.2", extras = ["toml"]}
 
 [tool.pytest.ini_options]
 testpaths = ["mkdocs_jupyter/tests"]
