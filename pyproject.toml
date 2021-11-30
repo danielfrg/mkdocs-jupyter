@@ -24,8 +24,8 @@ include = ["mkdocs_jupyter/**/assets/*"]
 python = ">=3.7.1,<4"
 nbconvert = "^6.2.0"
 jupytext = "^1.11.02"
-mkdocs = "^1.1.0"
-mkdocs-material = "^7.3.0"
+mkdocs = "^1.2.3"
+mkdocs-material = "^8.0.0"
 
 [tool.poetry.group.dev]
 optional = true
@@ -42,7 +42,7 @@ optional = true
 pytest = "^6.2.5"
 pytest-cov = "^2.12.1"
 ipykernel = "^6.4.1"
-pymdown-extensions = "^8.2"
+pymdown-extensions = "^9.0"
 
 [tool.pytest.ini_options]
 testpaths = ["mkdocs_jupyter/tests"]

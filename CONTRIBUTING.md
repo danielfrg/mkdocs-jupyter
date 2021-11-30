@@ -2,15 +2,24 @@
 
 ## Development environment
 
-Create Python env
+The following requires poetry 1.2.0a2 or newer these poetry `config.toml`
+settings:
+
+```toml
+[virtualenvs]
+in-project = true
+```
+
+Create Python env:
 
 ```shell
 make env
+source ./.venv/bin/activate
 ```
 
 ## JupyterLab styles
 
-We use the JuptyerLab styles with some minor modifications
+We use the JupyterLab styles with some minor modifications
 to make them more integrated with the mkdocs themes.
 
 We wrap those styles into the `.jupyter-wrapper` CSS class
