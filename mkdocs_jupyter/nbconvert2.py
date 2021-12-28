@@ -97,7 +97,7 @@ def nb2html(
         content, resources = exporter.from_file(nb_file)
     else:
         try:
-            with open(nb_path, "r") as f:
+            with open(nb_path, "r", encoding="utf-8") as f:
                 nb_json = json.load(f)
                 kernel_lang = nb_json["metadata"]["kernelspec"]["language"]
         except KeyError:
