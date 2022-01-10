@@ -53,6 +53,11 @@ plugins:
   - mkdocs-jupyter
 ```
 
+Before you run a `mkdocs` build, make sure `jupyterlab` is installed:
+
+-  For local builds, install `jupyterlab` locally by running `pip install jupyterlab`.
+-  For other builds, add `jupyterlab` in the build requirements file (along with `mkdocs-jupyter`).
+
 ### Titles and Table of Contents
 
 The first h1 header (`#`) in your notebook will be used as the title.
