@@ -87,6 +87,17 @@ in the same markdown cell or new bottom markdown cells:
 ### This one will be displayed inside the above level
 ```
 
+### Including or Ignoring Files
+
+You can control which files are included or ignored via lists of glob patterns:
+
+```yaml
+plugins:
+  - mkdocs-jupyter:
+      include: ["*.ipynb"]  # Default: ["*.py", "*.ipynb"]
+      ignore: ["some-irrelevant-files/*.ipynb"]
+```
+
 ### Execute Notebook
 
 You can tell the plugin to execute the notebook before converting, default is `False`:
