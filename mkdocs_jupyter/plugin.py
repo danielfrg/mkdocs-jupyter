@@ -1,9 +1,10 @@
+import glob
 import os
 import pathlib
 
 import mkdocs
 from mkdocs.config import config_options
-from mkdocs.structure.files import Files
+from mkdocs.structure.files import File, Files
 from mkdocs.structure.pages import Page
 from mkdocs.structure.toc import get_toc
 from mkdocs.tests.base import get_markdown_toc
@@ -11,7 +12,7 @@ from mkdocs.tests.base import get_markdown_toc
 from . import convert
 
 
-class NotebookFile(mkdocs.structure.files.File):
+class NotebookFile(File):
     """
     Wraps a regular File object to make .ipynb files appear as
     valid documentation files.
@@ -34,6 +35,8 @@ class NotebookFile(mkdocs.structure.files.File):
 
 class Plugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
+        ("include", config_options.Type(list, default=["*.py", "*.ipynb"])),
+        ("ignore", config_options.Type(list, default=[])),
         ("execute", config_options.Type(bool, default=False)),
         ("execute_ignore", config_options.Type(str, default="")),
         ("theme", config_options.Type(str, default="")),
@@ -41,15 +44,28 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("include_source", config_options.Type(bool, default=False)),
         ("ignore_h1_titles", config_options.Type(bool, default=False)),
     )
+    _supported_extensions = [".ipynb", ".py"]
+
+    def should_include(self, file):
+        ext = os.path.splitext(str(file.abs_src_path))[-1]
+        if ext not in self._supported_extensions:
+            return False
+        srcpath = pathlib.PurePath(file.abs_src_path)
+        include = None
+        ignore = None
+        for pattern in self.config["ignore"]:
+            if srcpath.match(pattern):
+                ignore = True
+        for pattern in self.config["include"]:
+            if srcpath.match(pattern):
+                include = True
+        return include and not ignore
 
     def on_files(self, files, config):
-
-        extensions = [".ipynb", ".py"]
-
         ret = Files(
             [
                 NotebookFile(file, **config)
-                if os.path.splitext(str(file.abs_src_path))[-1] in extensions
+                if self.should_include(file)
                 else file
                 for file in files
             ]
@@ -58,9 +74,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
     def on_pre_page(self, page, config, files):
 
-        extensions = [".ipynb", ".py"]
-
-        if os.path.splitext(str(page.file.abs_src_path))[-1] in extensions:
+        if self.should_include(page.file):
             ignore_h1_titles = self.config["ignore_h1_titles"]
             kernel_name = self.config["kernel_name"]
 
