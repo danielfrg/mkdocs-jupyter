@@ -84,7 +84,7 @@ jobs:
         if: steps.cached-python-env.outputs.cache-hit != 'true' || steps.cached-python-env-check.outcome != 'success'
         run: |
           rm -rf .venv || true
-          poetry install --no-interaction --no-root --with test
+          poetry install --no-interaction --no-root
 
       - name: Print Python info
         run: |
