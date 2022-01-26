@@ -95,5 +95,5 @@ match_dir = "mkdocs_jupyter"
 source = "init"
 
 [build-system]
-requires = ["poetry-core>=1.1", "setuptools>=57,<58"]
+requires = ["poetry-core>=1", "setuptools>=57,<58"]
 build-backend = "poetry.core.masonry.api"
