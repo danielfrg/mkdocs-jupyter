@@ -27,18 +27,12 @@ jupytext = "^1.11.02"
 mkdocs = "^1.2.3"
 mkdocs-material = "^8.0.0"
 
-[tool.poetry.group.dev]
-optional = true
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dev-dependencies]
 pylint = "^2.10.2"
 black = "^21.8b0"
 isort = "^5.9.3"
 flake8 = "^3.9.2"
 twine = "^3.4.2"
-
-[tool.poetry.group.test]
-optional = true
-[tool.poetry.group.test.dependencies]
 pytest = "^6.2.5"
 pytest-cov = "^2.12.1"
 ipykernel = "^6.4.1"
@@ -94,7 +88,6 @@ convention = "numpy"
 inherit = false
 match_dir = "mkdocs_jupyter"
 
-[tool.poetry.plugins]
 [tool.poetry.plugins."mkdocs.plugins"]
 "mkdocs-jupyter" = "mkdocs_jupyter.plugin:Plugin"
 
@@ -102,5 +95,5 @@ match_dir = "mkdocs_jupyter"
 source = "init"
 
 [build-system]
-requires = ["poetry>=1.2.0a2", "setuptools>=57,<58"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.1", "setuptools>=57,<58"]
+build-backend = "poetry.core.masonry.api"
