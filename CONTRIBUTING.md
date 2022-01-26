@@ -23,7 +23,7 @@ We use the JupyterLab styles with some minor modifications
 to make them more integrated with the mkdocs themes.
 
 We wrap those styles into the `.jupyter-wrapper` CSS class
-to make not break regular theme CSS.
+to make not break the themes CSS.
 
 To update the original styles:
 
