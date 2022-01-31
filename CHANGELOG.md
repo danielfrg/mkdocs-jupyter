@@ -1,6 +1,11 @@
 # mkdocs-jupyter Change Log
 
-## 0.19
+## 0.20.0
+
+- Support for toggle themes in material
+- Use poetry 1.1.X
+
+## 0.19.0
 
 - Support mkdocs-material 8
 
