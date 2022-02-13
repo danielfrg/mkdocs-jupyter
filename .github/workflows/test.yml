@@ -4,9 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
   schedule:
     - cron: "0 5 * * *"
-  workflow_dispatch:
 
 jobs:
   test:
@@ -115,16 +115,16 @@ jobs:
           make test-all
           make report
 
-      - name: Upload package
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: pkg-py${{ matrix.python-version }}
-          path: dist
+      # - name: Upload package
+      #   uses: actions/upload-artifact@v2
+      #   if: failure()
+      #   with:
+      #     name: pkg-py${{ matrix.python-version }}
+      #     path: dist
 
       - name: Upload test results
         uses: actions/upload-artifact@v2
-        if: always()
+        if: failure()
         with:
           name: test-results-py${{ matrix.python-version }}
           path: htmlcov
