@@ -14,13 +14,10 @@ def add_anchor_lower_id(html, anchor_link_text="¶"):
     from xml.etree.cElementTree import Element
 
     from defusedxml import cElementTree as ElementTree
-    from ipython_genutils import py3compat
     from nbconvert.filters.strings import _convert_header_id, html2text
 
     try:
-        h = ElementTree.fromstring(
-            py3compat.cast_bytes_py2(html, encoding="utf-8")
-        )
+        h = ElementTree.fromstring(html)
     except Exception:
         # failed to parse, just return it unmodified
         return html
@@ -38,7 +35,7 @@ def add_anchor_lower_id(html, anchor_link_text="¶"):
     # Known issue of Python3.x, ElementTree.tostring() returns a byte string
     # instead of a text string.  See issue http://bugs.python.org/issue10942
     # Workaround is to make sure the bytes are casted to a string.
-    return py3compat.decode(ElementTree.tostring(h), "utf-8")
+    return ElementTree.tostring(h).decode("utf-8", "replace")
 
 
 def new_header(self, text, level, raw=None):
