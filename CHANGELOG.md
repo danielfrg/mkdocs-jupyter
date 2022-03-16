@@ -1,5 +1,9 @@
 # mkdocs-jupyter Change Log
 
+## 0.20.1
+
+- Remove ipython_genutils dependency (#70) by: @incentsarago
+
 ## 0.20.0
 
 - Support for toggle themes in material
