@@ -8,6 +8,7 @@ nav:
 plugins:
   - mkdocs-jupyter:
       execute: true
+      execute_ignore: "*.py"
       allow_errors: false
 
 markdown_extensions:
