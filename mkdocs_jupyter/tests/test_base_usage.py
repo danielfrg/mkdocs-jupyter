@@ -30,6 +30,6 @@ def test_fails_when_configured_to_fail():
     this_dir = os.path.dirname(os.path.realpath(__file__))
     mkdocs_dir = os.path.join(this_dir, "mkdocs")
     cmd = ["mkdocs", "build", "-q", "-f", "base-with-nbs-failure.yml"]
-    result = subprocess.run(cmd, cwd=mkdocs_dir)
+    result = subprocess.run(cmd, cwd=mkdocs_dir, stderr=subprocess.STDOUT)
     assert result.returncode != 0
-    assert "failing notebook" in result.stderr.read().decode()
+    assert "failing notebook" in result.stdout.read().decode()
