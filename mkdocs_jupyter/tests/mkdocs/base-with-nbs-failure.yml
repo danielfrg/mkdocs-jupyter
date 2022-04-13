@@ -9,6 +9,8 @@ plugins:
   - mkdocs-jupyter:
       execute: true
       execute_ignore: "*.py"
+      include: ["fail.ipynb"]
+      ignore: ["demo.ipynb"]
       allow_errors: false
 
 markdown_extensions:
