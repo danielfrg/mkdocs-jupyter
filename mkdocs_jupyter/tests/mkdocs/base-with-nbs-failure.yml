@@ -1,0 +1,18 @@
+site_name: site-with-notebooks-failure
+site_description: mkdocs-jupyter test site
+
+nav:
+  - Home: index.md
+  - Fail: fail.ipynb
+
+plugins:
+  - mkdocs-jupyter:
+      execute: true
+      allow_errors: false
+
+markdown_extensions:
+  - codehilite:
+      guess_lang: false
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.arithmatex
