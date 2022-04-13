@@ -36,7 +36,13 @@ cell_id = 0
 
 
 def nb2html(
-    nb_path, execute=False, kernel_name="", theme=None, start=0, end=None
+    nb_path,
+    execute=False,
+    kernel_name="",
+    theme=None,
+    start=0,
+    end=None,
+    allow_errors=True,
 ):
     """
     Convert a notebook to HTML
@@ -55,6 +61,8 @@ def nb2html(
             Start cell number
         end: int
             End cell number
+        allow_errors
+            Render even if notebook execution fails
 
     Returns
     -------
@@ -66,7 +74,11 @@ def nb2html(
     cell_id = 0  # Reset the cell id
 
     app = get_nbconvert_app(
-        execute=execute, kernel_name=kernel_name, start=start, end=end
+        execute=execute,
+        kernel_name=kernel_name,
+        start=start,
+        end=end,
+        allow_errors=allow_errors,
     )
 
     # Use the templates included in this package
@@ -140,7 +152,11 @@ def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):
 
 
 def get_nbconvert_app(
-    execute=False, kernel_name="", start=0, end=None
+    execute=False,
+    kernel_name="",
+    start=0,
+    end=None,
+    allow_errors=True,
 ) -> NbConvertApp:
     """Create"""
 
@@ -161,7 +177,7 @@ def get_nbconvert_app(
                 "enabled": execute,
                 "store_widget_state": True,
                 "kernel_name": kernel_name,
-                "allow_errors": True,
+                "allow_errors": allow_errors,
             },
         }
     )

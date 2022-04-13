@@ -116,6 +116,15 @@ plugins:
       execute_ignore: "my-secret-files/*.ipynb"
 ```
 
+To fail when notebook execution fails set `allow_errors` to `false`:
+
+```yaml
+plugins:
+  - mkdocs-jupyter:
+      execute: true
+      allow_errors: false
+```
+
 #### Kernel
 
 By default the plugin will use the kernel specified in the notebook to execute it.
