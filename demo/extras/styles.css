@@ -1,0 +1,10 @@
+/* For highlighted blocks */
+.codehilite pre code {
+    background-color: #263238;
+}
+
+/* For non highlighted blocks */
+.md-typeset pre code {
+    background-color: #263238;
+    color: #FFF;
+}

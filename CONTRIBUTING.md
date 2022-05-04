@@ -13,7 +13,7 @@ in-project = true
 Create Python env:
 
 ```shell
-make env
+poetry install
 source ./.venv/bin/activate
 ```
 

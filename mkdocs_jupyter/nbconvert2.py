@@ -89,7 +89,7 @@ def nb2html(
     preprocessors_ = [SubCell]
     filters = {
         "highlight_code": custom_highlight_code,
-        "markdown2html": custom_markdown2html,
+        # "markdown2html": custom_markdown2html,
     }
 
     exporter = HTMLExporter(
