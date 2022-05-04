@@ -1,6 +1,11 @@
 version: '3'
 
 tasks:
+
+  pkg:
+    cmds:
+      - poetry build
+
   check:
     cmds:
       - isort --check-only --diff .
@@ -15,6 +20,10 @@ tasks:
   test:
     cmds:
       - pytest -k "{{.PYTEST_K}}"
+
+  test-all:
+    cmds:
+      - pytest .
 
   report:
     cmds:

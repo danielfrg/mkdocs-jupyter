@@ -22,6 +22,9 @@ jobs:
       - uses: actions/checkout@v2
       - run: git fetch --prune --unshallow
 
+      - name: Install Task
+        uses: arduino/setup-task@v1
+
       # ------------------------------------------------------------------------
       # JS
 
@@ -40,11 +43,11 @@ jobs:
       - name: JS - Install JS deps
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
-          make npm-install
+          task npm-install
 
       - name: JS - Build JS
         run: |
-          make npm-build
+          task npm-build
 
       # ------------------------------------------------------------------------
       # Python
@@ -102,7 +105,7 @@ jobs:
       - name: Build package
         run: |
           source .venv/bin/activate
-          make pkg
+          task pkg
 
       - name: Install package
         run: |
@@ -113,8 +116,8 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          make test-all
-          make report
+          task test-all
+          task report
 
       - name: Codecov
         uses: codecov/codecov-action@v2
