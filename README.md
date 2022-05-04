@@ -17,7 +17,6 @@
     </a>
 </p>
 
-
 # mkdocs-jupyter: Use Jupyter Notebooks in mkdocs
 
 - Add Jupyter Notebooks directly to the mkdocs navigation
@@ -30,8 +29,14 @@
 - Support for mkdocs TOC
 - Option to include notebook source
 
+
+
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png" alt="mkdocs-jupyter default theme"  width="410"></a>
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png" alt="mkdocs-jupyter material theme"  width="410"></a>
+
+## Demo website
+
+[Visit mkdocs-jupyter.danielfrg.com](https://mkdocs-jupyter.danielfrg.com/)
 
 ## Installation
 
