@@ -1,5 +1,9 @@
 # mkdocs-jupyter Change Log
 
+## 0.21
+
+- Support Pygments 2.1.0
+
 ## 0.20.1
 
 - Remove ipython_genutils dependency (#70) by: @incentsarago

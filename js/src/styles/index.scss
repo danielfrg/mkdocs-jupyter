@@ -321,6 +321,16 @@ We duplicated them to the root so they work in the cells
         }
     }
 
+    .jp-InputArea {
+        width: 100%;
+    }
+    .jp-Cell-inputArea {
+        width: 100%;
+    }
+    .jp-RenderedHTMLCommon {
+        width: 100%;
+    }
+
     // Markdown cells: Remove Input prompt
     .jp-Cell-inputWrapper .jp-InputPrompt {
         display: none;
@@ -410,6 +420,10 @@ We duplicated them to the root so they work in the cells
 
     // // DataFrame
     // // From: https://github.com/jupyter/notebook/blob/master/notebook/static/notebook/less/renderedhtml.less
+    table {
+        width: max-content;
+    }
+
     table.dataframe {
         margin-left: auto;
         margin-right: auto;
@@ -500,4 +514,8 @@ We duplicated them to the root so they work in the cells
             background: rgba(66, 165, 245, 0.2);
         }
     }
+}
+
+table {
+    width: max-content;
 }

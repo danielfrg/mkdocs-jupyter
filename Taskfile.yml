@@ -1,0 +1,70 @@
+version: '3'
+
+tasks:
+
+  pkg:
+    cmds:
+      - poetry build
+
+  check:
+    cmds:
+      - isort --check-only --diff .
+      - black --check --diff .
+      - flake8
+
+  fmt:
+    cmds:
+      - isort .
+      - black .
+
+  test:
+    cmds:
+      - pytest -k "{{.PYTEST_K}}"
+
+  test-all:
+    cmds:
+      - pytest .
+
+  report:
+    cmds:
+      - coverage xml
+      - coverage html
+
+  upload-pypi:
+    cmds:
+      - twine upload dist/*.tar.gz
+
+
+  cleanpython:
+    cmds:
+      - rm -rf .eggs .pytest_cache dist htmlcov test-results
+      - rm -f .coverage coverage.xml
+      - find . -type f -name '*.py[co]' -delete
+      - find . -type d -name __pycache__ -exec rm -rf {} +
+      - find . -type d -name .ipynb_checkpoints -exec rm -rf {} +
+      - find . -type d -name site -exec rm -rf {} +
+
+# ------------------------------------------------------------------------------
+# Javascript
+
+  npm-install:
+    dir: js
+    cmds:
+      - npm install
+
+  npm-build:
+    dir: js
+    cmds:
+      - npm run build
+
+
+  npm-dev:
+    dir: js
+    cmds:
+      - npm run dev
+
+  cleanjs:
+    dir: js
+    cmds:
+      - npm run clean
+

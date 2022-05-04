@@ -1,0 +1,38 @@
+site_name: mkdocs-jupyter demo
+site_description: mkdocs-jupyter demo website
+
+nav:
+  - Home: index.md
+  - Demo Markdown: demo-md.md
+  - Jupyter Notebook Cells: demo-nb.ipynb
+  - Jupyter Notebook Markdown: demo-nb-md.ipynb
+  - A .py file (jupytext): demo-script.py
+  - Ruby NB: ruby.ipynb
+  - Variational inference nb: variational-inference-nb.ipynb
+  - Variational inference script: variational-inference-script.py
+
+plugins:
+  - mkdocs-jupyter
+  - search
+
+theme:
+  name: material
+
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep orange
+      accent: deep orange
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep orange
+      accent: deep orange
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
