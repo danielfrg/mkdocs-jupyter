@@ -3,6 +3,7 @@
 ## 0.21
 
 - Support Pygments 2.1.0
+- Fix some markdown CSS overflow issues
 
 ## 0.20.1
 
