@@ -43,6 +43,8 @@ def nb2html(
     start=0,
     end=None,
     allow_errors=True,
+    show_input: bool = True,
+    no_input: bool = False,
 ):
     """
     Convert a notebook to HTML
@@ -63,7 +65,10 @@ def nb2html(
             End cell number
         allow_errors
             Render even if notebook execution fails
-
+        show_input: bool
+            Shows code input (default: True)
+        no_input: bool
+            Render notebook without code or output (default: False)
     Returns
     -------
         HTML content
@@ -79,6 +84,8 @@ def nb2html(
         start=start,
         end=end,
         allow_errors=allow_errors,
+        show_input=show_input,
+        no_input=no_input,
     )
 
     # Use the templates included in this package
@@ -157,12 +164,31 @@ def get_nbconvert_app(
     start=0,
     end=None,
     allow_errors=True,
+    show_input: bool = True,
+    no_input: bool = False,
 ) -> NbConvertApp:
     """Create"""
 
     # Load the user's nbconvert configuration
     app = NbConvertApp()
     app.load_config_file()
+
+    template_exported_conf = {
+        "TemplateExporter": {
+            "exclude_input": not show_input,
+        }
+    }
+
+    if no_input:
+        template_exported_conf.update(
+            {
+                "TemplateExporter": {
+                    "exclude_output_prompt": True,
+                    "exclude_input": True,
+                    "exclude_input_prompt": True,
+                }
+            }
+        )
 
     app.config.update(
         {
@@ -179,6 +205,7 @@ def get_nbconvert_app(
                 "kernel_name": kernel_name,
                 "allow_errors": allow_errors,
             },
+            **template_exported_conf,
         }
     )
 
@@ -213,9 +240,9 @@ def custom_markdown2html(source):
     This is done so it's the same HTML structure that for regular non-language
     sections.
     """
-    return MarkdownWithMath(
-        renderer=CustomMarkdownRendered(escape=False)
-    ).render(source)
+    return MarkdownWithMath(renderer=CustomMarkdownRendered(escape=False)).render(
+        source
+    )
 
 
 class CustomMarkdownRendered(IPythonRenderer):
