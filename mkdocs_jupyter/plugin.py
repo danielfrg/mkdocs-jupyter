@@ -44,6 +44,8 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("include_source", config_options.Type(bool, default=False)),
         ("ignore_h1_titles", config_options.Type(bool, default=False)),
         ("allow_errors", config_options.Type(bool, default=True)),
+        ("show_input", config_options.Type(bool, default=True)),
+        ("no_input", config_options.Type(bool, default=False)),
     )
     _supported_extensions = [".ipynb", ".py"]
 
@@ -81,6 +83,8 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             exec_nb = self.config["execute"]
             allow_errors = self.config["allow_errors"]
+            show_input = self.config["show_input"]
+            no_input = self.config["no_input"]
 
             if self.config["execute_ignore"]:
                 ignore_pattern = self.config["execute_ignore"]
@@ -99,6 +103,8 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     kernel_name=kernel_name,
                     theme=theme,
                     allow_errors=allow_errors,
+                    show_input=show_input,
+                    no_input=no_input,
                 )
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path)

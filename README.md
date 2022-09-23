@@ -141,6 +141,25 @@ plugins:
       kernel_name: python3
 ```
 
+#### Ingore Code Input
+
+By default the plugin will show full code and regular cell output details.
+You can hide cell code input for all the notebooks:
+
+```yaml
+plugins:
+  - mkdocs-jupyter:
+      show_input: False
+```
+
+You can also decide to hide the `Out[#]` output notation and other cell metadata for all the notebooks:
+
+```yaml
+plugins:
+  - mkdocs-jupyter:
+      no_input: True
+```
+
 ### Jupyter themes
 
 You can configure the different Jupyter themes.
