@@ -1,5 +1,9 @@
 # mkdocs-jupyter Change Log
 
+## 0.22
+
+- Add show_input and no_input options. @ggbaro
+
 ## 0.21
 
 - Support Pygments 2.1.0
