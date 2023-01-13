@@ -45,6 +45,7 @@ def nb2html(
     allow_errors=True,
     show_input: bool = True,
     no_input: bool = False,
+    remove_tag_config: dict = {}
 ):
     """
     Convert a notebook to HTML
@@ -69,6 +70,8 @@ def nb2html(
             Shows code input (default: True)
         no_input: bool
             Render notebook without code or output (default: False)
+        remove_tag_config: dict
+            Configure rendering based on cell tags (default: {})
     Returns
     -------
         HTML content
@@ -86,6 +89,7 @@ def nb2html(
         allow_errors=allow_errors,
         show_input=show_input,
         no_input=no_input,
+        remove_tag_config=remove_tag_config
     )
 
     # Use the templates included in this package
@@ -166,6 +170,7 @@ def get_nbconvert_app(
     allow_errors=True,
     show_input: bool = True,
     no_input: bool = False,
+    remove_tag_config: dict = {}
 ) -> NbConvertApp:
     """Create"""
 
@@ -189,6 +194,27 @@ def get_nbconvert_app(
                 }
             }
         )
+
+    if remove_tag_config != {}:
+        template_exported_conf.update(
+            {
+                "TagRemovePreprocessor": {
+                    "enabled": True,
+                }
+            }
+        )
+        for conf_param, conf_value in remove_tag_config.items():
+            if conf_param in [
+                "remove_cell_tags",
+                "remove_all_outputs_tags",
+                "remove_single_output_tags",
+                "remove_input_tags"
+            ]:
+                template_exported_conf["TagRemovePreprocessor"].update(
+                    {
+                        conf_param: {conf_value[0]},
+                    }
+                )
 
     app.config.update(
         {
