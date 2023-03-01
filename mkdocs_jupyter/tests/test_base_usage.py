@@ -1,34 +1,36 @@
 import os
-import subprocess
-
 import pytest
 
+from mkdocs.config import load_config
+from mkdocs.commands.build import build
+
+from nbclient.exceptions import CellExecutionError
 
 @pytest.mark.parametrize(
-    "filename",
+    "input",
     [
-        "base-with-nbs-pys.yml",
-        "base-with-nbs.yml",
-        "base-with-pys.yml",
-        "base-without-nbs.yml",
-        "material-with-nbs-pys.yml",
-        "material-with-nbs.yml",
-        "material-with-pys.yml",
+        ["base-with-nbs-pys.yml",     True],
+        ["base-with-nbs.yml",         True],
+        ["base-with-pys.yml",         True],
+        ["base-without-nbs.yml",      True],
+        ["material-with-nbs-pys.yml", True],
+        ["material-with-nbs.yml",     True],
+        ["material-with-pys.yml",     True],
+        ["base-with-nbs-failure.yml", False],
     ],
 )
-def test_can_render_notebook(filename):
+
+def test_notebook_renders(input):
+    filename, renders = input
+
     this_dir = os.path.dirname(os.path.realpath(__file__))
-    mkdocs_dir = os.path.join(this_dir, "mkdocs")
+    config_file = os.path.join(this_dir, f"mkdocs/{filename}")
 
-    run = subprocess.run(
-        ["mkdocs", "build", "-q", "-f", f"{filename}"], cwd=mkdocs_dir
-    )
-    assert run.returncode == 0
+    try:
+        build(load_config(config_file))
+        assert renders
+    except CellExecutionError:
+        assert not renders
 
 
-def test_fails_when_configured_to_fail():
-    this_dir = os.path.dirname(os.path.realpath(__file__))
-    mkdocs_dir = os.path.join(this_dir, "mkdocs")
-    cmd = ["mkdocs", "build", "-q", "-f", "base-with-nbs-failure.yml"]
-    result = subprocess.run(cmd, cwd=mkdocs_dir)
-    assert result.returncode != 0
+
