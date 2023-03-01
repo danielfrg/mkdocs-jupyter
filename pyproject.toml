@@ -22,7 +22,7 @@ include = ["mkdocs_jupyter/**/assets/*"]
 
 [tool.poetry.dependencies]
 python = ">=3.7.1,<4"
-nbconvert = "^6.2.0"
+nbconvert = "^7.2.9"
 jupytext = "^1.13.8"
 mkdocs = "^1.2.3"
 mkdocs-material = "^8.0.0"
