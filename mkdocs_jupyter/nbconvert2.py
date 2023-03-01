@@ -240,9 +240,9 @@ def custom_markdown2html(source):
     This is done so it's the same HTML structure that for regular non-language
     sections.
     """
-    return MarkdownWithMath(renderer=CustomMarkdownRendered(escape=False)).render(
-        source
-    )
+    return MarkdownWithMath(
+        renderer=CustomMarkdownRendered(escape=False)
+    ).render(source)
 
 
 class CustomMarkdownRendered(IPythonRenderer):
