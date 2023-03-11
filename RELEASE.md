@@ -2,8 +2,7 @@
 
 ## Upload to PyPI
 
-- Update version on `__init__.py`
-- Update version on `pyproject.toml`
+- Update version on `__about__.py`
 - Update `CHANGELOG.md`
 
 ```shell

@@ -1,25 +1,24 @@
 import os
+
 import pytest
-
-from mkdocs.config import load_config
 from mkdocs.commands.build import build
-
+from mkdocs.config import load_config
 from nbclient.exceptions import CellExecutionError
+
 
 @pytest.mark.parametrize(
     "input",
     [
-        ["base-with-nbs-pys.yml",     True],
-        ["base-with-nbs.yml",         True],
-        ["base-with-pys.yml",         True],
-        ["base-without-nbs.yml",      True],
+        ["base-with-nbs-pys.yml", True],
+        ["base-with-nbs.yml", True],
+        ["base-with-pys.yml", True],
+        ["base-without-nbs.yml", True],
         ["material-with-nbs-pys.yml", True],
-        ["material-with-nbs.yml",     True],
-        ["material-with-pys.yml",     True],
+        ["material-with-nbs.yml", True],
+        ["material-with-pys.yml", True],
         ["base-with-nbs-failure.yml", False],
     ],
 )
-
 def test_notebook_renders(input):
     filename, renders = input
 
@@ -31,6 +30,3 @@ def test_notebook_renders(input):
         assert renders
     except CellExecutionError:
         assert not renders
-
-
-

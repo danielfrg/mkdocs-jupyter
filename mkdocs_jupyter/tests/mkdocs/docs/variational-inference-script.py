@@ -331,6 +331,7 @@ dtype = tf.float32
 
 # -
 
+
 # Plot functions
 def plot_transformation(theta, zeta, p_theta, p_zeta):
     fig, (const, trans) = plt.subplots(nrows=2, ncols=1, figsize=(6.5, 12))

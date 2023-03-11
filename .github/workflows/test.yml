@@ -8,18 +8,30 @@ on:
   schedule:
     - cron: "0 5 * * *"
 
+concurrency:
+  group: test-${{ github.head_ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONUNBUFFERED: "1"
+  FORCE_COLOR: "1"
+
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    name: Python ${{ matrix.python-version }} on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+
+    runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.8, 3.9]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-20.04]
+        python-version: [3.8, 3.9, "3.10", 3.11]
         node-version: ["16"]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: git fetch --prune --unshallow
 
       - name: Install Task
@@ -52,70 +64,30 @@ jobs:
       # ------------------------------------------------------------------------
       # Python
 
-      - name: Python - Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - name: Python - Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Python - Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          version: 1.1.12
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-
-      - name: Python - Load cached venv
-        id: cached-python-env
-        uses: actions/cache@v2
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}-1
-
-      - name: Python - Ensure cache is healthy
-        id: cached-python-env-check
-        continue-on-error: true
-        if: steps.cached-python-env.outputs.cache-hit == 'true'
+      - name: Install Hatch
         run: |
-          .venv/bin/activate/bin/python --version
-          # poetry run python --version
-
-      - name: Python - Debug variables
-        run: |
-          echo ${{ steps.cached-python-env.outputs.cache-hit }}
-          echo ${{ steps.cached-python-env-check.outcome }}
-
-      - name: Python - Install Python dependencies
-        if: steps.cached-python-env.outputs.cache-hit != 'true' || steps.cached-python-env-check.outcome != 'success'
-        run: |
-          rm -rf .venv || true
-          poetry install --no-interaction --no-root
-
-      - name: Python - Print Python info
-        run: |
-          source .venv/bin/activate
-          which python
-          python --version
-          which pip
-          pip --version
-          pip freeze
+          pip install --upgrade hatch
 
       # ------------------------------------------------------------------------
       # Test
 
       - name: Build package
         run: |
-          source .venv/bin/activate
           task pkg
 
       - name: Install package
         run: |
-          source .venv/bin/activate
           pip install dist/*.tar.gz
+          pip install pytest pytest-cov ipykernel
           pip freeze
 
       - name: Run tests
         run: |
-          source .venv/bin/activate
           task test-all
           task report
 
