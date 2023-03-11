@@ -160,6 +160,21 @@ plugins:
       no_input: True
 ```
 
+#### Remove Cell Using Tags
+
+By default the plugin will show full code and regular cell output details.
+You can hide cell code input for specific cells using tags:
+
+```yaml
+plugins:
+  - mkdocs-jupyter:
+      remove_tag_config:
+          remove_input_tags:
+            - hide_code
+```
+
+More detailed on removing cell based on tag, see [NbConvert Customization](https://nbconvert.readthedocs.io/en/latest/removing_cells.html))
+
 ### Jupyter themes
 
 You can configure the different Jupyter themes.
