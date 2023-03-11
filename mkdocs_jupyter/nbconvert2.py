@@ -12,6 +12,7 @@ import os
 import jupytext
 import mistune
 from nbconvert.exporters import HTMLExporter, MarkdownExporter
+from nbconvert.exporters.templateexporter import default_filters
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.filters.markdown_mistune import (
     IPythonRenderer,
@@ -98,6 +99,13 @@ def nb2html(
         "highlight_code": custom_highlight_code,
         # "markdown2html": custom_markdown2html,
     }
+
+    # Ensures SVG rendered with data and rdkit exit with NOOP
+    # Source: https://github.com/jupyter/nbconvert/issues/1894#issuecomment-1334355109
+    def custom_clean_html(element):
+        return element.decode() if isinstance(element, bytes) else str(element)
+
+    default_filters["clean_html"] = custom_clean_html
 
     exporter = HTMLExporter(
         config=app.config,
@@ -240,9 +248,9 @@ def custom_markdown2html(source):
     This is done so it's the same HTML structure that for regular non-language
     sections.
     """
-    return MarkdownWithMath(renderer=CustomMarkdownRendered(escape=False)).render(
-        source
-    )
+    return MarkdownWithMath(
+        renderer=CustomMarkdownRendered(escape=False)
+    ).render(source)
 
 
 class CustomMarkdownRendered(IPythonRenderer):
