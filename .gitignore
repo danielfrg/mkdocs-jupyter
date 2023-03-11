@@ -113,4 +113,6 @@ dmypy.json
 _generated_version.py
 
 ### Project specific ###
+.venv
+node_modules
 mkdocs_jupyter/tests/mkdocs/site

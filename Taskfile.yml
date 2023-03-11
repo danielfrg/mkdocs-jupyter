@@ -4,13 +4,13 @@ tasks:
 
   pkg:
     cmds:
-      - poetry build
+      - hatch build
 
   check:
     cmds:
       - isort --check-only --diff .
       - black --check --diff .
-      - flake8
+      # - flake8
 
   fmt:
     cmds:

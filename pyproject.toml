@@ -1,49 +1,83 @@
-[tool.poetry]
+[project]
 name = "mkdocs-jupyter"
-version = "0.21.0"
-packages = [{ include = "mkdocs_jupyter" }]
-homepage = "https://github.com/danielfrg/mkdocs-jupyter"
-repository = "https://github.com/danielfrg/mkdocs-jupyter"
-documentation = "https://github.com/danielfrg/mkdocs-jupyter"
 description = "Use Jupyter in mkdocs websites"
-authors = ["Daniel Rodriguez"]
-maintainers = ["Daniel Rodriguez"]
-license = "Apache License, Version 2.0"
 readme = "README.md"
+requires-python = ">=3.7"
+license = "Apache-2.0"
+keywords = ["mkdocs", "jupyter", "jupyterlab", "notebooks", "documentation"]
+authors = [
+  { name = "Daniel Rodriguez", email = "daniel@danielfrg.com" },
+]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
-  "Operating System :: OS Independent",
-  "Intended Audience :: Science/Research",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3",
-  "Topic :: Scientific/Engineering",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
 ]
-include = ["mkdocs_jupyter/**/assets/*"]
+dependencies = [
+  "nbconvert>=7.2.9,<8",
+  "mkdocs>=1.4.2,<2",
+  "mkdocs-material>9.0.0",
+  "jupytext>1.13.8,<2",
+  "Pygments>2.12.0",
+]
+dynamic = ["version"]
 
-[tool.poetry.dependencies]
-python = ">=3.8.1,<4"
-nbconvert = "^7.2.9"
-jupytext = "^1.13.8"
-mkdocs = "^1.4.2"
-mkdocs-material = "^9.0.0"
-Pygments = "^2.12.0"
+[project.urls]
+Documentation = "https://github.com/danielfrg/mkdocs-jupyter#readme"
+Issues = "https://github.com/danielfrg/mkdocs-jupyter/issues"
+Source = "https://github.com/danielfrg/mkdocs-jupyter"
 
-[tool.poetry.dev-dependencies]
-pylint = "^2.16.2"
-black = "^22.3.0"
-isort = "^5.10.1"
-flake8 = "^6.0.0"
-twine = "^4.0.0"
-pytest = "^6.2.5"
-pytest-cov = "^2.12.1"
-ipykernel = "^6.4.1"
-pymdown-extensions = "^9.0"
-coverage = {version = "^6.2", extras = ["toml"]}
+[project.entry-points."mkdocs.plugins"]
+mkdocs-jupyter = "mkdocs_jupyter.plugin:Plugin"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+artifacts = [
+  "mkdocs_jupyter/**"
+]
+exclude = [
+  ".github", "demo",
+]
+
+[tool.hatch.version]
+path = "mkdocs_jupyter/__about__.py"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "black",
+  "coverage[toml]",
+  "isort",
+  "jupyterlab",
+  "flake8",
+  "pylint",
+  "pytest",
+  "pytest-cov",
+  "twine",
+  "ipykernel",
+  "pymdown-extensions",
+]
+
+[tool.hatch.envs.default.scripts]
+cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=adsctl --cov=tests {args}"
+no-cov = "cov --no-cov {args}"
+
+[[tool.hatch.envs.test.matrix]]
+python = ["37", "38", "39", "310", "311"]
 
 [tool.pytest.ini_options]
 testpaths = ["mkdocs_jupyter/tests"]
 addopts = [
-  "-s", "-vv",
+  "-s",
+  "-vv",
   "--ignore=dist",
   "--ignore=site-packages",
   # "--strict-markers",
@@ -56,21 +90,23 @@ xfail_strict = true
 [tool.coverage.run]
 branch = true
 parallel = true
+omit = ["adsctl/__about__.py"]
 
 [tool.coverage.report]
 show_missing = true
 ignore_errors = false
+
 exclude_lines = [
-    "pragma: no cover",
-    "raise NotImplementedError"
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "pragma: no cover",
+  "raise NotImplementedError",
 ]
 omit = ["mkdocs_jupyter/tests/*"]
 
 [tool.coverage.paths]
-source = [
-    "mkdocs_jupyter",
-    ".venv/lib/python*/site-packages/mkdocs_jupyter",
-]
+source = ["mkdocs_jupyter", ".venv/lib/python*/site-packages/mkdocs_jupyter"]
 
 [tool.black]
 line_length = 79
@@ -88,13 +124,3 @@ add_ignore = ["D100", "D101", "D102", "D103", "D104", "D105"]
 convention = "numpy"
 inherit = false
 match_dir = "mkdocs_jupyter"
-
-[tool.poetry.plugins."mkdocs.plugins"]
-"mkdocs-jupyter" = "mkdocs_jupyter.plugin:Plugin"
-
-[tool.poetry-version-plugin]
-source = "init"
-
-[build-system]
-requires = ["poetry-core>=1", "setuptools>=57,<58"]
-build-backend = "poetry.core.masonry.api"

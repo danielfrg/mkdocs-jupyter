@@ -4,7 +4,10 @@
 
 <p align="center">
     <a href="https://pypi.org/project/mkdocs-jupyter/">
-        <img src="https://badge.fury.io/py/mkdocs-jupyter.svg">
+        <img src="https://img.shields.io/pypi/v/mkdocs-jupyter.svg">
+    </a>
+    <a href="https://pypi.org/project/mkdocs-jupyter/">
+        <img src="https://img.shields.io/pypi/pyversions/mkdocs-jupyter.svg">
     </a>
     <a href="https://github.com/danielfrg/mkdocs-jupyter/actions/workflows/test.yml">
         <img src="https://github.com/danielfrg/mkdocs-jupyter/workflows/test/badge.svg">
@@ -29,14 +32,13 @@
 - Support for mkdocs TOC
 - Option to include notebook source
 
+<p align="center">
+[Demo Site](https://mkdocs-jupyter.danielfrg.com/)
+</p>
 
+<a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png" alt="mkdocs-jupyter default theme"  width="300"></a>
 
-<a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png" alt="mkdocs-jupyter default theme"  width="410"></a>
-<a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png" alt="mkdocs-jupyter material theme"  width="410"></a>
-
-## Demo website
-
-[Visit mkdocs-jupyter.danielfrg.com](https://mkdocs-jupyter.danielfrg.com/)
+<a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png" alt="mkdocs-jupyter material theme"  width="300"></a>
 
 ## Installation
 
@@ -50,9 +52,9 @@ In the `mkdocs.yml` use Jupyter notebooks (`.ipynb`) or Python scripts (`.py`) a
 
 ```yaml
 nav:
-- Home: index.md
-- Notebook page: notebook.ipynb
-- Python file: python_script.py
+  - Home: index.md
+  - Notebook page: notebook.ipynb
+  - Python file: python_script.py
 
 plugins:
   - mkdocs-jupyter
@@ -99,7 +101,7 @@ You can control which files are included or ignored via lists of glob patterns:
 ```yaml
 plugins:
   - mkdocs-jupyter:
-      include: ["*.ipynb"]  # Default: ["*.py", "*.ipynb"]
+      include: ["*.ipynb"] # Default: ["*.py", "*.ipynb"]
       ignore: ["some-irrelevant-files/*.ipynb"]
 ```
 
@@ -141,7 +143,7 @@ plugins:
       kernel_name: python3
 ```
 
-#### Ingore Code Input
+### Ingore Code Input
 
 By default the plugin will show full code and regular cell output details.
 You can hide cell code input for all the notebooks:
@@ -160,7 +162,7 @@ plugins:
       no_input: True
 ```
 
-#### Remove Cell Using Tags
+### Remove Cell Using Tags
 
 By default the plugin will show full code and regular cell output details.
 You can hide cell code input for specific cells using tags:
@@ -169,8 +171,8 @@ You can hide cell code input for specific cells using tags:
 plugins:
   - mkdocs-jupyter:
       remove_tag_config:
-          remove_input_tags:
-            - hide_code
+        remove_input_tags:
+          - hide_code
 ```
 
 More detailed on removing cell based on tag, see [NbConvert Customization](https://nbconvert.readthedocs.io/en/latest/removing_cells.html))
@@ -225,7 +227,7 @@ you can create a `main.html` file like this:
 
 ![Download Notebook button](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/download-button.png)
 
-### Styles
+## Styles
 
 This extensions includes the Jupyter Lab nbconvert CSS styles and does some changes
 to make it as generic as possible in order for it to work with a variety of mkdocs themes.
@@ -252,3 +254,11 @@ Create a `main.html` file like:
 </style>
 {% endblock content %}
 ```
+
+## Mkdocs Material notes
+
+Any markdown specific features such as
+[admonitions](https://squidfunk.github.io/mkdocs-material/reference/admonitions/)
+wont work with mkdocs-jupyter because those features are not supported by Jupyter itseft and we use
+[nbconvert](https://nbconvert.readthedocs.io/)
+to make the conversion.

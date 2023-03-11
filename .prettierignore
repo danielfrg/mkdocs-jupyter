@@ -1,6 +1,4 @@
 .cache
 public
 mkdocs_jupyter/
-*.md
-*.yml
 *.html
