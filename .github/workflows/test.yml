@@ -83,6 +83,7 @@ jobs:
       - name: Install package
         run: |
           pip install dist/*.tar.gz
+          pip install pytest pytest-cov
           pip freeze
 
       - name: Run tests

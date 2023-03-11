@@ -36,6 +36,12 @@ Source = "https://github.com/danielfrg/mkdocs-jupyter"
 [project.entry-points."mkdocs.plugins"]
 mkdocs-jupyter = "mkdocs_jupyter.plugin:Plugin"
 
+[project.optional-dependencies]
+test = [
+  "pytest",
+  "pytest-cov",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -59,8 +65,6 @@ dependencies = [
   "jupyterlab",
   "flake8",
   "pylint",
-  "pytest",
-  "pytest-cov",
   "twine",
   "ipykernel",
   "pymdown-extensions",
