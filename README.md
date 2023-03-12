@@ -22,6 +22,7 @@
 
 # mkdocs-jupyter: Use Jupyter Notebooks in mkdocs
 
+- [Demo Site](https://mkdocs-jupyter.danielfrg.com/)
 - Add Jupyter Notebooks directly to the mkdocs navigation
 - Support for multiple formats:
   - `.ipynb` and `.py` files (using [jupytext](https://github.com/mwouts/jupytext))
@@ -31,12 +32,6 @@
 - Support for [ipywidgets](https://github.com/jupyter-widgets/ipywidgets)
 - Support for mkdocs TOC
 - Option to include notebook source
-
-<p align="center">
-  <a href="https://mkdocs-jupyter.danielfrg.com">
-      Demo with mkdocs-jupyter default theme
-  </a>
-</p>
 
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png" alt="mkdocs-jupyter default theme"  width="300"></a>
 
