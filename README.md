@@ -33,7 +33,9 @@
 - Option to include notebook source
 
 <p align="center">
-[Demo Site](https://mkdocs-jupyter.danielfrg.com/)
+  <a href="https://mkdocs-jupyter.danielfrg.com">
+      Demo with mkdocs-jupyter default theme
+  </a>
 </p>
 
 <a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png" alt="mkdocs-jupyter default theme"  width="300"></a>

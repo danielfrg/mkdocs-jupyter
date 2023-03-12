@@ -1,5 +1,9 @@
 # mkdocs-jupyter Change Log
 
+## 0.23
+
+- Support nbconvert 7
+
 ## 0.21
 
 - Support Pygments 2.1.0

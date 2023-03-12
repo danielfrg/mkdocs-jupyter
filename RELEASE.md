@@ -8,10 +8,6 @@
 ```shell
 export VERSION=1.0.0
 
-# Optional reset
-task cleanall resetjs
-task npm-install
-
 # Build
 task npm-build pkg
 task upload-pypi

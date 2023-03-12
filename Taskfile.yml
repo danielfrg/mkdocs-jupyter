@@ -1,7 +1,6 @@
-version: '3'
+version: "3"
 
 tasks:
-
   pkg:
     cmds:
       - hatch build
@@ -33,7 +32,7 @@ tasks:
   upload-pypi:
     cmds:
       - twine upload dist/*.tar.gz
-
+      - twine upload dist/*.whl
 
   cleanpython:
     cmds:
@@ -44,8 +43,8 @@ tasks:
       - find . -type d -name .ipynb_checkpoints -exec rm -rf {} +
       - find . -type d -name site -exec rm -rf {} +
 
-# ------------------------------------------------------------------------------
-# Javascript
+  # ------------------------------------------------------------------------------
+  # Javascript
 
   npm-install:
     dir: js
@@ -57,7 +56,6 @@ tasks:
     cmds:
       - npm run build
 
-
   npm-dev:
     dir: js
     cmds:
@@ -67,4 +65,3 @@ tasks:
     dir: js
     cmds:
       - npm run clean
-
