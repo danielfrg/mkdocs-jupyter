@@ -14,7 +14,7 @@
     "dependencies": {},
     "devDependencies": {
         "css-loader": "^5.2.4",
-        "filemanager-webpack-plugin": "^4.0.0",
+        "filemanager-webpack-plugin": "^8.0.0",
         "mini-css-extract-plugin": "^1.5.0",
         "sass": "^1.32.11",
         "sass-loader": "^11.0.1",
