@@ -21,7 +21,7 @@ classifiers = [
 ]
 dependencies = [
   "nbconvert>=7.2.9,<8",
-  "mkdocs>=1.4.2,<2",
+  "mkdocs>=1.4.0,<2",
   "mkdocs-material>9.0.0",
   "jupytext>1.13.8,<2",
   "Pygments>2.12.0",
