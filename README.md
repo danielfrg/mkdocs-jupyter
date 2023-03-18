@@ -25,7 +25,8 @@
 - [Demo Site](https://mkdocs-jupyter.danielfrg.com/)
 - Add Jupyter Notebooks directly to the mkdocs navigation
 - Support for multiple formats:
-  - `.ipynb` and `.py` files (using [jupytext](https://github.com/mwouts/jupytext))
+  - `.ipynb` and `.py` files (using
+    [jupytext](https://github.com/mwouts/jupytext))
 - Same style as regular Jupyter Notebooks
   - Support Jupyter Themes
 - Option to execute the notebook before converting
@@ -33,8 +34,13 @@
 - Support for mkdocs TOC
 - Option to include notebook source
 
-<a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png" alt="mkdocs-jupyter default theme"  width="300"></a>
-<a href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"><img src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png" alt="mkdocs-jupyter material theme"  width="300"></a>
+<a
+href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img
+src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"
+alt="mkdocs-jupyter default theme"  width="300"></a> <a
+href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"><img
+src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"
+alt="mkdocs-jupyter material theme"  width="300"></a>
 
 ## Installation
 
@@ -44,7 +50,8 @@ pip install mkdocs-jupyter
 
 ## Configuration
 
-In the `mkdocs.yml` use Jupyter notebooks (`.ipynb`) or Python scripts (`.py`) as pages:
+In the `mkdocs.yml` use Jupyter notebooks (`.ipynb`) or Python scripts (`.py`)
+as pages:
 
 ```yaml
 nav:
@@ -64,7 +71,8 @@ The first h1 header (`#`) in your notebook will be used as the title.
 # This H1 header will be the the title.
 ```
 
-This can be turned off in the configuration (in which case the filename will be used as title):
+This can be turned off in the configuration (in which case the filename will be
+used as title):
 
 ```yaml
 plugins:
@@ -72,15 +80,16 @@ plugins:
       ignore_h1_titles: True
 ```
 
-In order to see the table of contents you need to maintain a hierarchical headers structure in your notebooks.
-You must use h2 headers (`##`) and not h1 (`#`)
+In order to see the table of contents you need to maintain a hierarchical
+headers structure in your notebooks. You must use h2 headers (`##`) and not h1
+(`#`)
 
 ```md
 ## This H2 title will show in the table of contents
 ```
 
-If you want to **nest headers** in the TOC you need to add additional levels later
-in the same markdown cell or new bottom markdown cells:
+If you want to **nest headers** in the TOC you need to add additional levels
+later in the same markdown cell or new bottom markdown cells:
 
 ```md
 ## This header will show as top level in the table of contents
@@ -103,7 +112,8 @@ plugins:
 
 ### Execute Notebook
 
-You can tell the plugin to execute the notebook before converting, default is `False`:
+You can tell the plugin to execute the notebook before converting, default is
+`False`:
 
 ```yaml
 plugins:
@@ -111,7 +121,8 @@ plugins:
       execute: true
 ```
 
-You can tell the plugin to ignore the execution of some files (with glob matching):
+You can tell the plugin to ignore the execution of some files (with glob
+matching):
 
 ```yaml
 plugins:
@@ -131,8 +142,8 @@ plugins:
 
 #### Kernel
 
-By default the plugin will use the kernel specified in the notebook to execute it.
-You can specify a custom kernel name to use for all the notebooks:
+By default the plugin will use the kernel specified in the notebook to execute
+it. You can specify a custom kernel name to use for all the notebooks:
 
 ```yaml
 plugins:
@@ -142,8 +153,8 @@ plugins:
 
 ### Ingore Code Input
 
-By default the plugin will show full code and regular cell output details.
-You can hide cell code input for all the notebooks:
+By default the plugin will show full code and regular cell output details. You
+can hide cell code input for all the notebooks:
 
 ```yaml
 plugins:
@@ -151,7 +162,8 @@ plugins:
       show_input: False
 ```
 
-You can also decide to hide the `Out[#]` output notation and other cell metadata for all the notebooks:
+You can also decide to hide the `Out[#]` output notation and other cell metadata
+for all the notebooks:
 
 ```yaml
 plugins:
@@ -161,8 +173,8 @@ plugins:
 
 ### Remove Cell Using Tags
 
-By default the plugin will show full code and regular cell output details.
-You can hide cell code input for specific cells using tags:
+By default the plugin will show full code and regular cell output details. You
+can hide cell code input for specific cells using tags:
 
 ```yaml
 plugins:
@@ -172,12 +184,13 @@ plugins:
           - hide_code
 ```
 
-More detailed on removing cell based on tag, see [NbConvert Customization](https://nbconvert.readthedocs.io/en/latest/removing_cells.html))
+More detailed on removing cell based on tag, see [NbConvert
+Customization](https://nbconvert.readthedocs.io/en/latest/removing_cells.html))
 
 ### Jupyter themes
 
-You can configure the different Jupyter themes.
-For example if using material with `slate` color scheme you can use the Jupyter Lab `dark` theme:
+You can configure the different Jupyter themes. For example if using material
+with `slate` color scheme you can use the Jupyter Lab `dark` theme:
 
 ```yml
 plugins:
@@ -192,8 +205,8 @@ theme:
 
 ### Download notebook link
 
-You can tell the plugin to include the notebook source to make it easy to show
-a download button in the theme, default is `False`:
+You can tell the plugin to include the notebook source to make it easy to show a
+download button in the theme, default is `False`:
 
 ```yml
 plugins:
@@ -201,11 +214,11 @@ plugins:
       include_source: True
 ```
 
-This setting will also create a `page.nb_url` value that you can use in your theme
-to make a link in each page.
+This setting will also create a `page.nb_url` value that you can use in your
+theme to make a link in each page.
 
-For example in `mkdocs-material`
-(see [customization](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks)),
+For example in `mkdocs-material` (see
+[customization](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks)),
 you can create a `main.html` file like this:
 
 ```jinja
@@ -226,12 +239,14 @@ you can create a `main.html` file like this:
 
 ## Styles
 
-This extensions includes the Jupyter Lab nbconvert CSS styles and does some changes
-to make it as generic as possible in order for it to work with a variety of mkdocs themes.
-This is not always possible and the theme we test the most is [mkdocs-material](https://squidfunk.github.io/mkdocs-material).
+This extensions includes the Jupyter Lab nbconvert CSS styles and does some
+modifications to make it as generic as possible in order for it to work with a
+variety of mkdocs themes. This is not always possible and the theme we test the
+most is [mkdocs-material](https://squidfunk.github.io/mkdocs-material).
 
-It's possible you might need to do some CSS changes to make it look as good as you
-want, for example for the material theme take a look at their [customization docs](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks).
+It's possible you might need to do some CSS changes to make it look as good as
+you want, for example for the material theme take a look at their [customization
+docs](https://squidfunk.github.io/mkdocs-material/customization/#overriding-template-blocks).
 
 Create a `main.html` file like:
 
@@ -256,6 +271,6 @@ Create a `main.html` file like:
 
 Any markdown specific features such as
 [admonitions](https://squidfunk.github.io/mkdocs-material/reference/admonitions/)
-wont work with mkdocs-jupyter because those features are not supported by Jupyter itseft and we use
-[nbconvert](https://nbconvert.readthedocs.io/)
-to make the conversion.
+wont work with mkdocs-jupyter because those features are not supported by
+Jupyter itseft and we use [nbconvert](https://nbconvert.readthedocs.io/) to make
+the conversion.
