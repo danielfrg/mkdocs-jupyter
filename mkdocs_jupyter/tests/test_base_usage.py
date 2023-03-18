@@ -13,6 +13,7 @@ from nbclient.exceptions import CellExecutionError
         ["base-with-nbs.yml", True],
         ["base-with-pys.yml", True],
         ["base-without-nbs.yml", True],
+        ["material-execute-ignore.yml", True],
         ["material-with-nbs-pys.yml", True],
         ["material-with-nbs.yml", True],
         ["material-with-pys.yml", True],
@@ -20,13 +21,13 @@ from nbclient.exceptions import CellExecutionError
     ],
 )
 def test_notebook_renders(input):
-    filename, renders = input
+    filename, should_work = input
 
     this_dir = os.path.dirname(os.path.realpath(__file__))
     config_file = os.path.join(this_dir, f"mkdocs/{filename}")
 
     try:
         build(load_config(config_file))
-        assert renders
+        assert should_work
     except CellExecutionError:
-        assert not renders
+        assert not should_work
