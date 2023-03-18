@@ -10,6 +10,7 @@ nav:
 plugins:
   - mkdocs-jupyter:
       include_source: True
+      highlight_extra_classes: "custom-css-classes"
 
 markdown_extensions:
   - toc:

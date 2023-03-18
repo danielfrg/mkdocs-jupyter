@@ -203,6 +203,17 @@ theme:
     scheme: slate
 ```
 
+### Extra CSS classes
+
+This option will add a custom CSS class to the `div` container that highlights
+the code cells. This can be useful to add custom styles to the code cells.
+
+```yml
+plugins:
+  - mkdocs-jupyter:
+      highlight_extra_classes: "custom-css-classes
+```
+
 ### Download notebook link
 
 You can tell the plugin to include the notebook source to make it easy to show a

@@ -47,6 +47,7 @@ def nb2html(
     show_input: bool = True,
     no_input: bool = False,
     remove_tag_config: dict = {},
+    highlight_extra_classes: str = "",
 ):
     """
     Convert a notebook to HTML
@@ -100,7 +101,9 @@ def nb2html(
     # Customize NBConvert App
     preprocessors_ = [SubCell]
     filters = {
-        "highlight_code": custom_highlight_code,
+        "highlight_code": mk_custom_highlight_code(
+            extra_css_classes=highlight_extra_classes
+        ),
         # "markdown2html": custom_markdown2html,
     }
 
@@ -125,7 +128,10 @@ def nb2html(
     if extension == ".py":
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
-        content, resources = exporter.from_file(nb_file)
+        content, resources = exporter.from_file(
+            nb_file,
+            resources={"mkdocs": {"test": "value"}},
+        )
     else:
         try:
             with open(nb_path, "r", encoding="utf-8") as f:
@@ -133,7 +139,12 @@ def nb2html(
                 kernel_lang = nb_json["metadata"]["kernelspec"]["language"]
         except KeyError:
             pass
-        content, resources = exporter.from_filename(nb_path)
+        content, resources = exporter.from_filename(
+            nb_path,
+            resources={
+                "mkdocs": {"highlight_extra_classes": highlight_extra_classes}
+            },
+        )
 
     return content
 
@@ -246,25 +257,29 @@ def get_nbconvert_app(
     return app
 
 
-def custom_highlight_code(source, language=None, metadata=None):
-    """
-    Change CSS class names from .highlight to .highlight-ipynb.
-    This are for the <div> that contains the <pre>
+def mk_custom_highlight_code(extra_css_classes=""):
+    def custom_highlight_code(source, language=None, metadata=None):
+        """
+        Change CSS class names from .highlight to .highlight-ipynb.
+        These are the <div> that contains the <pre>
 
-    This modifies only the HTML not CSS.
-    On the `notebook.html.js` template we modify the CSS styles.
-    """
-    global cell_id
-    cell_id = cell_id + 1
-    if not language:
-        language = kernel_lang
+        This modifies only the HTML not CSS.
+        On the `notebook.html.js` template we modify the CSS styles.
+        """
+        global cell_id
+        cell_id = cell_id + 1
+        if not language:
+            language = kernel_lang
 
-    formatter = HtmlFormatter(cssclass="highlight-ipynb hl-" + language)
-    output = _pygments_highlight(source, formatter, language, metadata)
+        classes = f"highlight-ipynb hl-{language} {extra_css_classes}"
+        formatter = HtmlFormatter(cssclass=classes)
+        output = _pygments_highlight(source, formatter, language, metadata)
 
-    clipboard_copy_txt = f"""<div id="cell-{cell_id}" class="clipboard-copy-txt">{source}</div>
-    """
-    return output + clipboard_copy_txt
+        clipboard_copy_txt = f"""<div id="cell-{cell_id}" class="clipboard-copy-txt">{source}</div>
+        """
+        return output + clipboard_copy_txt
+
+    return custom_highlight_code
 
 
 def custom_markdown2html(source):

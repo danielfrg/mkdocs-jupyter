@@ -47,6 +47,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("show_input", config_options.Type(bool, default=True)),
         ("no_input", config_options.Type(bool, default=False)),
         ("remove_tag_config", config_options.Type(dict, default={})),
+        ("highlight_extra_classes", config_options.Type(str, default="")),
     )
     _supported_extensions = [".ipynb", ".py"]
 
@@ -86,8 +87,8 @@ class Plugin(mkdocs.plugins.BasePlugin):
             show_input = self.config["show_input"]
             no_input = self.config["no_input"]
             remove_tag_config = self.config["remove_tag_config"]
+            highlight_extra_classes = self.config["highlight_extra_classes"]
 
-            print(self.config)
             if (
                 self.config["execute_ignore"]
                 and len(self.config["execute_ignore"]) > 0
@@ -111,6 +112,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     show_input=show_input,
                     no_input=no_input,
                     remove_tag_config=remove_tag_config,
+                    highlight_extra_classes=highlight_extra_classes,
                 )
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path)
