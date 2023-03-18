@@ -38,7 +38,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("include", config_options.Type(list, default=["*.py", "*.ipynb"])),
         ("ignore", config_options.Type(list, default=[])),
         ("execute", config_options.Type(bool, default=False)),
-        ("execute_ignore", config_options.Type(str, default="")),
+        ("execute_ignore", config_options.Type(list, default=[])),
         ("theme", config_options.Type(str, default="")),
         ("kernel_name", config_options.Type(str, default="")),
         ("include_source", config_options.Type(bool, default=False)),
@@ -87,13 +87,17 @@ class Plugin(mkdocs.plugins.BasePlugin):
             no_input = self.config["no_input"]
             remove_tag_config = self.config["remove_tag_config"]
 
-            if self.config["execute_ignore"]:
-                ignore_pattern = self.config["execute_ignore"]
-                execute_ignore = pathlib.PurePath(
-                    page.file.abs_src_path
-                ).match(ignore_pattern)
-                if execute_ignore:
-                    exec_nb = False
+            print(self.config)
+            if (
+                self.config["execute_ignore"]
+                and len(self.config["execute_ignore"]) > 0
+            ):
+                for ignore_pattern in self.config["execute_ignore"]:
+                    ignore_this = pathlib.PurePath(
+                        page.file.abs_src_path
+                    ).match(ignore_pattern)
+                    if ignore_this:
+                        exec_nb = False
 
             theme = self.config["theme"]
 

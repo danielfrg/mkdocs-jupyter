@@ -108,7 +108,7 @@ You can tell the plugin to execute the notebook before converting, default is `F
 ```yaml
 plugins:
   - mkdocs-jupyter:
-      execute: True
+      execute: true
 ```
 
 You can tell the plugin to ignore the execution of some files (with glob matching):
@@ -116,7 +116,8 @@ You can tell the plugin to ignore the execution of some files (with glob matchin
 ```yaml
 plugins:
   - mkdocs-jupyter:
-      execute_ignore: "my-secret-files/*.ipynb"
+      execute_ignore:
+        - "my-secret-files/*.ipynb"
 ```
 
 To fail when notebook execution fails set `allow_errors` to `false`:

@@ -1,0 +1,39 @@
+site_name: site-with-notebooks-and-python-files
+site_description: mkdocs-jupyter test site
+
+nav:
+  - Home: index.md
+  - Demo (nb): demo.ipynb
+  - Equations (py): variational-inference-script.py
+
+plugins:
+  - mkdocs-jupyter:
+      execute: true
+      execute_ignore:
+        - "ruby.ipynb" # We won't have the ruby kernel on the tests
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - codehilite:
+      guess_lang: false
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.arithmatex
+
+theme:
+  name: material
+  # custom_dir: overrides
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+extra_css:
+  - extras/material.css
+  - extras/styles.css
