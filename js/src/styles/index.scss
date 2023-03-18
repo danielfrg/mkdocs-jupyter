@@ -286,6 +286,10 @@ We duplicated them to the root so they work in the cells
         // TODO
     }
 
+    table.dataframe {
+        table-layout: auto !important;
+    }
+
     // Fix some margin/overflow issues
     .md-typeset__scrollwrap {
         margin: 0;
