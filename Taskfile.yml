@@ -31,8 +31,7 @@ tasks:
 
   upload-pypi:
     cmds:
-      - twine upload dist/*.tar.gz
-      - twine upload dist/*.whl
+      - hatch publish
 
   cleanpython:
     cmds:

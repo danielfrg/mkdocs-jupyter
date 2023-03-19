@@ -1,5 +1,12 @@
 # mkdocs-jupyter Change Log
 
+## 0.24
+
+- Add option for including requireJS
+- Add option for custom highlight CSS classes
+- Make execute_ignore a list
+- Fix various CSS issues
+
 ## 0.23
 
 - Support nbconvert 7
