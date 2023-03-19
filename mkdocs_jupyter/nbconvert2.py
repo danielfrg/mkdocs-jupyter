@@ -155,6 +155,12 @@ def nb2html(
             },
         )
 
+    if highlight_extra_classes:
+        content = content.replace(
+            "jp-OutputArea-output",
+            f"jp-OutputArea-output {highlight_extra_classes}",
+        )
+        return content
     return content
 
 
