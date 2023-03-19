@@ -48,6 +48,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("no_input", config_options.Type(bool, default=False)),
         ("remove_tag_config", config_options.Type(dict, default={})),
         ("highlight_extra_classes", config_options.Type(str, default="")),
+        ("include_requirejs", config_options.Type(bool, default=False)),
     )
     _supported_extensions = [".ipynb", ".py"]
 
@@ -80,14 +81,15 @@ class Plugin(mkdocs.plugins.BasePlugin):
     def on_pre_page(self, page, config, files):
         if self.should_include(page.file):
             ignore_h1_titles = self.config["ignore_h1_titles"]
-            kernel_name = self.config["kernel_name"]
 
             exec_nb = self.config["execute"]
+            kernel_name = self.config["kernel_name"]
             allow_errors = self.config["allow_errors"]
             show_input = self.config["show_input"]
             no_input = self.config["no_input"]
             remove_tag_config = self.config["remove_tag_config"]
             highlight_extra_classes = self.config["highlight_extra_classes"]
+            include_requirejs = self.config["include_requirejs"]
 
             if (
                 self.config["execute_ignore"]
@@ -113,6 +115,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     no_input=no_input,
                     remove_tag_config=remove_tag_config,
                     highlight_extra_classes=highlight_extra_classes,
+                    include_requirejs=include_requirejs,
                 )
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path)

@@ -48,6 +48,7 @@ def nb2html(
     no_input: bool = False,
     remove_tag_config: dict = {},
     highlight_extra_classes: str = "",
+    include_requirejs: bool = False,
 ):
     """
     Convert a notebook to HTML
@@ -130,7 +131,12 @@ def nb2html(
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
         content, resources = exporter.from_file(
             nb_file,
-            resources={"mkdocs": {"test": "value"}},
+            resources={
+                "mkdocs": {
+                    "test": "value",
+                    "include_requirejs": include_requirejs,
+                }
+            },
         )
     else:
         try:
@@ -142,7 +148,10 @@ def nb2html(
         content, resources = exporter.from_filename(
             nb_path,
             resources={
-                "mkdocs": {"highlight_extra_classes": highlight_extra_classes}
+                "mkdocs": {
+                    "test": "value",
+                    "include_requirejs": include_requirejs,
+                }
             },
         )
 

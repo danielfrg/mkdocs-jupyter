@@ -8,12 +8,10 @@
 {%- block header -%}
 
 {# CHANGE:
-1. Remove Require.JS (incompatible with the clipboard-copy)
+1. Make RequireJS optional as might conflict with some JS stuff from material
 #}
 {%- block html_head_js -%}
-{%- block html_head_js_requirejs -%}
-{# <script src="{{ resources.require_js_url }}"></script> #}
-{%- endblock html_head_js_requirejs -%}
+
 {{ resources.include_js("mkdocs_html/assets/clipboard.umd.js") }}
 <script>
       document.addEventListener('clipboard-copy', function(event) {
@@ -24,6 +22,12 @@
         }, 1000)
       })
 </script>
+
+{%- block html_head_js_requirejs -%}
+{%- if resources.mkdocs.include_requirejs -%}
+<script src="{{ resources.require_js_url }}"></script>
+{%- endif -%}
+{%- endblock html_head_js_requirejs -%}
 {%- endblock html_head_js -%}
 
 {% block jupyter_widgets %}
@@ -55,7 +59,6 @@
 {%- endblock notebook_css %}
 
 {{ mathjax() }}
-{{ resources.mkdocs }}
 {%- endblock header -%}
 
 {# CHANGE: Remove the footer - lab template outputs a full HTML page #}

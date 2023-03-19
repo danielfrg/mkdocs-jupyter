@@ -9,8 +9,9 @@ nav:
 
 plugins:
   - mkdocs-jupyter:
-      include_source: True
+      include_source: true
       highlight_extra_classes: "custom-css-classes"
+      include_requirejs: true
 
 markdown_extensions:
   - toc:

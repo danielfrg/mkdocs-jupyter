@@ -8,8 +8,8 @@ nav:
 
 plugins:
   - mkdocs-jupyter:
-      include_source: True
-      execute: True
+      include_source: true
+      execute: true
       execute_ignore:
         - "*.ipynb"
 

@@ -477,7 +477,7 @@ We duplicated them to the root so they work in the cells
         position: absolute;
         top: -3px;
         right: 0;
-        // z-index: 1000;
+        z-index: 1;
 
         clipboard-copy {
             -webkit-appearance: button;

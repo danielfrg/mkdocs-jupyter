@@ -214,6 +214,16 @@ plugins:
       highlight_extra_classes: "custom-css-classes
 ```
 
+### RequireJS
+
+By default RequireJS is not loaded. You can enable it with:
+
+```yml
+plugins:
+  - mkdocs-jupyter:
+      include_requirejs: true
+```
+
 ### Download notebook link
 
 You can tell the plugin to include the notebook source to make it easy to show a
@@ -283,5 +293,18 @@ Create a `main.html` file like:
 Any markdown specific features such as
 [admonitions](https://squidfunk.github.io/mkdocs-material/reference/admonitions/)
 wont work with mkdocs-jupyter because those features are not supported by
-Jupyter itseft and we use [nbconvert](https://nbconvert.readthedocs.io/) to make
+Jupyter itself and we use [nbconvert](https://nbconvert.readthedocs.io/) to make
 the conversion.
+
+To use this type of features you have to define the HTML directly in the
+markdown cells:
+
+```html
+<div class="admonition note">
+  <p class="admonition-title">Note</p>
+  <p>
+    If two distributions are similar, then their entropies are similar, implies
+    the KL divergence with respect to two distributions will be smaller...
+  </p>
+</div>
+```
