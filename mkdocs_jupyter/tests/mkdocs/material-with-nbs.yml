@@ -10,7 +10,7 @@ nav:
 plugins:
   - mkdocs-jupyter:
       include_source: true
-      highlight_extra_classes: not-prose
+      # highlight_extra_classes: not-prose
 
 markdown_extensions:
   - toc:
