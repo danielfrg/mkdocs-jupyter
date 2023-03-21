@@ -4,7 +4,7 @@ from mkdocs_jupyter.utils import slugify
 
 # ------------------------------------------------------------------------------
 # This makes the links from the TOC work
-# We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.header
+# We monkeypatch nbconvert.filters.markdown_mistune.IPythonRenderer.heading
 # to use a version that makes the id all lowercase
 # We do this because mkdocs uses all lowercase TOC titles
 # (to make them url-friendly)
@@ -38,13 +38,12 @@ def add_anchor_lower_id(html, anchor_link_text="¶"):
     return ElementTree.tostring(h).decode("utf-8", "replace")
 
 
-def new_header(self, text, level, raw=None):
-    html = super(IPythonRenderer, self).header(text, level, raw=raw)
-    anchor_link_text = self.options.get("anchor_link_text", "¶")
-    return add_anchor_lower_id(html, anchor_link_text=anchor_link_text)
+def new_heading(self, text, level):
+    html = super(IPythonRenderer, self).heading(text, level)
+    return add_anchor_lower_id(html, anchor_link_text=self.anchor_link_text)
 
 
-IPythonRenderer.header = new_header
+IPythonRenderer.heading = new_heading
 
 # End monkeypatch --------------------------------------------------------------
 
