@@ -1,17 +1,21 @@
 # mkdocs-jupyter Change Log
 
-## 0.24
+## 0.24.1
+
+- Fix TOC header links
+
+## 0.24.0
 
 - Add option for including requireJS
 - Add option for custom highlight CSS classes
 - Make execute_ignore a list
 - Fix various CSS issues
 
-## 0.23
+## 0.23.0
 
 - Support nbconvert 7
 
-## 0.21
+## 0.21.0
 
 - Support Pygments 2.1.0
 - Fix some markdown CSS overflow issues
