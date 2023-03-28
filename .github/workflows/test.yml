@@ -85,7 +85,7 @@ jobs:
             ${{ hashFiles('requirements/*') }}
 
       - name: Install dependencies
-        if: steps.cached-python-env.outputs.cache-hit != 'true' || steps.cached-python-env-check.outcome != 'success'
+        if: steps.cached-python-env.outputs.cache-hit != 'true'
         run: |
           pip install -r requirements/pyproject.txt
 
