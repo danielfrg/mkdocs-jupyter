@@ -73,41 +73,25 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Hatch
-        run: |
-          pip install --upgrade hatch
-          hatch config set dirs.env.virtual .venv
-
       - uses: actions/cache@v3
         id: cached-python-env
         with:
-          path: .venv
+          path: ${{ env.pythonLocation }}
           key: >
-            hatch-venv
+            python
             ${{ runner.os }}
             python-${{ matrix.python-version }}
             ${{ hashFiles('pyproject.toml') }}
             ${{ hashFiles('requirements/*') }}
 
-      - name: Ensure cache is healthy
-        id: cached-python-env-check
-        continue-on-error: true
-        if: steps.cached-python-env.outputs.cache-hit == 'true'
-        run: |
-          source .venv/jupyter-flex/bin/activate
-          python --version
-          pip --version
-
       - name: Install dependencies
         if: steps.cached-python-env.outputs.cache-hit != 'true' || steps.cached-python-env-check.outcome != 'success'
         run: |
-          cd python
-          hatch env create
+          pip install -r requirements/pyproject.txt
 
-      - name: Print variables
+      - name: Install Hatch
         run: |
-          echo ${{ steps.cached-python-env.outputs.cache-hit }}
-          echo ${{ steps.cached-python-env-check.outcome }}
+          pip install --upgrade hatch
 
       # ------------------------------------------------------------------------
       # Test
@@ -119,7 +103,6 @@ jobs:
       - name: Install package
         run: |
           pip install dist/*.tar.gz
-          pip install pytest pytest-cov ipykernel
           pip freeze
 
       - name: Run tests
