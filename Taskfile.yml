@@ -6,7 +6,7 @@ env:
 tasks:
   build:
     cmds:
-      - build
+      - hatch build
 
   check:
     cmds:
