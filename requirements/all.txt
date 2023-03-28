@@ -1,0 +1,2 @@
+-r ./pyproject.txt
+-r ./linting.txt

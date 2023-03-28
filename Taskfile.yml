@@ -1,20 +1,25 @@
 version: "3"
 
+env:
+  PYTEST_K: ""
+
 tasks:
-  pkg:
+  build:
     cmds:
       - hatch build
 
   check:
     cmds:
-      - isort --check-only --diff .
-      - black --check --diff .
-      # - flake8
+      - isort . --check-only --diff
+      - black . --check
+      - ruff check mkdocs_jupyter
+      - flake8
 
   fmt:
     cmds:
       - isort .
       - black .
+      - ruff check --fix mkdocs_jupyter
 
   test:
     cmds:
@@ -29,38 +34,42 @@ tasks:
       - coverage xml
       - coverage html
 
-  upload-pypi:
+  lockfiles:
+    cmds:
+      - pip-compile -q --resolver=backtracking -o requirements/pyproject.txt pyproject.toml --extra=test
+      - pip-compile -q --resolver=backtracking -o requirements/linting.txt requirements/linting.in
+
+  publish:
     cmds:
       - hatch publish
 
-  cleanpython:
+  py-clean:
     cmds:
-      - rm -rf .eggs .pytest_cache dist htmlcov test-results
+      - rm -rf .pytest_cache dist htmlcov test-results .ruff_cache
       - rm -f .coverage coverage.xml
       - find . -type f -name '*.py[co]' -delete
       - find . -type d -name __pycache__ -exec rm -rf {} +
       - find . -type d -name .ipynb_checkpoints -exec rm -rf {} +
-      - find . -type d -name site -exec rm -rf {} +
 
   # ------------------------------------------------------------------------------
   # Javascript
 
-  npm-install:
+  js-install:
     dir: js
     cmds:
       - npm install
 
-  npm-build:
+  js-build:
     dir: js
     cmds:
       - npm run build
 
-  npm-dev:
+  js-dev:
     dir: js
     cmds:
       - npm run dev
 
-  cleanjs:
+  js-clean:
     dir: js
     cmds:
       - npm run clean

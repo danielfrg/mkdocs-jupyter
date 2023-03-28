@@ -5,9 +5,7 @@ readme = "README.md"
 requires-python = ">=3.7"
 license = "Apache-2.0"
 keywords = ["mkdocs", "jupyter", "jupyterlab", "notebooks", "documentation"]
-authors = [
-  { name = "Daniel Rodriguez", email = "daniel@danielfrg.com" },
-]
+authors = [{ name = "Daniel Rodriguez", email = "daniel@danielfrg.com" }]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Programming Language :: Python",
@@ -25,6 +23,7 @@ dependencies = [
   "mkdocs-material>9.0.0",
   "jupytext>1.13.8,<2",
   "Pygments>2.12.0",
+  "ipykernel<7.0.0,>6.0.0",
 ]
 dynamic = ["version"]
 
@@ -37,37 +36,29 @@ Source = "https://github.com/danielfrg/mkdocs-jupyter"
 mkdocs-jupyter = "mkdocs_jupyter.plugin:Plugin"
 
 [project.optional-dependencies]
-test = [
-  "pytest",
-  "pytest-cov",
-]
+test = ["coverage[toml]", "pymdown-extensions", "pytest", "pytest-cov"]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build]
-artifacts = [
-  "mkdocs_jupyter/**"
-]
-exclude = [
-  ".github", "demo",
-]
+artifacts = ["mkdocs_jupyter/**"]
+exclude = [".github", "demo"]
 
 [tool.hatch.version]
 path = "mkdocs_jupyter/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = [
+  # Linting
   "black",
-  "coverage[toml]",
-  "isort",
-  "jupyterlab",
   "flake8",
-  "pylint",
-  "twine",
-  "ipykernel",
-  "pymdown-extensions",
+  "isort",
+  "pip-tools",
+  "ruff",
+  # Development
+  "jupyterlab",
 ]
 
 [tool.hatch.envs.default.scripts]

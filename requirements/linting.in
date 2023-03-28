@@ -1,0 +1,5 @@
+black
+flake8
+isort
+pip-tools
+ruff
