@@ -9,8 +9,9 @@
 export VERSION=1.0.0
 
 # Build
-task npm-build pkg
-task upload-pypi
+task js-build
+task build
+task publish
 
 git commit -am "Release ${VERSION}" --allow-empty
 git tag ${VERSION}

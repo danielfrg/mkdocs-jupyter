@@ -28,7 +28,7 @@ jobs:
         # os: [ubuntu-latest, windows-latest, macos-latest]
         os: [ubuntu-20.04]
         python-version: [3.8, 3.9, "3.10", 3.11]
-        node-version: ["16"]
+        node-version: ["18"]
 
     steps:
       - uses: actions/checkout@v3
@@ -50,16 +50,20 @@ jobs:
         uses: actions/cache@v2
         with:
           path: js/node_modules
-          key: node_modules-${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('js/package*.json') }}
+          key: >
+            node_modules
+            ${{ runner.os }}
+            node-${{ matrix.node-version }}
+            ${{ hashFiles('js/package*.json') }}
 
       - name: JS - Install JS deps
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
-          task npm-install
+          task js-install
 
       - name: JS - Build JS
         run: |
-          task npm-build
+          task js-build
 
       # ------------------------------------------------------------------------
       # Python
@@ -72,13 +76,45 @@ jobs:
       - name: Install Hatch
         run: |
           pip install --upgrade hatch
+          hatch config set dirs.env.virtual .venv
+
+      - uses: actions/cache@v3
+        id: cached-python-env
+        with:
+          path: .venv
+          key: >
+            hatch-venv
+            ${{ runner.os }}
+            python-${{ matrix.python-version }}
+            ${{ hashFiles('pyproject.toml') }}
+            ${{ hashFiles('requirements/*') }}
+
+      - name: Ensure cache is healthy
+        id: cached-python-env-check
+        continue-on-error: true
+        if: steps.cached-python-env.outputs.cache-hit == 'true'
+        run: |
+          source .venv/jupyter-flex/bin/activate
+          python --version
+          pip --version
+
+      - name: Install dependencies
+        if: steps.cached-python-env.outputs.cache-hit != 'true' || steps.cached-python-env-check.outcome != 'success'
+        run: |
+          cd python
+          hatch env create
+
+      - name: Print variables
+        run: |
+          echo ${{ steps.cached-python-env.outputs.cache-hit }}
+          echo ${{ steps.cached-python-env-check.outcome }}
 
       # ------------------------------------------------------------------------
       # Test
 
       - name: Build package
         run: |
-          task pkg
+          task build
 
       - name: Install package
         run: |

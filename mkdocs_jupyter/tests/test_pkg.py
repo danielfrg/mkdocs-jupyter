@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from mkdocs_jupyter import __about__  as mkj_about
+from mkdocs_jupyter import __about__ as mkj_about
 from mkdocs_jupyter.config import settings
 
 pytestmark = [pytest.mark.pkg]
