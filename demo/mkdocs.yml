@@ -21,7 +21,6 @@ theme:
   features:
     - navigation.instant
     - navigation.tracking
-    - navigation.tabs
     - content.code.copy
   palette:
     - scheme: default
@@ -51,6 +50,8 @@ markdown_extensions:
 
 plugins:
   - search
+  - mkdocs-jupyter:
+      execute: false
 
 extra:
   analytics:
