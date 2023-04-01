@@ -97,9 +97,9 @@ jobs:
           pip install dist/*.tar.gz
           pip freeze
 
-      - name: Build docs
+      - name: Build demo docs
         run: |
-          task docs-build
+          task demo-build
 
       # ------------------------------------------------------------------------
       # Publish
