@@ -1,0 +1,112 @@
+name: demo
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: demo-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Deploy demo website
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["18"]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Task
+        uses: arduino/setup-task@v1
+
+      # ------------------------------------------------------------------------
+      # Set up JS
+
+      - name: JS - Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: JS - Load cached node_modules
+        id: cached-node_modules
+        uses: actions/cache@v2
+        with:
+          path: js/node_modules
+          key: >
+            node_modules
+            ${{ runner.os }}
+            node-${{ matrix.node-version }}
+            ${{ hashFiles('js/package*.json') }}
+
+      - name: JS - Install JS deps
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        run: |
+          task js-install
+
+      - name: JS - Build JS
+        run: |
+          task js-build
+
+      # ------------------------------------------------------------------------
+      # Setup Python
+
+      - name: Python - Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: actions/cache@v3
+        id: cached-python-env
+        with:
+          path: ${{ env.pythonLocation }}
+          key: >
+            python
+            ${{ runner.os }}
+            python-${{ matrix.python-version }}
+            ${{ hashFiles('pyproject.toml') }}
+            ${{ hashFiles('requirements/*') }}
+
+      - name: Install dependencies
+        if: steps.cached-python-env.outputs.cache-hit != 'true'
+        run: |
+          pip install -r requirements/pyproject.txt
+
+      - name: Install Hatch
+        run: |
+          pip install --upgrade hatch
+
+      # ------------------------------------------------------------------------
+      # Test
+
+      - name: Build package
+        run: |
+          task build
+
+      - name: Install package
+        run: |
+          pip install dist/*.tar.gz
+          pip freeze
+
+      - name: Build docs
+        run: |
+          task docs-build
+
+      # ------------------------------------------------------------------------
+      # Publish
+
+      - name: Upload to Netlify
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=demo/site --prod
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
