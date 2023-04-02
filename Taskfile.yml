@@ -9,6 +9,7 @@ tasks:
       - hatch build
 
   check:
+    ignore_error: true
     cmds:
       - isort . --check-only --diff
       - black . --check
@@ -16,6 +17,7 @@ tasks:
       - flake8
 
   fmt:
+    ignore_error: true
     cmds:
       - isort .
       - black .

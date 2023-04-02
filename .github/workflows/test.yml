@@ -18,36 +18,35 @@ env:
 
 jobs:
   test:
-    name: Python ${{ matrix.python-version }} on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
-
-    runs-on: ${{ matrix.os }}
+    name: test / py${{ matrix.python-version }}
 
     strategy:
       fail-fast: false
       matrix:
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-20.04]
         python-version: [3.8, 3.9, "3.10", 3.11]
         node-version: ["18"]
 
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - run: git fetch --prune --unshallow
+        with:
+          fetch-depth: 0
 
-      - name: Install Task
-        uses: arduino/setup-task@v1
+      - uses: arduino/setup-task@v1
 
       # ------------------------------------------------------------------------
       # JS
 
       - name: JS - Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: JS - Load cached node_modules
         id: cached-node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: js/node_modules
           key: >
@@ -93,12 +92,19 @@ jobs:
         run: |
           pip install --upgrade hatch
 
+      - name: Print Python info
+        run: |
+          which python
+          python --version
+          which pip
+          pip --version
+          pip freeze
+
       # ------------------------------------------------------------------------
       # Test
 
       - name: Build package
-        run: |
-          task build
+        run: task build
 
       - name: Install package
         run: |
