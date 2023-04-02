@@ -16,28 +16,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10"]
-        node-version: ["18"]
+        python-version: [3.11]
+        node-version: [18]
 
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Install Task
-        uses: arduino/setup-task@v1
+      - uses: arduino/setup-task@v1
 
       # ------------------------------------------------------------------------
       # Set up JS
 
-      - name: JS - Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: JS - Load cached node_modules
+      - name: Load cached node_modules
         id: cached-node_modules
         uses: actions/cache@v3
         with:
@@ -48,19 +44,19 @@ jobs:
             node-${{ matrix.node-version }}
             ${{ hashFiles('js/package*.json') }}
 
-      - name: JS - Install JS deps
+      - name: Install JS deps
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
           task js-install
 
-      - name: JS - Build JS
+      - name: Build JS
         run: |
           task js-build
 
       # ------------------------------------------------------------------------
       # Setup Python
 
-      - name: Python - Set up Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
