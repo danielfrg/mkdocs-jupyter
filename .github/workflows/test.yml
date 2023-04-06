@@ -18,7 +18,7 @@ env:
 
 jobs:
   test:
-    name: test / py ${{ matrix.python-version }}
+    name: py ${{ matrix.python-version }}
 
     strategy:
       fail-fast: false
