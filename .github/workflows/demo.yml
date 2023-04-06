@@ -10,8 +10,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Deploy demo website
+  deploy:
+    name: deploy demo
 
     strategy:
       fail-fast: false
