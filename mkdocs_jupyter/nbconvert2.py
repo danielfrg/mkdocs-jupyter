@@ -11,7 +11,9 @@ import os
 
 import jupytext
 import mistune
-from nbconvert.exporters import HTMLExporter, MarkdownExporter
+from nbconvert.exporters.html import HTMLExporter
+from nbconvert.exporters.markdown import MarkdownExporter
+
 from nbconvert.exporters.templateexporter import default_filters
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.filters.markdown_mistune import (
