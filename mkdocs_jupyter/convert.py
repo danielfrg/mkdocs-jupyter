@@ -13,7 +13,7 @@ from mkdocs_jupyter.utils import slugify
 def add_anchor_lower_id(html, anchor_link_text="¶"):
     from xml.etree.cElementTree import Element
 
-    from defusedxml import cElementTree as ElementTree
+    from defusedxml import ElementTree
     from nbconvert.filters.strings import _convert_header_id, html2text
 
     try:
