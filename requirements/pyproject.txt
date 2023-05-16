@@ -160,7 +160,7 @@ pygments==2.14.0
     #   mkdocs-jupyter (pyproject.toml)
     #   mkdocs-material
     #   nbconvert
-pymdown-extensions==9.10
+pymdown-extensions==10.0
     # via
     #   mkdocs-jupyter (pyproject.toml)
     #   mkdocs-material
