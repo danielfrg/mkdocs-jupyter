@@ -154,7 +154,7 @@ pure-eval==0.2.2
     # via stack-data
 py==1.11.0
     # via pytest
-pygments==2.14.0
+pygments==2.15.0
     # via
     #   ipython
     #   mkdocs-jupyter (pyproject.toml)
