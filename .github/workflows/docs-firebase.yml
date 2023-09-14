@@ -1,0 +1,96 @@
+name: deploy-firebase
+
+on:
+  workflow_call:
+    secrets:
+      GCP_SERVICE_ACCOUNT:
+        required: true
+      GCP_WORKLOAD_IDENTITY_PROVIDER:
+        required: true
+
+jobs:
+  prod:
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+      checks: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Restore built website
+        uses: actions/cache@v3
+        with:
+          path: dist
+          key: >
+            dist
+            ${{ github.run_id }}
+            ${{ github.run_attempt }}
+          fail-on-cache-miss: true
+
+      - name: Configure GCP auth
+        uses: google-github-actions/auth@v1
+        id: gcloud-auth
+        with:
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          create_credentials_file: true
+
+      - name: Set firebase creds
+        run: |
+          echo "SERVICE_ACCOUNT_KEY=$(cat "${{ steps.gcloud-auth.outputs.credentials_file_path }}" | tr -d '\n')" >> $GITHUB_ENV
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: "${{ env.SERVICE_ACCOUNT_KEY }}"
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          channelId: live
+        # env:
+        #   FIREBASE_CLI_EXPERIMENTS: webframeworks
+
+  preview:
+    if: (github.event_name == 'pull_request')
+
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+      checks: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Restore built website
+        uses: actions/cache@v3
+        with:
+          path: dist
+          key: >
+            dist
+            ${{ github.run_id }}
+            ${{ github.run_attempt }}
+          fail-on-cache-miss: true
+
+      - name: Configure GCP auth
+        uses: google-github-actions/auth@v1
+        id: gcloud-auth
+        with:
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          create_credentials_file: true
+
+      - name: Set firebase creds
+        run: |
+          echo "SERVICE_ACCOUNT_KEY=$(cat "${{ steps.gcloud-auth.outputs.credentials_file_path }}" | tr -d '\n')" >> $GITHUB_ENV
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: "${{ env.SERVICE_ACCOUNT_KEY }}"
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          expires: 2d

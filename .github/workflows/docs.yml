@@ -1,4 +1,4 @@
-name: demo
+name: docs
 
 on:
   push:
@@ -6,13 +6,17 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: demo-${{ github.head_ref }}
+  group: docs-${{ github.head_ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+  checks: write
 
 jobs:
   build:
-    name: build
-
     strategy:
       fail-fast: false
       matrix:
@@ -97,13 +101,22 @@ jobs:
         run: |
           task demo-build
 
-      # ------------------------------------------------------------------------
-      # Publish
-
-      - name: Upload to Netlify
-        uses: netlify/actions/cli@master
+      - name: Cache website
+        id: cache-build
+        uses: actions/cache@v3
         with:
-          args: deploy --dir=demo/site --prod
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          path: dist
+          key: >
+            dist
+            ${{ github.run_id }}
+            ${{ github.run_attempt }}
+
+  firebase:
+    uses: ./.github/workflows/docs-firebase.yml
+    needs: [build]
+    secrets: inherit
+
+  post-deploy:
+    uses: ./.github/workflows/docs-cloudflare.yml
+    needs: [firebase]
+    secrets: inherit
