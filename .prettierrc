@@ -10,13 +10,7 @@
             }
         },
         {
-            "files": ["*.yml"],
-            "options": {
-                "tabWidth": 2
-            }
-        },
-        {
-            "files": ["*.md"],
+            "files": ["*.yml", "*.json"],
             "options": {
                 "tabWidth": 2
             }

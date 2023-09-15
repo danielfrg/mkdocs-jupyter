@@ -5,6 +5,7 @@ site_author: Daniel Rodriguez
 copyright: Copyright &copy; 2023 Daniel Rodrigue
 repo_url: https://github.com/danielfrg/cloud.danielfrg.com
 edit_uri: ""
+site_dir: dist
 
 nav:
   - Home: index.md

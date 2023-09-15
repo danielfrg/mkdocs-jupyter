@@ -1,0 +1,7 @@
+{
+  "hosting": {
+    "site": "mkdocs-jupyter",
+    "public": "demo/dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  }
+}
