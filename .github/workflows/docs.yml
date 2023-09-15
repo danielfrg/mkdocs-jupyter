@@ -106,9 +106,9 @@ jobs:
         id: cache-build
         uses: actions/cache@v3
         with:
-          path: dist
+          path: demo/dist
           key: >
-            dist
+            website
             ${{ github.run_id }}
             ${{ github.run_attempt }}
 

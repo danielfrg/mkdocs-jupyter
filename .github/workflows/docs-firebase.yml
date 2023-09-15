@@ -26,9 +26,9 @@ jobs:
       - name: Restore built website
         uses: actions/cache@v3
         with:
-          path: dist
+          path: demo/dist
           key: >
-            dist
+            website
             ${{ github.run_id }}
             ${{ github.run_attempt }}
           fail-on-cache-miss: true
