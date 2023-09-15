@@ -54,7 +54,7 @@ tasks:
       - find . -type d -name .ipynb_checkpoints -exec rm -rf {} +
 
   docs-build:
-    dir: docs
+    dir: demo
     cmds:
       - mkdocs build
 
