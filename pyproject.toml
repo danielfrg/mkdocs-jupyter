@@ -44,7 +44,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 artifacts = ["mkdocs_jupyter/**"]
-exclude = [".github", "demo"]
+exclude = [".github", "docs"]
 
 [tool.hatch.version]
 path = "mkdocs_jupyter/__about__.py"
