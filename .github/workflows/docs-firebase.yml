@@ -26,7 +26,7 @@ jobs:
       - name: Restore built website
         uses: actions/cache@v3
         with:
-          path: docs/dist
+          path: demo/dist
           key: >
             docs
             ${{ github.run_id }}
@@ -70,7 +70,7 @@ jobs:
       - name: Restore built website
         uses: actions/cache@v3
         with:
-          path: docs/dist
+          path: demo/dist
           key: >
             docs
             ${{ github.run_id }}

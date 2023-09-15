@@ -96,7 +96,7 @@ celerybeat-schedule
 .pydevproject
 
 # mkdocs documentation
-docs/dist
+demo/dist
 
 # mypy
 .mypy_cache/

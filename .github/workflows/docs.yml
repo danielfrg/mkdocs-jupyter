@@ -106,7 +106,7 @@ jobs:
         id: cache-build
         uses: actions/cache@v3
         with:
-          path: docs/dist
+          path: demo/dist
           key: >
             docs
             ${{ github.run_id }}
