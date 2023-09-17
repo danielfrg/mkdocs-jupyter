@@ -108,7 +108,7 @@ jobs:
         with:
           path: demo/dist
           key: >
-            docs
+            website
             ${{ github.run_id }}
             ${{ github.run_attempt }}
 
