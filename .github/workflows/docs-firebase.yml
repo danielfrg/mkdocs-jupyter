@@ -47,8 +47,8 @@ jobs:
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: "${{ env.SERVICE_ACCOUNT_KEY }}"
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: ${{ env.SERVICE_ACCOUNT_KEY }}
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
           channelId: live
         # env:
         #   FIREBASE_CLI_EXPERIMENTS: webframeworks
@@ -91,6 +91,6 @@ jobs:
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: "${{ env.SERVICE_ACCOUNT_KEY }}"
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: ${{ env.SERVICE_ACCOUNT_KEY }}
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
           expires: 2d
