@@ -1,0 +1,3 @@
+*.js
+*.css
+!clipboard.umd.js

@@ -100,7 +100,7 @@ jobs:
 
       - name: Build demo docs
         run: |
-          task docs-build
+          task docs:build
 
       - name: Cache website
         id: cache-build

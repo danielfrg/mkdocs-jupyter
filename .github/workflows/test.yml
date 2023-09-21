@@ -110,7 +110,7 @@ jobs:
 
       - name: Run tests
         run: |
-          task test-all
+          task test:all
           task report
 
       - name: Codecov

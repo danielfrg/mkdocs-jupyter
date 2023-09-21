@@ -6,7 +6,7 @@ env:
 tasks:
   build:
     cmds:
-      - hatch build
+      - rye build
 
   check:
     ignore_error: true
@@ -27,7 +27,7 @@ tasks:
     cmds:
       - pytest -k "{{.PYTEST_K}}"
 
-  test-all:
+  test:all:
     cmds:
       - pytest .
 
@@ -36,16 +36,11 @@ tasks:
       - coverage xml
       - coverage html
 
-  lockfiles:
-    cmds:
-      - pip-compile -q --resolver=backtracking -o requirements/pyproject.txt pyproject.toml --extra=test
-      - pip-compile -q --resolver=backtracking -o requirements/linting.txt requirements/linting.in
-
   publish:
     cmds:
       - hatch publish
 
-  py-clean:
+  py:clean:
     cmds:
       - rm -rf .pytest_cache dist htmlcov test-results .ruff_cache
       - rm -f .coverage coverage.xml
@@ -53,7 +48,7 @@ tasks:
       - find . -type d -name __pycache__ -exec rm -rf {} +
       - find . -type d -name .ipynb_checkpoints -exec rm -rf {} +
 
-  docs-build:
+  docs:build:
     dir: demo
     cmds:
       - mkdocs build
@@ -61,22 +56,22 @@ tasks:
   # ------------------------------------------------------------------------------
   # Javascript
 
-  js-install:
+  js:install:
     dir: js
     cmds:
-      - npm install
+      - pnpm install
 
-  js-build:
+  js:build:
     dir: js
     cmds:
-      - npm run build
+      - pnpm run build
 
-  js-dev:
+  js:dev:
     dir: js
     cmds:
-      - npm run dev
+      - pnpm run dev
 
-  js-clean:
+  js:clean:
     dir: js
     cmds:
-      - npm run clean
+      - pnpm run clean

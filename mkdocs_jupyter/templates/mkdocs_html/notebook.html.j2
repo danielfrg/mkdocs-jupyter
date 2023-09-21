@@ -1,17 +1,18 @@
-{# Ovewrites: https://github.com/jupyter/nbconvert/blob/main/share/templates/lab/index.html.j2 #}
+{#
+Ovewrites: https://github.com/jupyter/nbconvert/blob/main/share/templates/lab/index.html.j2
+Look for CHANGE comments to see what we changed
+#}
 
 {%- extends "lab/index.html.j2" -%}
 {% from "base/mathjax.html.j2" import mathjax %}
 
 {# CHANGE: Overwrite the header because lab/index.html outputs a full page #}
-{# We want just the notebook content not a full HTML page #}
+{# We want just the notebook content not the full HTML page #}
 {%- block header -%}
 
-{# CHANGE:
-1. Make RequireJS optional as might conflict with some JS stuff from material
-#}
 {%- block html_head_js -%}
 
+{# CHANGE: Include the copy button JS #}
 {{ resources.include_js("mkdocs_html/assets/clipboard.umd.js") }}
 <script>
       document.addEventListener('clipboard-copy', function(event) {
@@ -23,6 +24,8 @@
       })
 </script>
 
+{# CHANGE: Make RequireJS optional as might conflict with some JS with
+mkdocs-material #}
 {%- block html_head_js_requirejs -%}
 {%- if resources.mkdocs.include_requirejs -%}
 <script src="{{ resources.require_js_url }}"></script>
@@ -39,42 +42,49 @@
 {% block extra_css %}
 {% endblock extra_css %}
 
+{# CHANGE: replace CSS classes: .highlight -> .highlight-ipynb #}
 {% for css in resources.inlining.css -%}
   <style type="text/css">
-    {# CHANGE: replace CSS classes: .highlight -> .highlight-ipynb #}
     {{ css | replace(".highlight ", ".highlight-ipynb " ) }}
   </style>
 {% endfor %}
 
+{# CHANGE: Replace the default styles for our own #}
 {% block notebook_css %}
-{# CHANGE: Replace the default styles for our own that overwrite some things #}
-{{ resources.include_css("mkdocs_html/assets/mkdocs-jupyter.css") }}
-{#
+{{ resources.include_css("mkdocs_html/assets/index.css") }}
+
 {% if resources.theme == 'dark' %}
-    {{ resources.include_css("static/theme-dark.css") }}
+    {{ resources.include_css("mkdocs_html/assets/theme-dark.css") }}
 {% else %}
-    {{ resources.include_css("static/theme-light.css") }}
+    {{ resources.include_css("mkdocs_html/assets/theme-light.css") }}
 {% endif %}
-#}
+{# CHANGE: Remove the PDF CSS #}
 {%- endblock notebook_css %}
 
-{{ mathjax() }}
-{%- endblock header -%}
+{%- block html_head_js_mathjax -%}
+{{ mathjax(resources.mathjax_url) }}
+{%- endblock html_head_js_mathjax -%}
 
-{# CHANGE: Remove the footer - lab template outputs a full HTML page #}
-{% block footer %}
-{% endblock footer %}
+{%- block html_head_js_mermaidjs -%}
+{{ mermaid_js(resources.mermaid_js_url) }}
+{%- endblock html_head_js_mermaidjs -%}
+
+{%- block html_head_css -%}
+{%- endblock html_head_css -%}
+
+{%- endblock header -%}
 
 {# CHANGE: Overwrite body header and footer to include a .jupyter-wrapper div wrapper #}
 {%- block body_header -%}
 <div class="jupyter-wrapper">
+{% if resources.theme == 'dark' %}
+<div class="jp-Notebook" data-jp-theme-light="false" data-jp-theme-name="JupyterLab Dark">
+{% else %}
+<div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+{% endif %}
 {%- endblock body_header -%}
 
-{% block body_footer %}
-</div>
-{% endblock body_footer %}
-
-{# ADDED:
+{# CHANGE:
 1. Show the tags on the cell toolbar
 2. Add clipboard-copy button
     1. Add a wrapper with the ID for the clipboard button
@@ -123,3 +133,12 @@
 {{ super() }}
 </div>
 {%- endblock codecell %}
+
+{% block body_footer %}
+</div> <!-- jp-Notebook -->
+</div> <!-- jupyter-wrapper -->
+{% endblock body_footer %}
+
+{# CHANGE: Remove the footer - lab template outputs a full HTML page #}
+{% block footer %}
+{% endblock footer %}

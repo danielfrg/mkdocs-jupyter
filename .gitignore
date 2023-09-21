@@ -96,6 +96,7 @@ celerybeat-schedule
 .pydevproject
 
 # mkdocs documentation
+site
 demo/dist
 
 # mypy

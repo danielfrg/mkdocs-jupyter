@@ -1,9 +1,8 @@
 /*
-This file is taken from the built JupyterLab index.css
-Found on share/nbconvert/templates/lab/static
+This file is taken from the built JupyterLab found on:
+    share/nbconvert/templates/lab/static
 Some changes have been made and marked with CHANGE
 */
-
 
 /*-----------------------------------------------------------------------------
 | Copyright (c) Jupyter Development Team.
@@ -3252,19 +3251,29 @@ a.bp3-button.bp3-disabled {
     -webkit-transition-delay: 0;
     transition-delay: 0;
 }
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right):not(.bp3-vertical) {
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right):not(.bp3-vertical) {
     top: 0;
     right: 0;
     bottom: 0;
     width: 50%;
 }
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-enter,
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-appear {
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-enter,
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-appear {
     -webkit-transform: translateX(100%);
     transform: translateX(100%);
 }
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-enter-active,
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-appear-active {
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-enter-active,
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-appear-active {
     -webkit-transform: translateX(0);
     transform: translateX(0);
     -webkit-transition-property: -webkit-transform;
@@ -3278,11 +3287,15 @@ a.bp3-button.bp3-disabled {
     -webkit-transition-delay: 0;
     transition-delay: 0;
 }
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-exit {
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-exit {
     -webkit-transform: translateX(0);
     transform: translateX(0);
 }
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-exit-active {
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right):not(.bp3-vertical).bp3-overlay-exit-active {
     -webkit-transform: translateX(100%);
     transform: translateX(100%);
     -webkit-transition-property: -webkit-transform;
@@ -3296,19 +3309,29 @@ a.bp3-button.bp3-disabled {
     -webkit-transition-delay: 0;
     transition-delay: 0;
 }
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right).bp3-vertical {
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right).bp3-vertical {
     right: 0;
     bottom: 0;
     left: 0;
     height: 50%;
 }
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right).bp3-vertical.bp3-overlay-enter,
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right).bp3-vertical.bp3-overlay-appear {
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right).bp3-vertical.bp3-overlay-enter,
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right).bp3-vertical.bp3-overlay-appear {
     -webkit-transform: translateY(100%);
     transform: translateY(100%);
 }
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right).bp3-vertical.bp3-overlay-enter-active,
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right).bp3-vertical.bp3-overlay-appear-active {
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right).bp3-vertical.bp3-overlay-enter-active,
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right).bp3-vertical.bp3-overlay-appear-active {
     -webkit-transform: translateY(0);
     transform: translateY(0);
     -webkit-transition-property: -webkit-transform;
@@ -3322,11 +3345,15 @@ a.bp3-button.bp3-disabled {
     -webkit-transition-delay: 0;
     transition-delay: 0;
 }
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right).bp3-vertical.bp3-overlay-exit {
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right).bp3-vertical.bp3-overlay-exit {
     -webkit-transform: translateY(0);
     transform: translateY(0);
 }
-.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(.bp3-position-left):not(.bp3-position-right).bp3-vertical.bp3-overlay-exit-active {
+.bp3-drawer:not(.bp3-position-top):not(.bp3-position-bottom):not(
+        .bp3-position-left
+    ):not(.bp3-position-right).bp3-vertical.bp3-overlay-exit-active {
     -webkit-transform: translateY(100%);
     transform: translateY(100%);
     -webkit-transition-property: -webkit-transform;

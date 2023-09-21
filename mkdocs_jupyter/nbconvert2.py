@@ -1,7 +1,7 @@
 """
 This modules is a wrapper around nbconvert
-It provides a cleaner version of the HTML content that can be embedded into
-existing HTML pages without breaking existing styles.
+It provides a cleaner / more self-contained version of the HTML content
+that can be embedded into existing HTML pages without breaking existing styles
 """
 
 import io
@@ -13,7 +13,6 @@ import jupytext
 import mistune
 from nbconvert.exporters.html import HTMLExporter
 from nbconvert.exporters.markdown import MarkdownExporter
-
 from nbconvert.exporters.templateexporter import default_filters
 from nbconvert.filters.highlight import _pygments_highlight
 from nbconvert.filters.markdown_mistune import (
@@ -42,7 +41,7 @@ def nb2html(
     nb_path,
     execute=False,
     kernel_name="",
-    theme=None,
+    theme="light",
     start=0,
     end=None,
     allow_errors=True,
@@ -156,13 +155,18 @@ def nb2html(
                 }
             },
         )
+        content = content + f"""
+        <style>
+        {resources["inlining"]["css"]}
+        </style>
+        """
 
     if highlight_extra_classes:
         content = content.replace(
             "jp-OutputArea-output",
             f"jp-OutputArea-output {highlight_extra_classes}",
         )
-        return content
+
     return content
 
 
@@ -340,6 +344,6 @@ class CodeHtmlFormatter(HtmlFormatter):
 
 
 if __name__ == "__main__":
-    content = nb2html("tests/mkdocs/docs/demo.ipynb")
+    content = nb2html("./demo/docs/demo-nb.ipynb", theme="light")
     with open("./demo.html", "w") as f:
         f.write(content)
