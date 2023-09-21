@@ -4,14 +4,13 @@
 
 Requirements:
 
-- hatch
-- nodejs and npm
+- Python and rye
+- NodeJS and pnpm
 
 Create Python env and activate it:
 
 ```shell
-hatch env create
-hatch shell
+rye sync
 ```
 
 ## Dev cycle
@@ -19,8 +18,8 @@ hatch shell
 To change the styles
 
 - `cd js`
-- `npm install`
-- `npm run build` or `npm run dev` for continuous build
+- `pnpm install`
+- `pnpm run build` or `npm run dev` for continuous build
 
 Python:
 
@@ -55,5 +54,5 @@ trying to not break the themes specific CSS.
 To update the original styles:
 
 - Install `jupyterlab` Python package
-- Copy the nbconvert CSS to `js/src/jupyter-lab.scss`
+- Copy the nbconvert CSS to `js/src/styles/`
 - Look at the `CHANGE:` comments in that file and update accordingly

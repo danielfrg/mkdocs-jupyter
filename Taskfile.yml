@@ -38,7 +38,7 @@ tasks:
 
   publish:
     cmds:
-      - hatch publish
+      - rye publish
 
   py:clean:
     cmds:

@@ -9,7 +9,7 @@
 export VERSION=1.0.0
 
 # Build
-task js-build
+task js:build
 task build
 task publish
 

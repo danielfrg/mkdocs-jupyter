@@ -1,5 +1,9 @@
 # mkdocs-jupyter Change Log
 
+## 0.24.3
+
+- Fix theme selection
+
 ## 0.24.1
 
 - Fix TOC header links
