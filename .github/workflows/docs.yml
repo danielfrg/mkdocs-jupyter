@@ -33,24 +33,22 @@ jobs:
       # ------------------------------------------------------------------------
       # Set up JS
 
-      - name: Set up Node.js ${{ matrix.node-version }}
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: pnpm
 
-      - name: Load cached node_modules
-        id: cached-node_modules
-        uses: actions/cache@v3
-        with:
-          path: js/node_modules
-          key: >
-            node_modules
-            ${{ runner.os }}
-            node-${{ matrix.node-version }}
-            ${{ hashFiles('js/package*.json') }}
+      - name: Install JS dependencies
+        run: |
+          pnpm install
 
       - name: Install JS deps
-        if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
           task js:install
 
@@ -66,16 +64,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      # - uses: actions/cache@v3
-      #   id: cached-python-env
-      #   with:
-      #     path: ${{ env.pythonLocation }}
-      #     key: >
-      #       python
-      #       ${{ runner.os }}
-      #       python-${{ matrix.python-version }}
-      #       ${{ hashFiles('pyproject.toml') }}
-      #       ${{ hashFiles('requirements/*') }}
+      - uses: actions/cache@v3
+        id: cached-python-env
+        with:
+          path: ${{ env.pythonLocation }}
+          key: >
+            docs
+            ${{ runner.os }}
+            python-${{ matrix.python-version }}
+            ${{ hashFiles('pyproject.toml') }}
+            ${{ hashFiles('requirements/*') }}
 
       - name: Install dependencies
         # if: steps.cached-python-env.outputs.cache-hit != 'true'
