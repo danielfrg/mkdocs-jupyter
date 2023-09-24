@@ -1,3 +1,7 @@
+/* Taken from the nbconvert build package - share directory
+ * see CHANGE comments for stuff we modify
+ */
+
 /*-----------------------------------------------------------------------------
 | Copyright (c) Jupyter Development Team.
 | Distributed under the terms of the Modified BSD License.
@@ -14063,7 +14067,8 @@
     padding: var(--jp-notebook-padding);
     outline: none;
     overflow: auto;
-    background: var(--jp-layout-color0);
+    // CHANGE: Remove background for dark theme
+    // background: var(--jp-layout-color0);
   }
 
   .jp-Notebook.jp-mod-scrollPastEnd::after {
