@@ -67,9 +67,15 @@
         display: block;
     }
 
+    // Reset cursor to normal on input prompts
+    .jp-Cell .jp-InputPrompt {
+        cursor: normal;
+    }
+
     // Highlighted pre cells
     .highlight {
         pre {
+            padding: 10px;
             overflow: auto;
         }
     }
@@ -210,8 +216,13 @@
             cursor: default;
         }
 
+        clipboard-copy:hover {
+            cursor: pointer;
+        }
+
         .clipboard-copy-icon {
-            padding: 4px 4px 2px;
+            width: 15px;
+            padding: 2px 0;
             color: rgb(87, 96, 106);
             vertical-align: text-bottom;
         }
