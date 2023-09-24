@@ -101,7 +101,7 @@ jobs:
 
       - name: Run tests
         run: |
-          task test:all
+          pytest .
           task report
 
       - name: Codecov
