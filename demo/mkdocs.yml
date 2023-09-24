@@ -9,7 +9,7 @@ site_dir: dist
 
 nav:
   - Home: index.md
-  - Regular .md file: demo-md.md
+  - Markdown Cheatsheet in .md file: demo-md.md
   - Jupyter Notebook Markdown: demo-nb-md.ipynb
   - Jupyter Notebook Cells: demo-nb.ipynb
   - A .py file (jupytext): demo-script.py

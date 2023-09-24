@@ -75,6 +75,7 @@
     // Highlighted pre cells
     .highlight {
         pre {
+            background-color: #f5f5f5;
             padding: 10px;
             overflow: auto;
         }
@@ -235,6 +236,14 @@
 
 // Material dark theme
 [data-md-color-scheme="slate"] {
+    .highlight {
+        pre {
+            background-color: #21222c;
+            padding: 10px;
+            overflow: auto;
+        }
+    }
+
     .clipboard-copy-icon {
         color: #555 !important;
     }
