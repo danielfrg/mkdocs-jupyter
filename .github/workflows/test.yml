@@ -90,7 +90,7 @@ jobs:
       # Test
 
       - name: Build package
-        run: task build
+        run: hatch build
 
       - name: Install package
         run: |
