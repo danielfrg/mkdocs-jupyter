@@ -9,13 +9,13 @@ site_dir: dist
 
 nav:
   - Home: index.md
-  - Demo Markdown: demo-md.md
-  - Jupyter Notebook Cells: demo-nb.ipynb
+  - Regular .md file: demo-md.md
   - Jupyter Notebook Markdown: demo-nb-md.ipynb
+  - Jupyter Notebook Cells: demo-nb.ipynb
   - A .py file (jupytext): demo-script.py
-  - Ruby NB: ruby.ipynb
-  - Variational inference nb: variational-inference-nb.ipynb
-  - Variational inference script: variational-inference-script.py
+  - Demo - Ruby Notebook: ruby.ipynb
+  - Demo - Variational inference nb: variational-inference-nb.ipynb
+  - Demo - Variational inference script: variational-inference-script.py
 
 theme:
   name: material
