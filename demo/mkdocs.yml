@@ -53,6 +53,7 @@ plugins:
   - search
   - mkdocs-jupyter:
       execute: false
+      include_requirejs: true
 
 extra:
   analytics:

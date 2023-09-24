@@ -233,9 +233,19 @@
     }
 }
 
+// Material dark theme
 [data-md-color-scheme="slate"] {
     .clipboard-copy-icon {
-        color: #fff !important;
+        color: #555 !important;
+    }
+
+    .celltoolbar {
+        background: #333 !important;
+    }
+
+    .celltoolbar .tags_button_container .tag-container .cell-tag {
+        background-color: transparent !important;
+        border: 1px solid #666 !important;
     }
 
     table.dataframe {

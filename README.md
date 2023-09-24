@@ -58,7 +58,6 @@ nav:
     - Home: index.md
     - Notebook page: notebook.ipynb
     - Python file: python_script.py
-
 plugins:
     - mkdocs-jupyter
 ```
@@ -216,7 +215,8 @@ plugins:
 
 ### RequireJS
 
-By default RequireJS is not loaded. You can enable it with:
+By default RequireJS is not loaded. This is required for Plotly.
+You can enable it with:
 
 ```yml
 plugins:
@@ -292,7 +292,7 @@ Create a `main.html` file like:
 
 Any markdown specific features such as
 [admonitions](https://squidfunk.github.io/mkdocs-material/reference/admonitions/)
-wont work with mkdocs-jupyter because those features are not supported by
+won't work with mkdocs-jupyter because those features are not supported by
 Jupyter itself and we use [nbconvert](https://nbconvert.readthedocs.io/) to make
 the conversion.
 
