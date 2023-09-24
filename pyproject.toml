@@ -2,15 +2,13 @@
 name = "mkdocs-jupyter"
 description = "Use Jupyter in mkdocs websites"
 readme = "README.md"
-requires-python = ">=3.7"
-license = "Apache-2.0"
+requires-python = ">=3.9"
+license = { "text" = "Apache-2.0" }
 keywords = ["mkdocs", "jupyter", "jupyterlab", "notebooks", "documentation"]
 authors = [{ name = "Daniel Rodriguez", email = "daniel@danielfrg.com" }]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.7",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -27,52 +25,44 @@ dependencies = [
 ]
 dynamic = ["version"]
 
-[project.urls]
-Documentation = "https://github.com/danielfrg/mkdocs-jupyter#readme"
-Issues = "https://github.com/danielfrg/mkdocs-jupyter/issues"
-Source = "https://github.com/danielfrg/mkdocs-jupyter"
-
-[project.entry-points."mkdocs.plugins"]
-mkdocs-jupyter = "mkdocs_jupyter.plugin:Plugin"
-
-[project.optional-dependencies]
-test = ["coverage[toml]", "pymdown-extensions", "pytest", "pytest-cov"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.hatch.build]
-artifacts = ["mkdocs_jupyter/**"]
-exclude = [".github", "docs"]
-
-[tool.hatch.version]
-path = "mkdocs_jupyter/__about__.py"
-
-[tool.hatch.envs.default]
-dependencies = [
+[tool.rye]
+managed = true
+dev-dependencies = [
+  # Testing
+  "coverage[toml]",
+  "pymdown-extensions",
+  "pytest",
+  "pytest-cov",
   # Linting
   "black",
   "flake8",
   "isort",
   "pip-tools",
   "ruff",
-  # Development
+  # Utils
   "jupyterlab",
 ]
 
-[tool.hatch.envs.default.scripts]
-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=adsctl --cov=tests {args}"
-no-cov = "cov --no-cov {args}"
+[project.entry-points."mkdocs.plugins"]
+mkdocs-jupyter = "mkdocs_jupyter.plugin:Plugin"
 
-[[tool.hatch.envs.test.matrix]]
-python = ["37", "38", "39", "310", "311"]
+[tool.hatch.build]
+artifacts = ["mkdocs_jupyter/**"]
+exclude = [".github", "docs"]
+
+[tool.hatch.version]
+path = "src/mkdocs_jupyter/__about__.py"
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.pytest.ini_options]
-testpaths = ["mkdocs_jupyter/tests"]
+testpaths = ["tests"]
 addopts = [
   "-s",
   "-vv",
+  "--strict-config",
+  "--strict-markers",
   "--ignore=dist",
   "--ignore=site-packages",
   # "--strict-markers",
@@ -80,42 +70,41 @@ addopts = [
   "--cov-report=term",
   "--cov-config=pyproject.toml",
 ]
+markers = [
+  "pkg: marks tests as Packaging tests",
+  "adsapi: mark test that require connection to the API",
+]
 xfail_strict = true
+filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]
 branch = true
 parallel = true
-omit = ["adsctl/__about__.py"]
+omit = ["tests/*"]
 
 [tool.coverage.report]
-show_missing = true
-ignore_errors = false
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-  "pragma: no cover",
-  "raise NotImplementedError",
+[tool.ruff]
+select = [
+  "E", # pycodestyle errors
+  "W", # pycodestyle warnings
+  "F", # pyflakes
+  # "I",  # isort
+  "B", # flake8-bugbear
 ]
-omit = ["mkdocs_jupyter/tests/*"]
-
-[tool.coverage.paths]
-source = ["mkdocs_jupyter", ".venv/lib/python*/site-packages/mkdocs_jupyter"]
-
-[tool.black]
-line_length = 79
-skip_string_normalization = true
 
 [tool.isort]
-ensure_newline_before_comments = true
-line_length = 79
-multi_line_output = 3
-include_trailing_comma = true
 profile = "black"
 
-[tool.pydocstyle]
-add_ignore = ["D100", "D101", "D102", "D103", "D104", "D105"]
-convention = "numpy"
-inherit = false
-match_dir = "mkdocs_jupyter"
+[tool.mypy]
+strict = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.urls]
+Documentation = "https://github.com/danielfrg/mkdocs-jupyter#readme"
+Issues = "https://github.com/danielfrg/mkdocs-jupyter/issues"
+Source = "https://github.com/danielfrg/mkdocs-jupyter"

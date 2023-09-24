@@ -21,10 +21,9 @@ def test_assets_included():
 
     html_assets = os.path.join(mkdocs_html, "assets")
     assert os.path.exists(os.path.join(html_assets, "clipboard.umd.js"))
-    assert os.path.exists(os.path.join(html_assets, "mkdocs-jupyter.css"))
-    assert os.path.exists(os.path.join(html_assets, "mkdocs-jupyter.css.map"))
-    assert os.path.exists(os.path.join(html_assets, "mkdocs-jupyter.js"))
-    # assert os.path.exists(os.path.join(html_assets, "mkdocs-jupyter.js.map"))
+    assert os.path.exists(os.path.join(html_assets, "index.css"))
+    assert os.path.exists(os.path.join(html_assets, "theme-dark.css"))
+    assert os.path.exists(os.path.join(html_assets, "theme-light.css"))
 
     mkdocs_md = os.path.join(settings.templates_dir, "mkdocs_md")
     assert os.path.exists(os.path.join(mkdocs_md, "conf.json"))

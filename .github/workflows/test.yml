@@ -24,7 +24,7 @@ jobs:
       fail-fast: false
       matrix:
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: [3.8, 3.9, "3.10", 3.11]
+        python-version: [3.9, "3.10", 3.11]
         node-version: [18]
 
     runs-on: ubuntu-latest
@@ -36,30 +36,23 @@ jobs:
       # ------------------------------------------------------------------------
       # JS
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Load cached node_modules
-        id: cached-node_modules
-        uses: actions/cache@v3
-        with:
-          path: js/node_modules
-          key: >
-            node_modules
-            ${{ runner.os }}
-            node-${{ matrix.node-version }}
-            ${{ hashFiles('js/package*.json') }}
-
       - name: Install JS deps
-        if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
-          task js-install
+          task js:install
 
       - name: Build JS
         run: |
-          task js-build
+          task js:build
 
       # ------------------------------------------------------------------------
       # Python
@@ -74,20 +67,18 @@ jobs:
         with:
           path: ${{ env.pythonLocation }}
           key: >
-            python2
+            python
             ${{ runner.os }}
             python-${{ matrix.python-version }}
             ${{ hashFiles('pyproject.toml') }}
-            ${{ hashFiles('requirements/*') }}
+            ${{ hashFiles('requirements*') }}
 
       - name: Install dependencies
         if: steps.cached-python-env.outputs.cache-hit != 'true'
-        run: |
-          pip install -r requirements/pyproject.txt
+        run: pip install -r requirements-dev.lock
 
       - name: Install Hatch
-        run: |
-          pip install --upgrade hatch
+        run: pip install --upgrade hatch
 
       - name: Print Python info
         run: |
@@ -101,7 +92,7 @@ jobs:
       # Test
 
       - name: Build package
-        run: task build
+        run: hatch build
 
       - name: Install package
         run: |
@@ -110,7 +101,7 @@ jobs:
 
       - name: Run tests
         run: |
-          task test:all
+          pytest .
           task report
 
       - name: Codecov
