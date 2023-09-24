@@ -89,6 +89,9 @@ profile = "black"
 [tool.mypy]
 strict = true
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project.urls]
 Documentation = "https://github.com/danielfrg/mkdocs-jupyter#readme"
