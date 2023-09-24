@@ -25,6 +25,7 @@ executing==1.2.0
 fastjsonschema==2.17.1
 ghp-import==2.1.0
 idna==3.4
+importlib-metadata==6.8.0
 ipykernel==6.24.0
 ipython==8.14.0
 jedi==0.18.2
@@ -75,7 +76,9 @@ tinycss2==1.2.1
 toml==0.10.2
 tornado==6.3.2
 traitlets==5.9.0
+typing-extensions==4.8.0
 urllib3==2.0.3
 watchdog==3.0.0
 wcwidth==0.2.6
 webencodings==0.5.1
+zipp==3.17.0

@@ -1,8 +1,5 @@
 version: "3"
 
-env:
-  PYTEST_K: ""
-
 tasks:
   build:
     cmds:
@@ -25,7 +22,7 @@ tasks:
 
   test:
     cmds:
-      - rye run pytest -k "{{.PYTEST_K}}"
+      - rye run pytest -k "{{.name}}"
 
   test:all:
     cmds:

@@ -38,6 +38,7 @@ flake8==6.1.0
 fqdn==1.5.1
 ghp-import==2.1.0
 idna==3.4
+importlib-metadata==6.8.0
 iniconfig==2.0.0
 ipykernel==6.24.0
 ipython==8.14.0
@@ -130,6 +131,7 @@ webcolors==1.13
 webencodings==0.5.1
 websocket-client==1.6.3
 wheel==0.41.2
+zipp==3.17.0
 # The following packages are considered to be unsafe in a requirements file:
 pip==23.2.1
 setuptools==68.2.2
