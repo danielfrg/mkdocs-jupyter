@@ -75,7 +75,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cached-python-env.outputs.cache-hit != 'true'
-        run: pip install -r requirements.lock
+        run: pip install -r requirements-dev.lock
 
       - name: Install Hatch
         run: pip install --upgrade hatch
