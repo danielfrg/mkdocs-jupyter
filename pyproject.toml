@@ -58,7 +58,18 @@ allow-direct-references = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = ["-s", "-vv", "--strict-config", "--strict-markers"]
+addopts = [
+  "-s",
+  "-vv",
+  "--strict-config",
+  "--strict-markers",
+  "--ignore=dist",
+  "--ignore=site-packages",
+  # "--strict-markers",
+  "--cov=mkdocs_jupyter",
+  "--cov-report=term",
+  "--cov-config=pyproject.toml",
+]
 markers = [
   "pkg: marks tests as Packaging tests",
   "adsapi: mark test that require connection to the API",
