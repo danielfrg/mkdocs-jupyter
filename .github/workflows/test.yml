@@ -55,11 +55,11 @@ jobs:
       - name: Install JS deps
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
-          task js-install
+          task js:install
 
       - name: Build JS
         run: |
-          task js-build
+          task js:build
 
       # ------------------------------------------------------------------------
       # Python
@@ -74,7 +74,7 @@ jobs:
         with:
           path: ${{ env.pythonLocation }}
           key: >
-            python2
+            python
             ${{ runner.os }}
             python-${{ matrix.python-version }}
             ${{ hashFiles('pyproject.toml') }}
