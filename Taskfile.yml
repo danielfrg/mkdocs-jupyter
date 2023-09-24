@@ -25,11 +25,11 @@ tasks:
 
   test:
     cmds:
-      - pytest -k "{{.PYTEST_K}}"
+      - rye run pytest -k "{{.PYTEST_K}}"
 
   test:all:
     cmds:
-      - pytest .
+      - rye run pytest .
 
   report:
     cmds:

@@ -6,6 +6,7 @@ export default defineConfig({
         outDir: path.join(
             __dirname,
             "..",
+            "src",
             "mkdocs_jupyter",
             "templates",
             "mkdocs_html"

@@ -78,16 +78,12 @@ jobs:
             ${{ runner.os }}
             python-${{ matrix.python-version }}
             ${{ hashFiles('pyproject.toml') }}
-            ${{ hashFiles('requirements/*') }}
+            ${{ hashFiles('requirements*') }}
 
       - name: Install dependencies
         if: steps.cached-python-env.outputs.cache-hit != 'true'
         run: |
-          pip install -r requirements/pyproject.txt
-
-      - name: Install Hatch
-        run: |
-          pip install --upgrade hatch
+          pip install -r requirements.lock
 
       - name: Print Python info
         run: |

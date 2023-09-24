@@ -80,7 +80,7 @@ jobs:
       - name: Install dependencies
         # if: steps.cached-python-env.outputs.cache-hit != 'true'
         run: |
-          pip install -r requirements/pyproject.txt
+          pip install -r requirements.lock
 
       - name: Install Hatch
         run: |
