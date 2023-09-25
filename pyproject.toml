@@ -47,7 +47,7 @@ dev-dependencies = [
 mkdocs-jupyter = "mkdocs_jupyter.plugin:Plugin"
 
 [tool.hatch.build]
-artifacts = ["mkdocs_jupyter/**"]
+artifacts = ["src/mkdocs_jupyter/**"]
 exclude = [".github", "docs"]
 
 [tool.hatch.version]
