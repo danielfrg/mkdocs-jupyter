@@ -9,8 +9,8 @@ devDependencies:
     specifier: ^1.68.0
     version: 1.68.0
   vite:
-    specifier: ^4.4.5
-    version: 4.4.9(sass@1.68.0)
+    specifier: ^4.4.12
+    version: 4.4.12(sass@1.68.0)
 
 packages:
 
@@ -393,8 +393,8 @@ packages:
       is-number: 7.0.0
     dev: true
 
-  /vite@4.4.9(sass@1.68.0):
-    resolution: {integrity: sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==}
+  /vite@4.4.12(sass@1.68.0):
+    resolution: {integrity: sha512-KtPlUbWfxzGVul8Nut8Gw2Qe8sBzWY+8QVc5SL8iRFnpnrcoCaNlzO40c1R6hPmcdTwIPEDkq0Y9+27a5tVbdQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
