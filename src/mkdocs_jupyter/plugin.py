@@ -1,6 +1,7 @@
 import os
 import pathlib
 
+import markdown
 import mkdocs
 from mkdocs.config import config_options
 from mkdocs.structure.files import File, Files
