@@ -1,12 +1,12 @@
 import os
 import pathlib
 
+import markdown
 import mkdocs
 from mkdocs.config import config_options
 from mkdocs.structure.files import File, Files
 from mkdocs.structure.pages import Page
 from mkdocs.structure.toc import get_toc
-from mkdocs.tests.base import get_markdown_toc
 
 from . import convert
 
@@ -150,12 +150,18 @@ class Plugin(mkdocs.plugins.BasePlugin):
             copyfile(nb_source, nb_target)
 
 
+def _get_markdown_toc(markdown_source):
+    md = markdown.Markdown(extensions=["toc"])
+    md.convert(markdown_source)
+    return md.toc_tokens
+
+
 def get_nb_toc(fpath):
     """Returns a TOC for the Notebook
     It does that by converting first to MD
     """
     body = convert.nb2md(fpath)
-    md_toc_tokens = get_markdown_toc(body)
+    md_toc_tokens = _get_markdown_toc(body)
     toc = get_toc(md_toc_tokens)
     title = None
     for token in md_toc_tokens:
