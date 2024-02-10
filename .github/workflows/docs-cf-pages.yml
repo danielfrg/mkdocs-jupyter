@@ -1,0 +1,55 @@
+name: deploy-cf-pages
+
+on:
+  workflow_call:
+    secrets:
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
+      CLOUDFLARE_TOKEN:
+        required: true
+jobs:
+  prod:
+    # if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+      checks: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore built website
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: >
+            website
+            ${{ github.run_id }}
+            ${{ github.run_attempt }}
+          fail-on-cache-miss: true
+
+      - name: Publish to Cloudflare Pages
+        id: cloudflare-pages-deploy
+        uses: cloudflare/pages-action@v1.5.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: danielfrg-com
+          directory: dist
+
+      - name: Comment deploy url
+        uses: mshick/add-pr-comment@v2
+        with:
+          message-id: cloudflare-deploy
+          message: |
+            ### <span aria-hidden="true">✅</span> Preview deployment
+            |  Name | Link |
+            |---------------------------------|------------------------|
+            | Deploy Preview Url | [${{ steps.cloudflare-pages-deploy.outputs.url }}](${{ steps.cloudflare-pages-deploy.outputs.url }}) |
+            | Latest deploy log | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |
+            | Latest commit | ${{ github.sha }} |
+            | Environment | ${{ steps.cloudflare-pages-deploy.outputs.environment }} |

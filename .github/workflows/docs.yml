@@ -27,19 +27,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: arduino/setup-task@v1
 
       # ------------------------------------------------------------------------
       # Set up JS
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
           version: 8
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -59,7 +59,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cached-python-env
         with:
           path: ${{ env.pythonLocation }}
@@ -94,7 +94,7 @@ jobs:
 
       - name: Cache website
         id: cache-build
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: demo/dist
           key: >
@@ -102,12 +102,12 @@ jobs:
             ${{ github.run_id }}
             ${{ github.run_attempt }}
 
-  firebase:
-    uses: ./.github/workflows/docs-firebase.yml
+  cf-pages:
+    uses: ./.github/workflows/docs-cf-pages.yml
     needs: [build]
     secrets: inherit
 
   post-deploy:
-    uses: ./.github/workflows/docs-cloudflare.yml
+    uses: ./.github/workflows/docs-post.yml
     needs: [firebase]
     secrets: inherit
