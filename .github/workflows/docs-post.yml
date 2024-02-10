@@ -1,4 +1,4 @@
-name: deploy-cloudflare
+name: deploy-post
 
 on:
   workflow_call:

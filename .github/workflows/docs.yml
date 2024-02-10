@@ -109,5 +109,5 @@ jobs:
 
   post-deploy:
     uses: ./.github/workflows/docs-post.yml
-    needs: [firebase]
+    needs: [cf-pages]
     secrets: inherit
