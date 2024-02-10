@@ -64,7 +64,7 @@ jobs:
         with:
           path: ${{ env.pythonLocation }}
           key: >
-            docs
+            python-env
             ${{ runner.os }}
             python-${{ matrix.python-version }}
             ${{ hashFiles('pyproject.toml') }}

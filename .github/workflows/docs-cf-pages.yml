@@ -25,7 +25,7 @@ jobs:
       - name: Restore built website
         uses: actions/cache@v4
         with:
-          path: dist
+          path: demo/dist
           key: >
             website
             ${{ github.run_id }}
@@ -38,8 +38,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: danielfrg-com
-          directory: dist
+          projectName: mkdocs-jupyter-danielfrg-com
+          directory: demo/dist
 
       - name: Comment deploy url
         uses: mshick/add-pr-comment@v2
