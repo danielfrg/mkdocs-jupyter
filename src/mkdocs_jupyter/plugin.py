@@ -2,6 +2,7 @@ import os
 import pathlib
 
 import markdown
+from markdown.extensions.toc import TocExtension
 import mkdocs
 from mkdocs.config import config_options
 from mkdocs.structure.files import File, Files
@@ -48,6 +49,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("remove_tag_config", config_options.Type(dict, default={})),
         ("highlight_extra_classes", config_options.Type(str, default="")),
         ("include_requirejs", config_options.Type(bool, default=False)),
+        ("toc_depth", config_options.Type(int, default=6)),
     )
     _supported_extensions = [".ipynb", ".py"]
 
@@ -89,6 +91,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
             remove_tag_config = self.config["remove_tag_config"]
             highlight_extra_classes = self.config["highlight_extra_classes"]
             include_requirejs = self.config["include_requirejs"]
+            toc_depth = self.config["toc_depth"]
 
             if (
                 self.config["execute_ignore"]
@@ -117,7 +120,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     include_requirejs=include_requirejs,
                 )
                 self.content = body
-                toc, title = get_nb_toc(page.file.abs_src_path)
+                toc, title = get_nb_toc(page.file.abs_src_path, toc_depth)
                 self.toc = toc
                 if title is not None and not ignore_h1_titles:
                     self.title = title
@@ -149,19 +152,18 @@ class Plugin(mkdocs.plugins.BasePlugin):
             os.makedirs(nb_target_dir, exist_ok=True)
             copyfile(nb_source, nb_target)
 
-
-def _get_markdown_toc(markdown_source):
-    md = markdown.Markdown(extensions=["toc"])
+def _get_markdown_toc(markdown_source, toc_depth):
+    md = markdown.Markdown(extensions=[TocExtension(toc_depth=toc_depth)])
     md.convert(markdown_source)
     return md.toc_tokens
 
 
-def get_nb_toc(fpath):
+def get_nb_toc(fpath, toc_depth):
     """Returns a TOC for the Notebook
     It does that by converting first to MD
     """
     body = convert.nb2md(fpath)
-    md_toc_tokens = _get_markdown_toc(body)
+    md_toc_tokens = _get_markdown_toc(body, toc_depth)
     toc = get_toc(md_toc_tokens)
     title = None
     for token in md_toc_tokens:
