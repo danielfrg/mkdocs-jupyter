@@ -150,7 +150,7 @@ plugins:
           kernel_name: python3
 ```
 
-### Ingore Code Input
+### Ignore Code Input
 
 By default the plugin will show full code and regular cell output details. You
 can hide cell code input for all the notebooks:
