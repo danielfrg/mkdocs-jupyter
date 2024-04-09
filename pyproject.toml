@@ -17,12 +17,12 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "nbconvert>=7.2.9,<8",
-  "mkdocs>=1.4.0,<2",
-  "mkdocs-material>9.0.0",
-  "jupytext>1.13.8,<2",
-  "Pygments>2.12.0",
-  "ipykernel<7.0.0,>6.0.0",
+    "nbconvert>=7.2.9,<8",
+    "mkdocs>=1.4.0,<2",
+    "mkdocs-material>9.0.0",
+    "jupytext>1.13.8,<2",
+    "Pygments>2.12.0",
+    "ipykernel<7.0.0,>6.0.0",
 ]
 dynamic = ["version"]
 
