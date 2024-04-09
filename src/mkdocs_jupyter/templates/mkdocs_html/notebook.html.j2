@@ -139,6 +139,12 @@ mkdocs-material #}
 </div> <!-- jupyter-wrapper -->
 {% endblock body_footer %}
 
-{# CHANGE: Remove the footer - lab template outputs a full HTML page #}
+{# CHANGE: Remove the footer except widget states - lab template outputs a full HTML page #}
 {% block footer %}
+{% set mimetype = 'application/vnd.jupyter.widget-state+json'%}
+{% if mimetype in nb.metadata.get("widgets",{})%}
+<script type="{{ mimetype }}">
+{{ nb.metadata.widgets[mimetype] | json_dumps | escape_html_script }}
+</script>
+{% endif %}
 {% endblock footer %}
