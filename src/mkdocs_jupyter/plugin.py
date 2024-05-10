@@ -49,6 +49,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("remove_tag_config", config_options.Type(dict, default={})),
         ("highlight_extra_classes", config_options.Type(str, default="")),
         ("include_requirejs", config_options.Type(bool, default=False)),
+        ("custom_mathjax_url", config_options.Type(str, default="")),
         ("toc_depth", config_options.Type(int, default=6)),
     )
     _supported_extensions = [".ipynb", ".py"]
@@ -91,6 +92,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
             remove_tag_config = self.config["remove_tag_config"]
             highlight_extra_classes = self.config["highlight_extra_classes"]
             include_requirejs = self.config["include_requirejs"]
+            custom_mathjax_url = self.config["custom_mathjax_url"]
             toc_depth = self.config["toc_depth"]
 
             if (
@@ -118,6 +120,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     remove_tag_config=remove_tag_config,
                     highlight_extra_classes=highlight_extra_classes,
                     include_requirejs=include_requirejs,
+                    custom_mathjax_url=custom_mathjax_url,
                 )
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path, toc_depth)
