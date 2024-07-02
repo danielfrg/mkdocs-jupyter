@@ -54,7 +54,7 @@ plugins:
   - mkdocs-jupyter:
       execute: false
       include_requirejs: true
-
+      custom_mathjax_url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe"
 extra:
   analytics:
     provider: google

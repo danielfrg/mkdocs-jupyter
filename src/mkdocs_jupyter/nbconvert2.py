@@ -51,6 +51,7 @@ def nb2html(
     remove_tag_config: dict = {},
     highlight_extra_classes: str = "",
     include_requirejs: bool = False,
+    custom_mathjax_url: str = "",
 ):
     """
     Convert a notebook to HTML
@@ -126,6 +127,17 @@ def nb2html(
         theme=theme,
     )
 
+    if custom_mathjax_url != "":
+        exporter = HTMLExporter(
+        config=app.config,
+        template_file=template_file,
+        extra_template_paths=extra_template_paths,
+        preprocessors=preprocessors_,
+        filters=filters,
+        theme=theme,
+        mathjax_url=custom_mathjax_url,
+        )
+        
     _, extension = os.path.splitext(nb_path)
 
     if extension == ".py":
