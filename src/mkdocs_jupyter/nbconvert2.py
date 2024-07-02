@@ -51,7 +51,7 @@ def nb2html(
     remove_tag_config: dict = {},
     highlight_extra_classes: str = "",
     include_requirejs: bool = False,
-    custom_mathjax_url: str = "",
+    custom_mathjax_url: str = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe",
 ):
     """
     Convert a notebook to HTML
@@ -125,19 +125,9 @@ def nb2html(
         preprocessors=preprocessors_,
         filters=filters,
         theme=theme,
+        mathjax_url=custom_mathjax_url,
     )
 
-    if custom_mathjax_url != "":
-        exporter = HTMLExporter(
-        config=app.config,
-        template_file=template_file,
-        extra_template_paths=extra_template_paths,
-        preprocessors=preprocessors_,
-        filters=filters,
-        theme=theme,
-        mathjax_url=custom_mathjax_url,
-        )
-        
     _, extension = os.path.splitext(nb_path)
 
     if extension == ".py":
@@ -168,11 +158,14 @@ def nb2html(
                 }
             },
         )
-        content = content + f"""
+        content = (
+            content
+            + f"""
         <style>
         {resources["inlining"]["css"]}
         </style>
         """
+        )
 
     if highlight_extra_classes:
         content = content.replace(
@@ -327,9 +320,9 @@ def custom_markdown2html(source):
     This is done so it's the same HTML structure that for regular non-language
     sections.
     """
-    return MarkdownWithMath(
-        renderer=CustomMarkdownRendered(escape=False)
-    ).render(source)
+    return MarkdownWithMath(renderer=CustomMarkdownRendered(escape=False)).render(
+        source
+    )
 
 
 class CustomMarkdownRendered(IPythonRenderer):
