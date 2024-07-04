@@ -107,7 +107,7 @@ mkdocs-material #}
         {% endif %}
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-{{ vars.cell_id }}">
+                <clipboard-copy for="cell-{{ vars.cell_id }}", aria-label="Copy to Clipboard">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
