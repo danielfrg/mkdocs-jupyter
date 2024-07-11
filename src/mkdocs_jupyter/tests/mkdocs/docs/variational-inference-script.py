@@ -31,7 +31,7 @@
 #
 # ### Bayesian Networks
 #
-# Bayesian Networks are graph based representations to acccount for randomness while modelling our data. The nodes of the graph are random variables and the connections between nodes denote the direct influence from parent to child.
+# Bayesian Networks are graph based representations to account for randomness while modelling our data. The nodes of the graph are random variables and the connections between nodes denote the direct influence from parent to child.
 #
 # ### Bayesian Network Example
 #
@@ -49,7 +49,7 @@
 #     <summary>Extra: Proof of decomposition</summary>
 #     <p><br>First, let's recall conditional probability,<br>
 #     $$P\left (A|B\right ) = \frac{P\left (A, B\right )}{P\left (B\right )}$$
-#     The above equation is so derived because of reduction of sample space of $A$ when $B$ has already occured.
+#     The above equation is so derived because of reduction of sample space of $A$ when $B$ has already occurred.
 #     Now, adjusting terms -<br>
 #     $$P\left (A, B\right ) = P\left (A|B\right )*P\left (B\right )$$
 #     This equation is called chain rule of probability. Let's generalize this rule for Bayesian Networks. The ordering of names of nodes is such that parent(s) of nodes lie above them (Breadth First Ordering).<br>
@@ -114,11 +114,11 @@
 # The negative sign in the formula has high intuitive meaning. In words, it signifies whenever the probability of certain events is high, the related information is less and vica versa. For example -
 #
 # 1. Consider the statement - It never snows in deserts. The probability of this statement being true is significantly high because we already know that it is hardly possible to snow in deserts. So, the related information is very small.
-# 2. Now consider - There was a snowfall in Sahara Desert in late December 2019. Wow, thats a great news because some unlikely event occured (probability was less). In turn, the information is high.
+# 2. Now consider - There was a snowfall in Sahara Desert in late December 2019. Wow, that's a great news because some unlikely event occurred (probability was less). In turn, the information is high.
 #
 # ### Entropy
 #
-# Entropy quantifies how much **average** Information is present in occurence of events. It is denoted by $H$. It is named Differential Entropy in case of Real Continuous Domain.
+# Entropy quantifies how much **average** Information is present in occurrence of events. It is denoted by $H$. It is named Differential Entropy in case of Real Continuous Domain.
 #
 # $$
 # H =  E_{P\left (X\right )} \left [-\log\left (P\left (X\right )\right )\right ]\\
@@ -259,10 +259,10 @@
 #
 # <details class="tip">
 #     <summary>Extra: Proof of transformation equation</summary>
-#     <p><br>To simplify notations, let's use $Y=T(X)$ instead of $\zeta=T(\theta)$. After reaching the results, we will put the values back. Also, let's denote cummulative distribution function (cdf) as $F$. There are two cases which respect to properties of function $T$.<br><br><strong>Case 1</strong> - When $T$ is an increasing function $$F_Y(y) = P(Y <= y) = P(T(X) <= y)\\
+#     <p><br>To simplify notations, let's use $Y=T(X)$ instead of $\zeta=T(\theta)$. After reaching the results, we will put the values back. Also, let's denote cumulative distribution function (cdf) as $F$. There are two cases which respect to properties of function $T$.<br><br><strong>Case 1</strong> - When $T$ is an increasing function $$F_Y(y) = P(Y <= y) = P(T(X) <= y)\\
 #     = P\left(X <= T^{-1}(y) \right) = F_X\left(T^{-1}(y) \right)\\
 #     F_Y(y) = F_X\left(T^{-1}(y) \right)$$Let's differentiate with respect to $y$ both sides - $$\frac{\mathrm{d} (F_Y(y))}{\mathrm{d} y} = \frac{\mathrm{d} (F_X\left(T^{-1}(y) \right))}{\mathrm{d} y}\\
-#     P_Y(y) = P_X\left(T^{-1}(y) \right) \frac{\mathrm{d} (T^{-1}(y))}{\mathrm{d} y}$$<strong>Case 2</strong> - When $T$ is a descreasing function $$F_Y(y) = P(Y <= y) = P(T(X) <= y) = P\left(X >= T^{-1}(y) \right)\\
+#     P_Y(y) = P_X\left(T^{-1}(y) \right) \frac{\mathrm{d} (T^{-1}(y))}{\mathrm{d} y}$$<strong>Case 2</strong> - When $T$ is a decreasing function $$F_Y(y) = P(Y <= y) = P(T(X) <= y) = P\left(X >= T^{-1}(y) \right)\\
 #     = 1-P\left(X < T^{-1}(y) \right) = 1-P\left(X <= T^{-1}(y) \right) = 1-F_X\left(T^{-1}(y) \right)\\
 #     F_Y(y) = 1-F_X\left(T^{-1}(y) \right)$$Let's differentiate with respect to $y$ both sides - $$\frac{\mathrm{d} (F_Y(y))}{\mathrm{d} y} = \frac{\mathrm{d} (1-F_X\left(T^{-1}(y) \right))}{\mathrm{d} y}\\
 #     P_Y(y) = (-1) P_X\left(T^{-1}(y) \right) (-1) \frac{\mathrm{d} (T^{-1}(y))}{\mathrm{d} y}\\
@@ -338,7 +338,7 @@ def plot_transformation(theta, zeta, p_theta, p_zeta):
     trans.plot(zeta, p_zeta, color="blue", lw=2)
     trans.set_xlabel(r"$\zeta$")
     trans.set_ylabel(r"$P(\zeta)$")
-    trans.set_title("Transfomed Space")
+    trans.set_title("Transformed Space")
 
 
 # ### Transformed Space Example-1
