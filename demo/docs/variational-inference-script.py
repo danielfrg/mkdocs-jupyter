@@ -127,7 +127,7 @@
 #
 # ### Entropy of Normal Distribution
 #
-# As an exercise, let's calculate entropy of Normal Distribution. Let's denote $\mu$ as mean nd $\sigma$ as standard deviation of Normal Distribution. Remember the results, we will need them further.
+# As an exercise, let's calculate entropy of Normal Distribution. Let's denote $\mu$ as mean and $\sigma$ as standard deviation of Normal Distribution. Remember the results, we will need them further.
 #
 # $$
 # X \sim Normal\left (\mu, \sigma^2\right )\\
