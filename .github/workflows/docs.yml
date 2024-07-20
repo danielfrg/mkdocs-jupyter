@@ -90,7 +90,7 @@ jobs:
 
       - name: Build demo docs
         run: |
-          just docs:build
+          just docs-build
 
       - name: Cache website
         id: cache-build
