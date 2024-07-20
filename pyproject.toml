@@ -2,17 +2,17 @@
 name = "mkdocs-jupyter"
 description = "Use Jupyter in mkdocs websites"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = { "text" = "Apache-2.0" }
 keywords = ["mkdocs", "jupyter", "jupyterlab", "notebooks", "documentation"]
 authors = [{ name = "Daniel Rodriguez", email = "daniel@danielfrg.com" }]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
@@ -46,6 +46,10 @@ dev-dependencies = [
 
 [project.entry-points."mkdocs.plugins"]
 mkdocs-jupyter = "mkdocs_jupyter.plugin:Plugin"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.hatch.build]
 artifacts = ["src/mkdocs_jupyter/**"]
@@ -84,10 +88,17 @@ parallel = true
 omit = ["tests/*"]
 
 [tool.coverage.report]
-exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "pragma: no cover",
+  "raise NotImplementedError",
+]
+
 
 [tool.ruff]
-select = [
+lint.select = [
   "E", # pycodestyle errors
   "W", # pycodestyle warnings
   "F", # pyflakes
@@ -101,14 +112,11 @@ profile = "black"
 [tool.mypy]
 strict = true
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[project.urls]
-Documentation = "https://github.com/danielfrg/mkdocs-jupyter#readme"
-Issues = "https://github.com/danielfrg/mkdocs-jupyter/issues"
-Source = "https://github.com/danielfrg/mkdocs-jupyter"
+[tool.pydocstyle]
+add_ignore = ["D100", "D101", "D102", "D103", "D104", "D105"]
+convention = "numpy"
+inherit = false
+match_dir = "mkdocs_jupyter"
 
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
@@ -117,3 +125,9 @@ check-hidden = true
 # image embeddings and all generally too long lines in "", and all urls
 ignore-regex = '(^\s*"(image/\S+": "|.{300,}).*|https?://\S+)'
 # ignore-words-list = ''
+
+[project.urls]
+Documentation = "https://github.com/danielfrg/mkdocs-jupyter#readme"
+Issues = "https://github.com/danielfrg/mkdocs-jupyter/issues"
+Source = "https://github.com/danielfrg/mkdocs-jupyter"
+

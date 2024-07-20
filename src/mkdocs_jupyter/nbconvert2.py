@@ -16,10 +16,7 @@ from nbconvert.exporters.html import HTMLExporter
 from nbconvert.exporters.markdown import MarkdownExporter
 from nbconvert.exporters.templateexporter import default_filters
 from nbconvert.filters.highlight import _pygments_highlight
-from nbconvert.filters.markdown_mistune import (
-    IPythonRenderer,
-    MarkdownWithMath,
-)
+from nbconvert.filters.markdown_mistune import IPythonRenderer, MarkdownWithMath
 from nbconvert.nbconvertapp import NbConvertApp
 from pygments import highlight
 from pygments.formatters import HtmlFormatter

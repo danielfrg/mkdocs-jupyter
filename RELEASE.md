@@ -9,9 +9,9 @@
 export VERSION=1.0.0
 
 # Build
-task js:build
-task build
-task publish
+just js:build
+just build
+just publish
 
 git commit -am "Release ${VERSION}" --allow-empty
 git tag ${VERSION}

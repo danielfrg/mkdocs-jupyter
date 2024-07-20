@@ -33,14 +33,14 @@ Change styles and rebuild the site to see the changes
 ## Tests
 
 ```shell
-task test
+just test
 ```
 
 Check linting and format
 
 ```shell
-task check
-task fmt
+just check
+just fmt
 ```
 
 ## JupyterLab styles
