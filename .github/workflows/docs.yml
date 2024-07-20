@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: arduino/setup-task@v2
+      - uses: extractions/setup-just@v2
 
       # ------------------------------------------------------------------------
       # Set up JS
@@ -45,11 +45,11 @@ jobs:
 
       - name: Install JS deps
         run: |
-          task js:install
+          just js:install
 
       - name: Build JS
         run: |
-          task js:build
+          just js:build
 
       # ------------------------------------------------------------------------
       # Setup Python
@@ -90,7 +90,7 @@ jobs:
 
       - name: Build demo docs
         run: |
-          task docs:build
+          just docs:build
 
       - name: Cache website
         id: cache-build

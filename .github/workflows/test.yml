@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: arduino/setup-task@v1
+      - uses: extractions/setup-just@v2
 
       # ------------------------------------------------------------------------
       # JS
@@ -48,11 +48,11 @@ jobs:
 
       - name: Install JS deps
         run: |
-          task js:install
+          just js:install
 
       - name: Build JS
         run: |
-          task js:build
+          just js:build
 
       # ------------------------------------------------------------------------
       # Python
@@ -102,7 +102,7 @@ jobs:
       - name: Run tests
         run: |
           pytest .
-          task report
+          just report
 
       - name: Codecov
         uses: codecov/codecov-action@v2
