@@ -29,7 +29,7 @@ publish:
   rye publish
 
 docs-build:
-  mkdocs build
+  cd demo; mkdocs build
 
 # ------------------------------------------------------------------------------
 # Javascript
