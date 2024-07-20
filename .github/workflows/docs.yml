@@ -45,11 +45,11 @@ jobs:
 
       - name: Install JS deps
         run: |
-          just js:install
+          just js-install
 
       - name: Build JS
         run: |
-          just js:build
+          just js-build
 
       # ------------------------------------------------------------------------
       # Setup Python
