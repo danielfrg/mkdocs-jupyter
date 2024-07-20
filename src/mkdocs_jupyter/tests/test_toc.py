@@ -1,10 +1,10 @@
 import os
 
 import pytest
+from mkdocs.config import load_config
+from mkdocs.structure.toc import AnchorLink, TableOfContents
 
 from mkdocs_jupyter import plugin
-from mkdocs.config import load_config
-from mkdocs.structure.toc import TableOfContents, AnchorLink
 
 
 @pytest.mark.parametrize(
@@ -22,7 +22,9 @@ def test_anchors_count(test_file_path, expected_anchor_count) -> None:
     test_file_dir = os.path.join(this_dir, test_file_path)
 
     config_file = os.path.join(this_dir, "mkdocs/base-with-nbs.yml")
-    toc_depth = load_config(config_file)["plugins"]["mkdocs-jupyter"].config["toc_depth"]
+    toc_depth = load_config(config_file)["plugins"]["mkdocs-jupyter"].config[
+        "toc_depth"
+    ]
 
     toc: TableOfContents = plugin.get_nb_toc(test_file_dir, toc_depth)[0]
 

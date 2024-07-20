@@ -5,15 +5,15 @@ build:
   rye build
 
 check:
-  isort . --check-only --diff
-  black . --check
-  ruff check mkdocs_jupyter
-  flake8
+  rye run isort . --check-only --diff
+  rye run black . --check
+  rye run ruff check mkdocs_jupyter
+  rye run flake8
 
 fmt:
-  isort .
-  black .
-  ruff check --fix mkdocs_jupyter
+  rye run isort .
+  rye run black .
+  rye run ruff check --fix mkdocs_jupyter
 
 test FILTER="":
   rye run pytest -k "{{FILTER}}"

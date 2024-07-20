@@ -2,8 +2,8 @@ import os
 import pathlib
 
 import markdown
-from markdown.extensions.toc import TocExtension
 import mkdocs
+from markdown.extensions.toc import TocExtension
 from mkdocs.config import config_options
 from mkdocs.structure.files import File, Files
 from mkdocs.structure.pages import Page
@@ -21,9 +21,7 @@ class NotebookFile(File):
     def __init__(self, file, use_directory_urls, site_dir, **kwargs):
         self.file = file
         self.dest_path = self._get_dest_path(use_directory_urls)
-        self.abs_dest_path = os.path.normpath(
-            os.path.join(site_dir, self.dest_path)
-        )
+        self.abs_dest_path = os.path.normpath(os.path.join(site_dir, self.dest_path))
         self.url = self._get_url(use_directory_urls)
 
     def __getattr__(self, item):
@@ -72,9 +70,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
     def on_files(self, files, config):
         ret = Files(
             [
-                NotebookFile(file, **config)
-                if self.should_include(file)
-                else file
+                NotebookFile(file, **config) if self.should_include(file) else file
                 for file in files
             ]
         )
@@ -95,14 +91,11 @@ class Plugin(mkdocs.plugins.BasePlugin):
             custom_mathjax_url = self.config["custom_mathjax_url"]
             toc_depth = self.config["toc_depth"]
 
-            if (
-                self.config["execute_ignore"]
-                and len(self.config["execute_ignore"]) > 0
-            ):
+            if self.config["execute_ignore"] and len(self.config["execute_ignore"]) > 0:
                 for ignore_pattern in self.config["execute_ignore"]:
-                    ignore_this = pathlib.PurePath(
-                        page.file.abs_src_path
-                    ).match(ignore_pattern)
+                    ignore_this = pathlib.PurePath(page.file.abs_src_path).match(
+                        ignore_pattern
+                    )
                     if ignore_this:
                         exec_nb = False
 
@@ -154,6 +147,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             os.makedirs(nb_target_dir, exist_ok=True)
             copyfile(nb_source, nb_target)
+
 
 def _get_markdown_toc(markdown_source, toc_depth):
     md = markdown.Markdown(extensions=[TocExtension(toc_depth=toc_depth)])
