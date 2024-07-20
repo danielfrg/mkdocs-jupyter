@@ -109,3 +109,11 @@ build-backend = "hatchling.build"
 Documentation = "https://github.com/danielfrg/mkdocs-jupyter#readme"
 Issues = "https://github.com/danielfrg/mkdocs-jupyter/issues"
 Source = "https://github.com/danielfrg/mkdocs-jupyter"
+
+[tool.codespell]
+# Ref: https://github.com/codespell-project/codespell#using-a-config-file
+skip = '.git*,*-lock.yaml,*.lock,*.css'
+check-hidden = true
+# image embeddings and all generally too long lines in "", and all urls
+ignore-regex = '(^\s*"(image/\S+": "|.{300,}).*|https?://\S+)'
+# ignore-words-list = ''
