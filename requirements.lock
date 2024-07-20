@@ -53,9 +53,6 @@ importlib-metadata==7.1.0
     # via markdown
     # via mkdocs
     # via nbconvert
-importlib-resources==6.4.0
-    # via jsonschema
-    # via jsonschema-specifications
 ipykernel==6.29.4
     # via mkdocs-jupyter
 ipython==8.12.3
@@ -139,8 +136,6 @@ pexpect==4.9.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-pkgutil-resolve-name==1.3.10
-    # via jsonschema
 platformdirs==4.2.0
     # via jupyter-core
     # via mkdocs
@@ -162,8 +157,6 @@ pymdown-extensions==10.7.1
 python-dateutil==2.9.0.post0
     # via ghp-import
     # via jupyter-client
-pytz==2024.1
-    # via babel
 pyyaml==6.0.1
     # via jupytext
     # via mkdocs
@@ -222,4 +215,3 @@ webencodings==0.5.1
     # via tinycss2
 zipp==3.18.1
     # via importlib-metadata
-    # via importlib-resources

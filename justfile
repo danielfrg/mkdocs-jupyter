@@ -12,18 +12,14 @@ check:
 
 fmt:
   rye run isort .
-  rye run black .
-  rye run ruff check --fix mkdocs_jupyter
+  rye run ruff format
 
 test FILTER="":
   rye run pytest -k "{{FILTER}}"
 
-test-all:
-  rye run pytest .
-
 report:
-  coverage xml
-  coverage html
+  rye run coverage xml
+  rue run coverage html
 
 publish:
   rye publish
