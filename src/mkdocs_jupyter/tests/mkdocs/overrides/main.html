@@ -1,11 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if page.nb_url %}
-    <a href="{{ page.nb_url }}" title="Download Notebook" class="md-content__button md-icon jp-DownloadNB">
-        {% include ".icons/material/download.svg" %}
-    </a>
-{% endif %}
+<div class="md-content__button-row">
+    {% if page.nb_url %}
+        <a href="{{ page.nb_url }}" title="Download Notebook" class="md-content__button md-icon jp-DownloadNB">
+            {% include ".icons/material/download.svg" %}
+            Notebook
+        </a>
+    {% endif %}
+
+    {% if page.data_files %}
+        {% for data_file in page.data_files %}
+            <a href="{{ data_file }}" title="Download Data File" class="md-content__button md-icon jp-DownloadData">
+                {% include ".icons/material/file-download.svg" %}
+                Data
+            </a>
+        {% endfor %}
+    {% endif %}
+</div>
 
 {{ super() }}
 

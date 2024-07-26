@@ -2,8 +2,8 @@ import os
 import pathlib
 
 import markdown
-import mkdocs
 from markdown.extensions.toc import TocExtension
+import mkdocs
 from mkdocs.config import config_options
 from mkdocs.structure.files import File, Files
 from mkdocs.structure.pages import Page
@@ -21,7 +21,9 @@ class NotebookFile(File):
     def __init__(self, file, use_directory_urls, site_dir, **kwargs):
         self.file = file
         self.dest_path = self._get_dest_path(use_directory_urls)
-        self.abs_dest_path = os.path.normpath(os.path.join(site_dir, self.dest_path))
+        self.abs_dest_path = os.path.normpath(
+            os.path.join(site_dir, self.dest_path)
+        )
         self.url = self._get_url(use_directory_urls)
 
     def __getattr__(self, item):
@@ -47,8 +49,9 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("remove_tag_config", config_options.Type(dict, default={})),
         ("highlight_extra_classes", config_options.Type(str, default="")),
         ("include_requirejs", config_options.Type(bool, default=False)),
-        ("custom_mathjax_url", config_options.Type(str, default="")),
         ("toc_depth", config_options.Type(int, default=6)),
+        ("data_files", config_options.Type(dict, default={})),
+
     )
     _supported_extensions = [".ipynb", ".py"]
 
@@ -70,7 +73,9 @@ class Plugin(mkdocs.plugins.BasePlugin):
     def on_files(self, files, config):
         ret = Files(
             [
-                NotebookFile(file, **config) if self.should_include(file) else file
+                NotebookFile(file, **config)
+                if self.should_include(file)
+                else file
                 for file in files
             ]
         )
@@ -88,14 +93,16 @@ class Plugin(mkdocs.plugins.BasePlugin):
             remove_tag_config = self.config["remove_tag_config"]
             highlight_extra_classes = self.config["highlight_extra_classes"]
             include_requirejs = self.config["include_requirejs"]
-            custom_mathjax_url = self.config["custom_mathjax_url"]
             toc_depth = self.config["toc_depth"]
 
-            if self.config["execute_ignore"] and len(self.config["execute_ignore"]) > 0:
+            if (
+                self.config["execute_ignore"]
+                and len(self.config["execute_ignore"]) > 0
+            ):
                 for ignore_pattern in self.config["execute_ignore"]:
-                    ignore_this = pathlib.PurePath(page.file.abs_src_path).match(
-                        ignore_pattern
-                    )
+                    ignore_this = pathlib.PurePath(
+                        page.file.abs_src_path
+                    ).match(ignore_pattern)
                     if ignore_this:
                         exec_nb = False
 
@@ -113,7 +120,6 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     remove_tag_config=remove_tag_config,
                     highlight_extra_classes=highlight_extra_classes,
                     include_requirejs=include_requirejs,
-                    custom_mathjax_url=custom_mathjax_url,
                 )
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path, toc_depth)
@@ -126,6 +132,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             # Add metadata for template
             self._set_nb_url(page)
+            page.data_files = self.config["data_files"].get(page.file.src_path)
         return page
 
     def _set_nb_url(self, page):
@@ -147,7 +154,20 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             os.makedirs(nb_target_dir, exist_ok=True)
             copyfile(nb_source, nb_target)
-
+            print(f"Copied jupyter file: {nb_source} to {nb_target}")
+        
+        # Include data files
+        data_files = self.config["data_files"].get(page.file.src_path, [])
+        if data_files:
+            for data_file in data_files:
+                data_source = data_file
+                data_source_name = os.path.basename(data_file)
+                data_target_dir = os.path.dirname(os.path.join(nb_target_dir, data_source))
+                data_target = os.path.join(data_target_dir, data_source_name)
+                
+                os.makedirs(data_target_dir, exist_ok=True)
+                copyfile(data_source, data_target)
+            print(page.data_files)
 
 def _get_markdown_toc(markdown_source, toc_depth):
     md = markdown.Markdown(extensions=[TocExtension(toc_depth=toc_depth)])
