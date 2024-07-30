@@ -10,10 +10,9 @@ nav:
 plugins:
   - mkdocs-jupyter:
       include_source: true
-      data_files:
-        variational-inference.ipynb:
-          - docs/data/test.xlsx
-          - docs/data/test_1.xlsx
+      # data_files:
+      #   variational-inference.ipynb:
+      #     - docs/data/test.xlsx
       # highlight_extra_classes: not-prose
 
 markdown_extensions:
