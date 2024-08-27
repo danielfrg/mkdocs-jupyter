@@ -127,7 +127,7 @@ def nb2html(
 
     _, extension = os.path.splitext(nb_path)
 
-    if extension == ".py":
+    if extension in (".py", ".md"):
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
         content, resources = exporter.from_file(
@@ -196,7 +196,7 @@ def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):
 
     _, extension = os.path.splitext(nb_path)
 
-    if extension == ".py":
+    if extension in (".py", ".md"):
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
         body, resources = exporter.from_file(nb_file)
