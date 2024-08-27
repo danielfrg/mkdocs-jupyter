@@ -1,0 +1,17 @@
+site_name: site-with-python-files
+site_description: mkdocs-jupyter test site
+
+nav:
+  - Home: index.md
+  - Demo (md): demo-jupytext.md
+  - Equations (md): variational-inference.md
+
+plugins:
+  - mkdocs-jupyter
+
+markdown_extensions:
+  - codehilite:
+      guess_lang: false
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.arithmatex

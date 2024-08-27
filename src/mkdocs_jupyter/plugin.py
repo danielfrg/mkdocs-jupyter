@@ -1,6 +1,7 @@
 import os
 import pathlib
 
+import jupytext
 import markdown
 import mkdocs
 from markdown.extensions.toc import TocExtension
@@ -50,12 +51,25 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("toc_depth", config_options.Type(int, default=6)),
         ("data_files", config_options.Type(dict, default={})),
     )
-    _supported_extensions = [".ipynb", ".py", "*.md"]
+    _supported_extensions = [".ipynb", ".py", ".md"]
 
     def should_include(self, file):
         ext = os.path.splitext(str(file.abs_src_path))[-1]
         if ext not in self._supported_extensions:
             return False
+        if ext == ".md":
+            try:
+                # only include markdown files with an explicit jupytext metadata
+                # that specifies a python kernel
+                data = jupytext.read(file.abs_src_path)
+                if not (
+                    (meta := data.get("metadata", {}))
+                    and (kernelspec := meta.get("kernelspec"))
+                    and kernelspec["language"] == "python"
+                ):
+                    return False
+            except Exception as e:
+                return False
         srcpath = pathlib.PurePath(file.abs_src_path)
         include = None
         ignore = None
