@@ -58,9 +58,9 @@ class Plugin(mkdocs.plugins.BasePlugin):
         if ext not in self._supported_extensions:
             return False
         if ext == ".md":
+            # only include markdown files with jupytext frontmatter
+            # that explicitly specifies a python kernel
             try:
-                # only include markdown files with an explicit jupytext metadata
-                # that specifies a python kernel
                 data = jupytext.read(file.abs_src_path)
                 if not (
                     (meta := data.get("metadata", {}))
