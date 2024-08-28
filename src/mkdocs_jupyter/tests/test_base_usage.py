@@ -12,13 +12,16 @@ from nbclient.exceptions import CellExecutionError
         ["base-with-nbs-pys.yml", True],
         ["base-with-nbs.yml", True],
         ["base-with-pys.yml", True],
+        ["base-with-mds.yml", True],
         ["base-without-nbs.yml", True],
         ["material-execute-ignore.yml", True],
         ["material-with-nbs-pys.yml", True],
         ["material-with-nbs.yml", True],
         ["material-with-pys.yml", True],
+        ["material-with-mds.yml", True],
         ["base-with-nbs-failure.yml", False],
     ],
+    ids=lambda x: x[0],
 )
 def test_notebook_renders(input):
     filename, should_work = input
