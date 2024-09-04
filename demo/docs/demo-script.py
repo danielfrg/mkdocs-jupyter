@@ -87,7 +87,7 @@ import re
 text = "foo bar\t baz \tqux"
 
 # %%
-re.split("\s+", text)
+re.split(r"\s+", text)
 
 # %% language="latex"
 # \begin{align}

@@ -57,51 +57,26 @@ jobs:
       # ------------------------------------------------------------------------
       # Python
 
+      - name: Set up uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
 
-      - uses: actions/cache@v3
-        id: cached-python-env
-        with:
-          path: ${{ env.pythonLocation }}
-          key: >
-            python
-            ${{ runner.os }}
-            python-${{ matrix.python-version }}
-            ${{ hashFiles('pyproject.toml') }}
-            ${{ hashFiles('requirements*') }}
-
-      - name: Install dependencies
-        if: steps.cached-python-env.outputs.cache-hit != 'true'
-        run: pip install -r requirements-dev.lock
-
-      - name: Install Hatch
-        run: pip install --upgrade hatch
+      - name: Install the project
+        run: uv sync --all-extras --dev
 
       - name: Print Python info
         run: |
-          which python
-          python --version
-          which pip
-          pip --version
-          pip freeze
-
-      # ------------------------------------------------------------------------
-      # Test
-
-      - name: Build package
-        run: hatch build
-
-      - name: Install package
-        run: |
-          pip install dist/*.tar.gz
-          pip freeze
+          uv run which python
+          uv run python --version
+          uv run which pip
+          uv pip --version
+          uv pip freeze
 
       - name: Run tests
         run: |
-          pytest .
+          uv run pytest .
           just report
 
       - name: Codecov

@@ -4,13 +4,13 @@
 
 Requirements:
 
-- Python and rye
+- Python and uv
 - NodeJS and pnpm
 
 Create Python env and activate it:
 
 ```shell
-rye sync
+uv sync
 ```
 
 ## Dev cycle
@@ -25,8 +25,8 @@ Python:
 
 Run `mkdocs` in one of the tests configurations:
 
-- `cd mkdocs_jupyter/tests/mkdocs/`
-- `mkdocs serve -f material-with-nbs.yml`
+- `cd src/mkdocs_jupyter/tests/mkdocs/`
+- `uv run mkdocs serve -f material-with-nbs.yml`
 
 Change styles and rebuild the site to see the changes
 
@@ -45,11 +45,11 @@ just fmt
 
 ## JupyterLab styles
 
-We use the JupyterLab styles with some minor modifications
+We start from the JupyterLab styles with some minor modifications
 to make them more integrated with the mkdocs themes.
 
 We wrap those styles into the `.jupyter-wrapper` CSS class
-trying to not break the themes specific CSS.
+to try to adapt with mkdocs theme specific CSS.
 
 To update the original styles:
 

@@ -301,17 +301,13 @@
 #
 # ### Let's Code
 
-from pprint import pprint
 
-import arviz as az
 import matplotlib.pyplot as plt
 
 # +
 # Imports
 # %matplotlib inline
 import numpy as np
-import pandas as pd
-import pymc3 as pm
 import scipy as sp
 import tensorflow as tf
 import tensorflow_probability as tfp
@@ -320,7 +316,6 @@ from scipy.stats import expon, uniform
 plt.style.use("seaborn-darkgrid")
 
 from tensorflow_probability.python.mcmc.transformed_kernel import (
-    make_transform_fn,
     make_transformed_log_prob,
 )
 

@@ -68,7 +68,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     and kernelspec["language"] == "python"
                 ):
                     return False
-            except Exception as e:
+            except Exception:
                 return False
         srcpath = pathlib.PurePath(file.abs_src_path)
         include = None
