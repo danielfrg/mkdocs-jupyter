@@ -24,7 +24,7 @@ publish:
   uv publish
 
 docs-build:
-  cd demo; mkdocs build
+  cd demo; uv run mkdocs build
 
 # ------------------------------------------------------------------------------
 # Javascript
