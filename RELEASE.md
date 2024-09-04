@@ -9,7 +9,7 @@
 export VERSION=1.0.0
 
 # Build
-just js:build
+just js-build
 just build
 just publish
 

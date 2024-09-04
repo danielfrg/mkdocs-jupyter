@@ -21,7 +21,7 @@ report:
   uv run coverage html
 
 publish:
-  uv publish
+  uv run twine upload dist/*
 
 docs-build:
   cd demo; uv run mkdocs build
