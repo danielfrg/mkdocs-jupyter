@@ -2,30 +2,29 @@ default:
   just --list
 
 build:
-  rye build
+  uv run pyproject-build --installer uv
 
 check:
-  rye run isort . --check-only --diff
-  rye run black . --check
-  rye run ruff check mkdocs_jupyter
-  rye run flake8
+  uv run isort . --check-only --diff
+  uv run ruff check
+  uv run flake8
 
 fmt:
-  rye run isort .
-  rye run ruff format
+  uv run isort .
+  uv run ruff format
 
 test FILTER="":
-  rye run pytest -k "{{FILTER}}"
+  uv run pytest -k "{{FILTER}}"
 
 report:
-  coverage xml
-  coverage html
+  uv run coverage xml
+  uv run coverage html
 
 publish:
-  rye publish
+  uv publish
 
 docs-build:
-  cd demo; mkdocs build
+  cd demo; uv run mkdocs build
 
 # ------------------------------------------------------------------------------
 # Javascript

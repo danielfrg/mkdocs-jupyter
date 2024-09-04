@@ -26,22 +26,19 @@ dependencies = [
 ]
 dynamic = ["version"]
 
-[tool.rye]
-managed = true
+[tool.uv]
 dev-dependencies = [
-  # Testing
-  "coverage[toml]",
-  "pymdown-extensions",
-  "pytest",
-  "pytest-cov",
-  # Linting
-  "black",
-  "flake8",
-  "isort",
-  "pip-tools",
-  "ruff",
-  # Utils
-  "jupyterlab",
+    "isort",
+    "ruff==0.5.0",
+    "build",
+    "twine",
+    # Testing
+    "coverage[toml]",
+    "pymdown-extensions",
+    "pytest",
+    "pytest-cov",
+    # Utils
+    "jupyterlab",
 ]
 
 [project.entry-points."mkdocs.plugins"]
@@ -105,6 +102,8 @@ lint.select = [
   # "I",  # isort
   "B", # flake8-bugbear
 ]
+exclude = [".venv", "tests", "demo"]
+
 
 [tool.isort]
 profile = "black"
