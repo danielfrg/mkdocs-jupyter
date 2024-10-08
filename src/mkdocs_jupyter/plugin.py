@@ -1,3 +1,4 @@
+import logging
 import os
 import pathlib
 
@@ -11,6 +12,8 @@ from mkdocs.structure.pages import Page
 from mkdocs.structure.toc import get_toc
 
 from . import convert
+
+logger = logging.getLogger("mkdocs.plugins.mkdocs_jupyter")
 
 
 class NotebookFile(File):
@@ -160,7 +163,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             os.makedirs(nb_target_dir, exist_ok=True)
             copyfile(nb_source, nb_target)
-            print(f"Copied jupyter file: {nb_source} to {nb_target}")
+            logger.info("Copied jupyter file: %s to %s", nb_source, nb_target)
 
         # Include data files
         data_files = self.config["data_files"].get(page.file.src_path, [])
@@ -175,7 +178,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
                 os.makedirs(data_target_dir, exist_ok=True)
                 copyfile(data_source, data_target)
-            print(page.data_files)
+            logger.info("Copied data files: %s to %s", data_files, data_target_dir)
 
 
 def _get_markdown_toc(markdown_source, toc_depth):
