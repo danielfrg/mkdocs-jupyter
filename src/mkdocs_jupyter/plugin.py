@@ -153,7 +153,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
     def on_post_page(self, output_content, page, config):
         # Include source
-        if self.config["include_source"]:
+        if self.config["include_source"] and self.should_include(page.file):
             from shutil import copyfile
 
             nb_source = page.file.abs_src_path
