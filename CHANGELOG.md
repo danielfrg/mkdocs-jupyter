@@ -1,5 +1,10 @@
 # mkdocs-jupyter Change Log
 
+## 0.25.1
+
+- Fix issue which caused unrelated source files from being copied into the output directory.
+- Replace print statements with logging.
+
 ## 0.24.3
 
 - Fix theme selection
