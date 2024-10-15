@@ -11,5 +11,9 @@
   "devDependencies": {
     "sass": "^1.68.0",
     "vite": "^4.5.5"
+  },
+  "volta": {
+    "node": "22.9.0",
+    "pnpm": "9.12.1"
   }
 }

@@ -2,8 +2,9 @@
 
 ## 0.25.1
 
-- Fix issue which caused unrelated source files from being copied into the output directory.
-- Replace print statements with logging.
+- Add option to customize Mathjax URL
+- Fix issue which caused unrelated source files from being copied into the output directory
+- Replace print statements with logging
 
 ## 0.24.3
 
