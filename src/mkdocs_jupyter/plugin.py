@@ -107,6 +107,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
             highlight_extra_classes = self.config["highlight_extra_classes"]
             include_requirejs = self.config["include_requirejs"]
             toc_depth = self.config["toc_depth"]
+            custom_mathjax_url = self.config["custom_mathjax_url"]
 
             if self.config["execute_ignore"] and len(self.config["execute_ignore"]) > 0:
                 for ignore_pattern in self.config["execute_ignore"]:
@@ -130,7 +131,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     remove_tag_config=remove_tag_config,
                     highlight_extra_classes=highlight_extra_classes,
                     include_requirejs=include_requirejs,
-                    custom_mathjax_url=self.config["custom_mathjax_url"],
+                    custom_mathjax_url=custom_mathjax_url,
                 )
                 self.content = body
                 toc, title = get_nb_toc(page.file.abs_src_path, toc_depth)
