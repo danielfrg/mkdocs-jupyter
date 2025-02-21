@@ -3,7 +3,7 @@ site_description: mkdocs-jupyter demo website
 site_url: https://mkdocs-jupyter.danielfrg.com
 site_author: Daniel Rodriguez
 copyright: Copyright &copy; 2023 Daniel Rodrigue
-repo_url: https://github.com/danielfrg/cloud.danielfrg.com
+repo_url: https://github.com/danielfrg/mkdocs-jupyter
 edit_uri: ""
 site_dir: dist
 
