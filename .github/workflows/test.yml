@@ -71,7 +71,6 @@ jobs:
           uv run which python
           uv run python --version
           uv run which pip
-          uv pip --version
           uv pip freeze
 
       - name: Run tests
