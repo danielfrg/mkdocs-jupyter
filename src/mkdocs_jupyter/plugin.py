@@ -58,9 +58,14 @@ class Plugin(mkdocs.plugins.BasePlugin):
     _supported_extensions = [".ipynb", ".py", ".md"]
 
     def should_include(self, file):
+        srcpath = pathlib.PurePath(file.abs_src_path)
         ext = os.path.splitext(str(file.abs_src_path))[-1]
         if ext not in self._supported_extensions:
             return False
+        for pattern in self.config["ignore"]:
+            # check ignore patterns before attempting to read the file
+            if srcpath.match(pattern):
+                return False
         if ext == ".md":
             # only include markdown files with jupytext frontmatter
             # that explicitly specifies a python kernel
@@ -74,16 +79,10 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     return False
             except Exception:
                 return False
-        srcpath = pathlib.PurePath(file.abs_src_path)
-        include = None
-        ignore = None
-        for pattern in self.config["ignore"]:
-            if srcpath.match(pattern):
-                ignore = True
         for pattern in self.config["include"]:
             if srcpath.match(pattern):
-                include = True
-        return include and not ignore
+                return True
+        return False
 
     def on_files(self, files, config):
         ret = Files(
