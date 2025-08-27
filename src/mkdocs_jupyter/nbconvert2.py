@@ -303,7 +303,8 @@ def mk_custom_highlight_code(extra_css_classes=""):
         formatter = HtmlFormatter(cssclass=classes)
         output = _pygments_highlight(source, formatter, language, metadata)
 
-        clipboard_copy_txt = f"""<div id="cell-{cell_id}" class="clipboard-copy-txt">{source}</div>
+        escaped = mistune.escape(source)
+        clipboard_copy_txt = f"""<div id="cell-{cell_id}" class="clipboard-copy-txt">{escaped}</div>
         """
         return output + clipboard_copy_txt
 
