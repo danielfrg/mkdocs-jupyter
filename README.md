@@ -258,6 +258,30 @@ you can create a `main.html` file like this:
 
 ![Download Notebook button](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/download-button.png)
 
+### Caching
+
+By default the plugin caches notebook conversion results so that unchanged
+notebooks are not re-converted on every build. The cache key is based on the
+notebook file content and all relevant plugin config options.
+
+To disable caching:
+
+```yaml
+plugins:
+    - mkdocs-jupyter:
+          cache: false
+```
+
+To change the cache directory (default is `.cache/mkdocs-jupyter`):
+
+```yaml
+plugins:
+    - mkdocs-jupyter:
+          cache_dir: .cache/custom-dir
+```
+
+Stale cache entries from previous builds are automatically cleaned up.
+
 ## Styles
 
 This extensions includes the Jupyter Lab nbconvert CSS styles and does some
