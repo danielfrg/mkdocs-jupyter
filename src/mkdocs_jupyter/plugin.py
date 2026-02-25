@@ -88,6 +88,9 @@ class Plugin(mkdocs.plugins.BasePlugin):
                 return True
         return False
 
+    def on_pre_build(self, config):
+        self._used_cache_paths = set()
+
     def on_files(self, files, config):
         ret = Files(
             [
@@ -125,8 +128,11 @@ class Plugin(mkdocs.plugins.BasePlugin):
             cache_dir = self.config["cache_dir"]
 
             if cache_enabled:
-                cache_key = _compute_cache_key(page.file.abs_src_path, self.config)
+                cache_key = _compute_cache_key(
+                    page.file.abs_src_path, self.config, exec_nb
+                )
                 cache_path = _get_cache_path(cache_dir, cache_key)
+                self._used_cache_paths.add(cache_path)
             else:
                 cache_path = None
 
@@ -219,6 +225,17 @@ class Plugin(mkdocs.plugins.BasePlugin):
                 copyfile(data_source, data_target)
             logger.info("Copied data files: %s to %s", data_files, data_target_dir)
 
+    def on_post_build(self, config):
+        if not self.config["cache"]:
+            return
+        cache_dir = pathlib.Path(self.config["cache_dir"])
+        if not cache_dir.is_dir():
+            return
+        for cache_file in cache_dir.glob("*.json"):
+            if cache_file not in self._used_cache_paths:
+                cache_file.unlink()
+                logger.info("Evicted stale cache: %s", cache_file)
+
 
 def _get_markdown_toc(markdown_source, toc_depth):
     md = markdown.Markdown(extensions=[TocExtension(toc_depth=toc_depth)])
@@ -250,14 +267,20 @@ def get_nb_toc(fpath, toc_depth):
     return toc, title
 
 
-def _compute_cache_key(nb_path, config):
-    """Compute a SHA-256 hash from notebook content and relevant config options."""
+def _compute_cache_key(nb_path, config, exec_nb):
+    """Compute a SHA-256 hash from notebook content and relevant config options.
+
+    Uses the resolved exec_nb value (after execute_ignore processing) rather
+    than config["execute"], so that notebooks in execute_ignore get a distinct
+    cache key.
+    """
     hasher = hashlib.sha256()
     hasher.update(pathlib.Path(nb_path).read_bytes())
+    hasher.update(f"execute={exec_nb}".encode())
     for key in (
-        "execute",
         "kernel_name",
         "theme",
+        "allow_errors",
         "show_input",
         "no_input",
         "remove_tag_config",
@@ -266,7 +289,7 @@ def _compute_cache_key(nb_path, config):
         "custom_mathjax_url",
         "toc_depth",
     ):
-        hasher.update(f"{key}={config[key]}".encode())
+        hasher.update(f"{key}={repr(config[key])}".encode())
     return hasher.hexdigest()
 
 

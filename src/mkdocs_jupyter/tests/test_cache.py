@@ -38,9 +38,9 @@ def sample_nb(tmp_path):
 @pytest.fixture
 def base_config():
     return {
-        "execute": False,
         "kernel_name": "",
         "theme": "",
+        "allow_errors": True,
         "show_input": True,
         "no_input": False,
         "remove_tag_config": {},
@@ -53,8 +53,8 @@ def base_config():
 
 class TestComputeCacheKey:
     def test_same_file_same_config_same_key(self, sample_nb, base_config):
-        key1 = _compute_cache_key(str(sample_nb), base_config)
-        key2 = _compute_cache_key(str(sample_nb), base_config)
+        key1 = _compute_cache_key(str(sample_nb), base_config, False)
+        key2 = _compute_cache_key(str(sample_nb), base_config, False)
         assert key1 == key2
 
     def test_different_file_content_different_key(self, tmp_path, base_config):
@@ -63,30 +63,40 @@ class TestComputeCacheKey:
         nb1.write_text(json.dumps({"cells": [], "metadata": {}, "nbformat": 4}))
         nb2.write_text(
             json.dumps(
-                {"cells": [{"cell_type": "code"}], "metadata": {}, "nbformat": 4}
+                {
+                    "cells": [{"cell_type": "code"}],
+                    "metadata": {},
+                    "nbformat": 4,
+                }
             )
         )
 
-        key1 = _compute_cache_key(str(nb1), base_config)
-        key2 = _compute_cache_key(str(nb2), base_config)
+        key1 = _compute_cache_key(str(nb1), base_config, False)
+        key2 = _compute_cache_key(str(nb2), base_config, False)
         assert key1 != key2
 
     def test_different_config_different_key(self, sample_nb, base_config):
-        key1 = _compute_cache_key(str(sample_nb), base_config)
+        key1 = _compute_cache_key(str(sample_nb), base_config, False)
 
-        config2 = {**base_config, "execute": True}
-        key2 = _compute_cache_key(str(sample_nb), config2)
+        config2 = {**base_config, "allow_errors": False}
+        key2 = _compute_cache_key(str(sample_nb), config2, False)
+        assert key1 != key2
+
+    def test_different_exec_nb_different_key(self, sample_nb, base_config):
+        """Resolved exec_nb (after execute_ignore) affects the key."""
+        key1 = _compute_cache_key(str(sample_nb), base_config, True)
+        key2 = _compute_cache_key(str(sample_nb), base_config, False)
         assert key1 != key2
 
     def test_modified_file_different_key(self, sample_nb, base_config):
-        key1 = _compute_cache_key(str(sample_nb), base_config)
+        key1 = _compute_cache_key(str(sample_nb), base_config, False)
 
         # Modify the file
         nb = json.loads(sample_nb.read_text())
         nb["cells"].append({"cell_type": "code", "metadata": {}, "source": ["x = 1"]})
         sample_nb.write_text(json.dumps(nb))
 
-        key2 = _compute_cache_key(str(sample_nb), base_config)
+        key2 = _compute_cache_key(str(sample_nb), base_config, False)
         assert key1 != key2
 
 
@@ -163,3 +173,27 @@ class TestCacheIntegration:
 
             cache_files = list(pathlib.Path(cache_dir).glob("*.json"))
             assert len(cache_files) == 0, "No cache files when cache is disabled"
+
+    def test_stale_cache_evicted(self):
+        """Stale cache files from previous builds are cleaned up."""
+        from mkdocs.commands.build import build
+        from mkdocs.config import load_config
+
+        this_dir = os.path.dirname(os.path.realpath(__file__))
+        config_file = os.path.join(this_dir, "mkdocs/base-with-nbs.yml")
+
+        with tempfile.TemporaryDirectory() as cache_dir:
+            # Plant a stale cache file
+            stale = pathlib.Path(cache_dir) / "stale_old_entry.json"
+            stale.write_text("{}")
+
+            cfg = load_config(config_file)
+            cfg["plugins"]["mkdocs-jupyter"].config["cache"] = True
+            cfg["plugins"]["mkdocs-jupyter"].config["cache_dir"] = cache_dir
+
+            build(cfg)
+
+            assert not stale.exists(), "Stale cache file should be evicted"
+            # But valid cache files should remain
+            cache_files = list(pathlib.Path(cache_dir).glob("*.json"))
+            assert len(cache_files) > 0
