@@ -1,3 +1,5 @@
+import hashlib
+import json
 import logging
 import os
 import pathlib
@@ -54,6 +56,8 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("toc_depth", config_options.Type(int, default=6)),
         ("data_files", config_options.Type(dict, default={})),
         ("custom_mathjax_url", config_options.Type(str, default="")),
+        ("cache", config_options.Type(bool, default=True)),
+        ("cache_dir", config_options.Type(str, default=".cache/mkdocs-jupyter")),
     )
     _supported_extensions = [".ipynb", ".py", ".md"]
 
@@ -83,6 +87,9 @@ class Plugin(mkdocs.plugins.BasePlugin):
             if srcpath.match(pattern):
                 return True
         return False
+
+    def on_pre_build(self, config):
+        self._used_cache_paths = set()
 
     def on_files(self, files, config):
         ret = Files(
@@ -117,8 +124,28 @@ class Plugin(mkdocs.plugins.BasePlugin):
                         exec_nb = False
 
             theme = self.config["theme"]
+            cache_enabled = self.config["cache"]
+            cache_dir = self.config["cache_dir"]
+
+            if cache_enabled:
+                cache_key = _compute_cache_key(
+                    page.file.abs_src_path, self.config, exec_nb
+                )
+                cache_path = _get_cache_path(cache_dir, cache_key)
+                self._used_cache_paths.add(cache_path)
+            else:
+                cache_path = None
 
             def new_render(self, config, files):
+                if cache_path and cache_path.exists():
+                    logger.info("Cache hit: %s", page.file.abs_src_path)
+                    cached = json.loads(cache_path.read_text(encoding="utf-8"))
+                    self.content = cached["content"]
+                    self.toc = get_toc(cached["toc_tokens"])
+                    if cached.get("title") is not None and not ignore_h1_titles:
+                        self.title = cached["title"]
+                    return
+
                 body = convert.nb2html(
                     page.file.abs_src_path,
                     execute=exec_nb,
@@ -133,10 +160,26 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     custom_mathjax_url=custom_mathjax_url,
                 )
                 self.content = body
-                toc, title = get_nb_toc(page.file.abs_src_path, toc_depth)
-                self.toc = toc
+                toc_tokens, title = _get_nb_toc_tokens(
+                    page.file.abs_src_path, toc_depth
+                )
+                self.toc = get_toc(toc_tokens)
                 if title is not None and not ignore_h1_titles:
                     self.title = title
+
+                if cache_path:
+                    logger.info("Cache miss, writing: %s", page.file.abs_src_path)
+                    cache_path.parent.mkdir(parents=True, exist_ok=True)
+                    cache_path.write_text(
+                        json.dumps(
+                            {
+                                "content": body,
+                                "toc_tokens": toc_tokens,
+                                "title": title,
+                            }
+                        ),
+                        encoding="utf-8",
+                    )
 
             # replace render with new_render for this object only
             page.render = new_render.__get__(page, Page)
@@ -182,6 +225,17 @@ class Plugin(mkdocs.plugins.BasePlugin):
                 copyfile(data_source, data_target)
             logger.info("Copied data files: %s to %s", data_files, data_target_dir)
 
+    def on_post_build(self, config):
+        if not self.config["cache"]:
+            return
+        cache_dir = pathlib.Path(self.config["cache_dir"])
+        if not cache_dir.is_dir():
+            return
+        for cache_file in cache_dir.glob("*.json"):
+            if cache_file not in self._used_cache_paths:
+                cache_file.unlink()
+                logger.info("Evicted stale cache: %s", cache_file)
+
 
 def _get_markdown_toc(markdown_source, toc_depth):
     md = markdown.Markdown(extensions=[TocExtension(toc_depth=toc_depth)])
@@ -189,15 +243,56 @@ def _get_markdown_toc(markdown_source, toc_depth):
     return md.toc_tokens
 
 
-def get_nb_toc(fpath, toc_depth):
-    """Returns a TOC for the Notebook
-    It does that by converting first to MD
+def _get_nb_toc_tokens(fpath, toc_depth):
+    """Returns raw TOC tokens and title for the Notebook.
+
+    Converts to Markdown first, then extracts TOC tokens.
+    Returns (toc_tokens, title) where toc_tokens is a list of dicts.
     """
     body = convert.nb2md(fpath)
     md_toc_tokens = _get_markdown_toc(body, toc_depth)
-    toc = get_toc(md_toc_tokens)
     title = None
     for token in md_toc_tokens:
         if token["level"] == 1 and title is None:
             title = token["name"]
+    return md_toc_tokens, title
+
+
+def get_nb_toc(fpath, toc_depth):
+    """Returns a TOC for the Notebook
+    It does that by converting first to MD
+    """
+    md_toc_tokens, title = _get_nb_toc_tokens(fpath, toc_depth)
+    toc = get_toc(md_toc_tokens)
     return toc, title
+
+
+def _compute_cache_key(nb_path, config, exec_nb):
+    """Compute a SHA-256 hash from notebook content and relevant config options.
+
+    Uses the resolved exec_nb value (after execute_ignore processing) rather
+    than config["execute"], so that notebooks in execute_ignore get a distinct
+    cache key.
+    """
+    hasher = hashlib.sha256()
+    hasher.update(pathlib.Path(nb_path).read_bytes())
+    hasher.update(f"execute={exec_nb}".encode())
+    for key in (
+        "kernel_name",
+        "theme",
+        "allow_errors",
+        "show_input",
+        "no_input",
+        "remove_tag_config",
+        "highlight_extra_classes",
+        "include_requirejs",
+        "custom_mathjax_url",
+        "toc_depth",
+    ):
+        hasher.update(f"{key}={repr(config[key])}".encode())
+    return hasher.hexdigest()
+
+
+def _get_cache_path(cache_dir, cache_key):
+    """Return the Path for a given cache key."""
+    return pathlib.Path(cache_dir) / f"{cache_key}.json"
