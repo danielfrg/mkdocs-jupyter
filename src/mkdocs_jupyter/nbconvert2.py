@@ -173,6 +173,13 @@ def nb2html(
     return content
 
 
+def _strip_if_no_heading(m):
+    """Strip `m` of headings, check the pattern {1-6}#<space>, does not strip, e.g., "#incldue"."""
+    if re.search(r"^#{1,6} ", m.group(), re.MULTILINE):
+        return m.group()  # keep it
+    return ""
+
+
 def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):
     """Convert a notebook to markdown
 
@@ -205,8 +212,19 @@ def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):
 
     # Code cells can also be created using backquotes (text surrounded by up to three backquotes `)
     # So it needs to be removed, also to not mess the table of contents (for more see "test_toc.py")
-    backquote_text_regex = r"`{1,3}[.\s\S]*?`{1,3}"
-    return re.sub(backquote_text_regex, "", body)
+
+    # Remove fenced code blocks (``` ... ```) including their content (may span lines)
+    body = re.sub(r"```.*?```", "", body, flags=re.DOTALL)
+
+    # Remove inline code spans (`...`) without crossing newlines to avoid
+    # destroying headings when backticks are unmatched across cells
+    body = re.sub(r"`[^`\n]*`", "", body)
+
+    # Remove remaining backtick-wrapped spans that may cross lines,
+    # but only if they don't contain markdown headings
+    body = re.sub(r"`[^`]*`", _strip_if_no_heading, body)
+
+    return body
 
 
 def get_nbconvert_app(
