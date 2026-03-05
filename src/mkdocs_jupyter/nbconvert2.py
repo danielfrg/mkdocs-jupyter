@@ -205,7 +205,7 @@ def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):
 
     # Code cells can also be created using backquotes (text surrounded by up to three backquotes `)
     # So it needs to be removed, also to not mess the table of contents (for more see "test_toc.py")
-    backquote_text_regex = r"`{1,3}[.\s\S]*?`{1,3}"
+    backquote_text_regex = r"`{1,3}[^`\n]*`{1,3}"
     return re.sub(backquote_text_regex, "", body)
 
 
