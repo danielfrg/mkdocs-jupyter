@@ -11,11 +11,53 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build JS assets
+        run: |
+          cd js
+          pnpm install --frozen-lockfile
+          pnpm run build
+
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
       - name: Build package
         run: uv build
+
+      - name: Verify wheel includes notebook CSS assets
+        run: |
+          uv run python - <<'PY'
+          import glob
+          import zipfile
+
+          wheels = glob.glob("dist/*.whl")
+          if not wheels:
+              raise SystemExit("No wheel found in dist/")
+
+          required = {
+              "mkdocs_jupyter/templates/mkdocs_html/assets/index.css",
+              "mkdocs_jupyter/templates/mkdocs_html/assets/theme-dark.css",
+              "mkdocs_jupyter/templates/mkdocs_html/assets/theme-light.css",
+          }
+
+          with zipfile.ZipFile(wheels[0]) as zf:
+              names = set(zf.namelist())
+
+          missing = sorted(required - names)
+          if missing:
+              raise SystemExit(f"Wheel is missing expected assets: {missing}")
+
+          print("Wheel asset check passed")
+          PY
 
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
