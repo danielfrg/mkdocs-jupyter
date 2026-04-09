@@ -62,6 +62,8 @@ class Plugin(mkdocs.plugins.BasePlugin):
     _supported_extensions = [".ipynb", ".py", ".md"]
 
     def should_include(self, file):
+        if file.abs_src_path is None:
+            return False
         srcpath = pathlib.PurePath(file.abs_src_path)
         ext = os.path.splitext(str(file.abs_src_path))[-1]
         if ext not in self._supported_extensions:
