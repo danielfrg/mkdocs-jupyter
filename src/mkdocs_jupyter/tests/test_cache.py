@@ -43,6 +43,7 @@ def base_config():
         "allow_errors": True,
         "show_input": True,
         "no_input": False,
+        "no_prompt": False,
         "remove_tag_config": {},
         "highlight_extra_classes": "",
         "include_requirejs": False,

@@ -50,6 +50,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("allow_errors", config_options.Type(bool, default=True)),
         ("show_input", config_options.Type(bool, default=True)),
         ("no_input", config_options.Type(bool, default=False)),
+        ("no_prompt", config_options.Type(bool, default=False)),
         ("remove_tag_config", config_options.Type(dict, default={})),
         ("highlight_extra_classes", config_options.Type(str, default="")),
         ("include_requirejs", config_options.Type(bool, default=False)),
@@ -111,6 +112,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
             allow_errors = self.config["allow_errors"]
             show_input = self.config["show_input"]
             no_input = self.config["no_input"]
+            no_prompt = self.config["no_prompt"]
             remove_tag_config = self.config["remove_tag_config"]
             highlight_extra_classes = self.config["highlight_extra_classes"]
             include_requirejs = self.config["include_requirejs"]
@@ -156,6 +158,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     allow_errors=allow_errors,
                     show_input=show_input,
                     no_input=no_input,
+                    no_prompt=no_prompt,
                     remove_tag_config=remove_tag_config,
                     highlight_extra_classes=highlight_extra_classes,
                     include_requirejs=include_requirejs,
@@ -285,6 +288,7 @@ def _compute_cache_key(nb_path, config, exec_nb):
         "allow_errors",
         "show_input",
         "no_input",
+        "no_prompt",
         "remove_tag_config",
         "highlight_extra_classes",
         "include_requirejs",
