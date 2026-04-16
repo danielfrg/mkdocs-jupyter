@@ -45,6 +45,7 @@ def nb2html(
     allow_errors=True,
     show_input: bool = True,
     no_input: bool = False,
+    no_prompt: bool = False,
     remove_tag_config: dict = {},
     highlight_extra_classes: str = "",
     include_requirejs: bool = False,
@@ -73,6 +74,8 @@ def nb2html(
             Shows code input (default: True)
         no_input: bool
             Render notebook without code or output (default: False)
+        no_prompt: bool
+            Render notebook without input or output prompts (default: False)
         remove_tag_config: dict
             Configure rendering based on cell tags (default: {})
     Returns
@@ -92,6 +95,7 @@ def nb2html(
         allow_errors=allow_errors,
         show_input=show_input,
         no_input=no_input,
+        no_prompt=no_prompt,
         remove_tag_config=remove_tag_config,
     )
 
@@ -235,6 +239,7 @@ def get_nbconvert_app(
     allow_errors=True,
     show_input: bool = True,
     no_input: bool = False,
+    no_prompt: bool = False,
     remove_tag_config: dict = {},
 ) -> NbConvertApp:
     """Create"""
@@ -255,6 +260,16 @@ def get_nbconvert_app(
                 "TemplateExporter": {
                     "exclude_output_prompt": True,
                     "exclude_input": True,
+                    "exclude_input_prompt": True,
+                }
+            }
+        )
+
+    if no_prompt:
+        template_exported_conf.update(
+            {
+                "TemplateExporter": {
+                    "exclude_output_prompt": True,
                     "exclude_input_prompt": True,
                 }
             }

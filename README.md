@@ -170,6 +170,15 @@ plugins:
           no_input: True
 ```
 
+You can also only hide the `In[#]` and `Out[#]` prompts but keep the input and
+output content:
+
+```yaml
+plugins:
+    - mkdocs-jupyter:
+          no_prompt: True
+```
+
 ### Remove Cell Using Tags
 
 By default the plugin will show full code and regular cell output details. You
