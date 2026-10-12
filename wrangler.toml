@@ -1,0 +1,8 @@
+name = "mkdocs-jupyter-danielfrg-com"
+compatibility_date = "2026-10-11"
+workers_dev = true
+preview_urls = true
+
+[assets]
+directory = "./demo/dist"
+not_found_handling = "404-page"

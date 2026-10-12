@@ -84,12 +84,12 @@ jobs:
             ${{ github.run_id }}
             ${{ github.run_attempt }}
 
-  cf-pages:
-    uses: ./.github/workflows/docs-cf-pages.yml
+  cf-workers:
+    uses: ./.github/workflows/docs-cf-workers.yml
     needs: [build]
     secrets: inherit
 
   post-deploy:
     uses: ./.github/workflows/docs-post.yml
-    needs: [cf-pages]
+    needs: [cf-workers]
     secrets: inherit
