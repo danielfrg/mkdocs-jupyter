@@ -38,10 +38,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy demo/dist --project-name=mkdocs-jupyter-danielfrg-com --branch="$DEPLOY_BRANCH"
+          command: pages deploy demo/dist --project-name=mkdocs-jupyter-danielfrg-com --branch="${{ github.head_ref || github.ref_name }}"
           packageManager: npm
-        env:
-          DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
 
       - name: Comment deploy url
         if: github.event_name == 'pull_request'
