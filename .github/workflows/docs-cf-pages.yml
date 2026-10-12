@@ -9,7 +9,6 @@ on:
         required: true
 jobs:
   prod:
-    # if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
 
     permissions:
       contents: read
@@ -33,6 +32,7 @@ jobs:
           fail-on-cache-miss: true
 
       - name: Publish to Cloudflare Pages
+        if: github.event_name == 'pull_request' || ((github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main')
         id: cloudflare-pages-deploy
         uses: cloudflare/pages-action@v1.5.0
         with:
@@ -40,8 +40,10 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: mkdocs-jupyter-danielfrg-com
           directory: demo/dist
+          branch: ${{ github.head_ref || github.ref_name }}
 
       - name: Comment deploy url
+        if: github.event_name == 'pull_request'
         uses: mshick/add-pr-comment@v2
         with:
           message-id: cloudflare-deploy
