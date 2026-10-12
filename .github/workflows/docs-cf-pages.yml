@@ -34,13 +34,14 @@ jobs:
       - name: Publish to Cloudflare Pages
         if: github.event_name == 'pull_request' || ((github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main')
         id: cloudflare-pages-deploy
-        uses: cloudflare/pages-action@v1.5.0
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: mkdocs-jupyter-danielfrg-com
-          directory: demo/dist
-          branch: ${{ github.head_ref || github.ref_name }}
+          command: pages deploy demo/dist --project-name=mkdocs-jupyter-danielfrg-com --branch="$DEPLOY_BRANCH"
+          packageManager: npm
+        env:
+          DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
 
       - name: Comment deploy url
         if: github.event_name == 'pull_request'
@@ -51,7 +52,7 @@ jobs:
             ### <span aria-hidden="true">✅</span> Preview deployment
             |  Name | Link |
             |---------------------------------|------------------------|
-            | Deploy Preview Url | [${{ steps.cloudflare-pages-deploy.outputs.url }}](${{ steps.cloudflare-pages-deploy.outputs.url }}) |
+            | Deploy Preview Url | [${{ steps.cloudflare-pages-deploy.outputs.deployment-url }}](${{ steps.cloudflare-pages-deploy.outputs.deployment-url }}) |
             | Latest deploy log | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |
             | Latest commit | ${{ github.sha }} |
-            | Environment | ${{ steps.cloudflare-pages-deploy.outputs.environment }} |
+            | Environment | ${{ steps.cloudflare-pages-deploy.outputs.pages-environment }} |
