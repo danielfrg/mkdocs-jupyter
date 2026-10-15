@@ -1,4 +1,4 @@
-name: docs
+name: Deploy Docs
 
 on:
   push:
@@ -85,11 +85,11 @@ jobs:
             ${{ github.run_attempt }}
 
   cf-workers:
-    uses: ./.github/workflows/docs-cf-workers.yml
+    uses: ./.github/workflows/deploy-cloudflare.yml
     needs: [build]
     secrets: inherit
 
   post-deploy:
-    uses: ./.github/workflows/docs-post.yml
+    uses: ./.github/workflows/purge-cloudflare-cache.yml
     needs: [cf-workers]
     secrets: inherit

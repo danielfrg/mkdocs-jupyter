@@ -10,7 +10,7 @@
         <img src="https://img.shields.io/pypi/pyversions/mkdocs-jupyter.svg">
     </a>
     <a href="https://github.com/danielfrg/mkdocs-jupyter/actions/workflows/test.yml">
-        <img src="https://github.com/danielfrg/mkdocs-jupyter/workflows/test/badge.svg">
+        <img src="https://github.com/danielfrg/mkdocs-jupyter/actions/workflows/test.yml/badge.svg">
     </a>
     <a href="https://codecov.io/gh/danielfrg/mkdocs-jupyter?branch=main">
         <img src="https://codecov.io/gh/danielfrg/mkdocs-jupyter/branch/main/graph/badge.svg">

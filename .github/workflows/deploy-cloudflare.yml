@@ -1,4 +1,4 @@
-name: deploy-cf-workers
+name: Deploy to Cloudflare
 
 on:
   workflow_call:

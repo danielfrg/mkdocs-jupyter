@@ -1,4 +1,4 @@
-name: deploy-post
+name: Purge Cloudflare Cache
 
 on:
   workflow_call:
