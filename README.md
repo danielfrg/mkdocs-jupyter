@@ -219,7 +219,7 @@ the code cells. This can be useful to add custom styles to the code cells.
 ```yml
 plugins:
   - mkdocs-jupyter:
-      highlight_extra_classes: "custom-css-classes
+      highlight_extra_classes: "custom-css-classes"
 ```
 
 ### RequireJS
