@@ -266,12 +266,10 @@ def get_nbconvert_app(
         )
 
     if no_prompt:
-        template_exported_conf.update(
+        template_exported_conf["TemplateExporter"].update(
             {
-                "TemplateExporter": {
-                    "exclude_output_prompt": True,
-                    "exclude_input_prompt": True,
-                }
+                "exclude_output_prompt": True,
+                "exclude_input_prompt": True,
             }
         )
 
