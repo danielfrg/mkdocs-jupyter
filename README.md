@@ -211,6 +211,15 @@ theme:
         scheme: slate
 ```
 
+If a Material-derived theme uses a different name for its dark color scheme,
+set `dark_scheme` to that name. The default is `slate`:
+
+```yml
+plugins:
+    - mkdocs-jupyter:
+          dark_scheme: dark
+```
+
 ### Extra CSS classes
 
 This option will add a custom CSS class to the `div` container that highlights
