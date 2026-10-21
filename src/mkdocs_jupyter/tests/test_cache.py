@@ -83,6 +83,18 @@ class TestComputeCacheKey:
         key2 = _compute_cache_key(str(sample_nb), config2, False)
         assert key1 != key2
 
+    def test_empty_mathjax_url_uses_default_cache_key(self, sample_nb, base_config):
+        default_config = {
+            **base_config,
+            "custom_mathjax_url": (
+                "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js"
+                "?config=TeX-AMS_CHTML-full,Safe"
+            ),
+        }
+        assert _compute_cache_key(str(sample_nb), base_config, False) == (
+            _compute_cache_key(str(sample_nb), default_config, False)
+        )
+
     def test_different_exec_nb_different_key(self, sample_nb, base_config):
         """Resolved exec_nb (after execute_ignore) affects the key."""
         key1 = _compute_cache_key(str(sample_nb), base_config, True)

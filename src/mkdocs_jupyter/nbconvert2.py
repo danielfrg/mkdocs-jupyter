@@ -28,6 +28,11 @@ from mkdocs_jupyter.preprocessors import SubCell
 
 logger = logging.getLogger("mkdocs.mkdocs-jupyter")
 
+DEFAULT_MATHJAX_URL = (
+    "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js"
+    "?config=TeX-AMS_CHTML-full,Safe"
+)
+
 # Language of the kernel (used for syntax highlighting)
 kernel_lang = "python"
 
@@ -49,7 +54,7 @@ def nb2html(
     remove_tag_config: dict = {},
     highlight_extra_classes: str = "",
     include_requirejs: bool = False,
-    custom_mathjax_url: str = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe",
+    custom_mathjax_url: str = DEFAULT_MATHJAX_URL,
 ):
     """
     Convert a notebook to HTML
@@ -126,7 +131,7 @@ def nb2html(
         preprocessors=preprocessors_,
         filters=filters,
         theme=theme,
-        mathjax_url=custom_mathjax_url,
+        mathjax_url=custom_mathjax_url or DEFAULT_MATHJAX_URL,
     )
 
     _, extension = os.path.splitext(nb_path)

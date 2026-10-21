@@ -12,6 +12,53 @@
         table-layout: auto !important;
     }
 
+    // Keep Material and Jupyter output styles from overriding xarray's HTML repr.
+    .jp-OutputArea-output {
+        pre.xr-text-repr-fallback {
+            display: none;
+        }
+
+        .xr-wrap {
+            // xarray declares these on :root; Jupyter's theme lives in this wrapper.
+            --xr-font-color0: var(--jp-content-font-color0);
+            --xr-font-color2: var(--jp-content-font-color2);
+            --xr-font-color3: var(--jp-content-font-color3);
+            --xr-border-color: var(--jp-border-color2);
+            --xr-disabled-color: var(--jp-layout-color3);
+            --xr-background-color: var(--jp-layout-color0);
+            --xr-background-color-row-even: var(--jp-layout-color1);
+            --xr-background-color-row-odd: var(--jp-layout-color2);
+        }
+
+        ul.xr-sections {
+            display: grid;
+            margin: 0;
+        }
+
+        ul.xr-var-list {
+            display: contents;
+        }
+
+        ul.xr-dim-list,
+        ul.xr-dim-list li {
+            margin: 0;
+        }
+
+        dl.xr-attrs {
+            display: grid;
+
+            dt,
+            dd {
+                width: auto;
+                padding-right: 10px;
+            }
+
+            dt {
+                font-weight: normal;
+            }
+        }
+    }
+
     // Fix some margin/overflow issues
     .md-typeset__scrollwrap {
         margin: 0;
