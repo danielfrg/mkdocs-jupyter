@@ -218,6 +218,8 @@ set `dark_scheme` to that name. The default is `slate`:
 plugins:
     - mkdocs-jupyter:
           dark_scheme: dark
+          # Optionally pass the css class for the dark selectors
+          dark_selector: ".dark"
 ```
 
 ### Extra CSS classes
