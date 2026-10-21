@@ -44,6 +44,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("include", config_options.Type(list, default=["*.py", "*.ipynb", "*.md"])),
         ("ignore", config_options.Type(list, default=[])),
         ("execute", config_options.Type(bool, default=False)),
+        ("execute_include", config_options.Type(list, default=[])),
         ("execute_ignore", config_options.Type(list, default=[])),
         ("theme", config_options.Type(str, default="")),
         ("dark_scheme", config_options.Type(str, default="slate")),
@@ -59,7 +60,10 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("include_requirejs", config_options.Type(bool, default=False)),
         ("toc_depth", config_options.Type(int, default=6)),
         ("data_files", config_options.Type(dict, default={})),
-        ("custom_mathjax_url", config_options.Type(str, default="")),
+        (
+            "custom_mathjax_url",
+            config_options.Type(str, default=convert.DEFAULT_MATHJAX_URL),
+        ),
         ("cache", config_options.Type(bool, default=True)),
         ("cache_dir", config_options.Type(str, default=".cache/mkdocs-jupyter")),
     )
@@ -128,6 +132,12 @@ class Plugin(mkdocs.plugins.BasePlugin):
             include_requirejs = self.config["include_requirejs"]
             toc_depth = self.config["toc_depth"]
             custom_mathjax_url = self.config["custom_mathjax_url"]
+
+            if self.config["execute_include"]:
+                exec_nb = exec_nb and any(
+                    pathlib.PurePath(page.file.abs_src_path).match(pattern)
+                    for pattern in self.config["execute_include"]
+                )
 
             if self.config["execute_ignore"] and len(self.config["execute_ignore"]) > 0:
                 for ignore_pattern in self.config["execute_ignore"]:
@@ -294,7 +304,7 @@ def get_nb_toc(fpath, toc_depth):
 def _compute_cache_key(nb_path, config, exec_nb):
     """Compute a SHA-256 hash from notebook content and relevant config options.
 
-    Uses the resolved exec_nb value (after execute_ignore processing) rather
+    Uses the resolved exec_nb value (after execution filters) rather
     than config["execute"], so that notebooks in execute_ignore get a distinct
     cache key.
     """
@@ -314,7 +324,10 @@ def _compute_cache_key(nb_path, config, exec_nb):
         "custom_mathjax_url",
         "toc_depth",
     ):
-        hasher.update(f"{key}={repr(config[key])}".encode())
+        value = config[key]
+        if key == "custom_mathjax_url":
+            value = value or convert.DEFAULT_MATHJAX_URL
+        hasher.update(f"{key}={repr(value)}".encode())
     return hasher.hexdigest()
 
 
