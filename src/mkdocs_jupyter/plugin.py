@@ -3,12 +3,14 @@ import json
 import logging
 import os
 import pathlib
+import re
 
 import jupytext
 import markdown
 import mkdocs
 from markdown.extensions.toc import TocExtension
 from mkdocs.config import config_options
+from mkdocs.exceptions import ConfigurationError
 from mkdocs.structure.files import File, Files
 from mkdocs.structure.pages import Page
 from mkdocs.structure.toc import get_toc
@@ -44,6 +46,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("execute", config_options.Type(bool, default=False)),
         ("execute_ignore", config_options.Type(list, default=[])),
         ("theme", config_options.Type(str, default="")),
+        ("dark_scheme", config_options.Type(str, default="slate")),
         ("kernel_name", config_options.Type(str, default="")),
         ("include_source", config_options.Type(bool, default=False)),
         ("ignore_h1_titles", config_options.Type(bool, default=False)),
@@ -61,6 +64,13 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("cache_dir", config_options.Type(str, default=".cache/mkdocs-jupyter")),
     )
     _supported_extensions = [".ipynb", ".py", ".md"]
+
+    def on_config(self, config):
+        dark_scheme = self.config["dark_scheme"]
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_-]*", dark_scheme):
+            raise ConfigurationError(
+                "The mkdocs-jupyter dark_scheme option must be a CSS identifier."
+            )
 
     def should_include(self, file):
         if file.abs_src_path is None:
@@ -202,6 +212,13 @@ class Plugin(mkdocs.plugins.BasePlugin):
         page.nb_url = urljoin(page.abs_url, nb_source_name)
 
     def on_post_page(self, output_content, page, config):
+        dark_scheme = self.config["dark_scheme"]
+        if dark_scheme != "slate":
+            output_content = output_content.replace(
+                "[data-md-color-scheme=slate]",
+                f'[data-md-color-scheme="{dark_scheme}"]',
+            )
+
         # Include source
         if self.config["include_source"] and self.should_include(page.file):
             from shutil import copyfile
@@ -229,6 +246,8 @@ class Plugin(mkdocs.plugins.BasePlugin):
                 os.makedirs(data_target_dir, exist_ok=True)
                 copyfile(data_source, data_target)
             logger.info("Copied data files: %s to %s", data_files, data_target_dir)
+
+        return output_content
 
     def on_post_build(self, config):
         if not self.config["cache"]:
