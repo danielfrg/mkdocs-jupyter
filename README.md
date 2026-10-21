@@ -130,24 +130,6 @@ plugins:
               - "my-secret-files/*.ipynb"
 ```
 
-To execute only matching files, set `execute_include`. An empty list (the default)
-allows all files. These patterns use the same glob matching as `execute_ignore`:
-
-```yaml
-plugins:
-    - mkdocs-jupyter:
-          execute: true
-          execute_include:
-              - "examples/*.ipynb"
-          execute_ignore:
-              - "examples/slow-*.ipynb"
-```
-
-`execute_ignore` takes precedence over `execute_include`. These options only
-control execution; notebooks outside the selection are still rendered using
-their saved outputs. Setting `execute: false` disables execution regardless of
-the include patterns.
-
 To fail when notebook execution fails set `allow_errors` to `false`:
 
 ```yaml
@@ -259,18 +241,6 @@ plugins:
     - mkdocs-jupyter:
           include_requirejs: true
 ```
-
-### MathJax
-
-MathJax is loaded from the default CDN URL. To use a different URL:
-
-```yaml
-plugins:
-    - mkdocs-jupyter:
-          custom_mathjax_url: "https://example.com/MathJax.js?config=TeX-AMS_CHTML-full,Safe"
-```
-
-An empty `custom_mathjax_url` uses the default URL.
 
 ### Download notebook link
 
