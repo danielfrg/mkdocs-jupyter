@@ -30,7 +30,7 @@ docs-build:
 # Javascript
 
 js-install:
-  cd js; pnpm install
+  cd js; pnpm install --frozen-lockfile
 
 js-build:
   cd js; pnpm run build

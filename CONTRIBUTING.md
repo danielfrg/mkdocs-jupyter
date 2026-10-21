@@ -5,7 +5,7 @@
 Requirements:
 
 - Python and uv
-- NodeJS and pnpm
+- Node.js >=26.0.0 <27 and pnpm 10.28.0
 
 Create Python env and activate it:
 
@@ -19,7 +19,7 @@ To change the styles
 
 - `cd js`
 - `pnpm install`
-- `pnpm run build` or `npm run dev` for continuous build
+- `pnpm run build` or `pnpm run dev` for continuous build
 
 Python:
 

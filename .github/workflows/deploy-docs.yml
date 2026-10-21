@@ -22,7 +22,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.12]
-        node-version: [20]
 
     runs-on: ubuntu-latest
 
@@ -34,14 +33,14 @@ jobs:
       # Set up JS
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 10.28.0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: .node-version
 
       - name: Install JS deps
         run: |
