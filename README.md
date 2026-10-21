@@ -35,11 +35,11 @@
 -   Option to include notebook source
 
 <a
-href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"><img
-src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/mkdocs-theme.png"
+href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/main/docs/mkdocs-theme.png"><img
+src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/main/docs/mkdocs-theme.png"
 alt="mkdocs-jupyter default theme"  width="300"></a> <a
-href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"><img
-src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/material-theme.png"
+href="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/main/docs/material-theme.png"><img
+src="https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/main/docs/material-theme.png"
 alt="mkdocs-jupyter material theme"  width="300"></a>
 
 ## Installation
@@ -67,7 +67,7 @@ plugins:
 The first h1 header (`#`) in your notebook will be used as the title.
 
 ```md
-# This H1 header will be the the title.
+# This H1 header will be the title.
 ```
 
 This can be turned off in the configuration (in which case the filename will be
@@ -274,7 +274,7 @@ you can create a `main.html` file like this:
 {% endblock content %}
 ```
 
-![Download Notebook button](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/master/docs/download-button.png)
+![Download Notebook button](https://raw.githubusercontent.com/danielfrg/mkdocs-jupyter/main/docs/download-button.png)
 
 ### Caching
 
