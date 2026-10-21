@@ -98,6 +98,45 @@ later in the same markdown cell or new bottom markdown cells:
 ### This one will be displayed inside the above level
 ```
 
+### Notebook page metadata
+
+Add YAML frontmatter at the start of the notebook's first Markdown cell to set
+standard MkDocs page metadata:
+
+```markdown
+---
+title: Analysis
+description: An overview of the analysis.
+hide:
+  - navigation
+  - toc
+search:
+  exclude: true
+---
+
+# Analysis
+
+Notebook content goes here.
+```
+
+The frontmatter is removed from the rendered notebook and exposed as `page.meta`
+to MkDocs plugins and templates. In Material, the example hides the page's
+navigation and table of contents and excludes it from search. Other metadata
+keys are passed through unchanged.
+
+Search exclusion uses Material's search plugin. With older MkDocs versions,
+select it explicitly as `material/search` in your `plugins` configuration.
+
+The first Markdown cell can contain only frontmatter, with content in later
+cells. Frontmatter must be a closed YAML mapping; YAML examples in code fences
+or later Markdown cells remain content. This also works in Jupytext notebooks.
+
+For notebooks with frontmatter, an explicit `nav` title takes precedence over
+the metadata title, followed by the first H1. Set `ignore_h1_titles: true` to
+ignore that H1 fallback. Themes may use the metadata title separately, such as
+for the browser tab title. Notebooks without frontmatter keep their existing
+title behavior.
+
 ### Including or Ignoring Files
 
 You can control which files are included or ignored via lists of glob patterns:

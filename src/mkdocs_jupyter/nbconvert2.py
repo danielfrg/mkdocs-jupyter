@@ -24,6 +24,7 @@ from pygments.lexers import get_lexer_by_name
 from pygments.util import ClassNotFound
 
 from mkdocs_jupyter.config import settings
+from mkdocs_jupyter.metadata import NotebookMetadataMixin
 from mkdocs_jupyter.preprocessors import SubCell
 
 logger = logging.getLogger("mkdocs.mkdocs-jupyter")
@@ -38,6 +39,14 @@ kernel_lang = "python"
 
 # We use this to tag each div with code with an unique ID for the copy-to-clipboard
 cell_id = 0
+
+
+class NotebookHTMLExporter(NotebookMetadataMixin, HTMLExporter):
+    """HTML export without the notebook's page frontmatter."""
+
+
+class NotebookMarkdownExporter(NotebookMetadataMixin, MarkdownExporter):
+    """TOC export without the notebook's page frontmatter."""
 
 
 def nb2html(
@@ -124,7 +133,7 @@ def nb2html(
 
     default_filters["clean_html"] = custom_clean_html
 
-    exporter = HTMLExporter(
+    exporter = NotebookHTMLExporter(
         config=app.config,
         template_file=template_file,
         extra_template_paths=extra_template_paths,
@@ -204,7 +213,7 @@ def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):
     template_file = "mkdocs_md/md-no-codecell.md.j2"
     extra_template_paths = [settings.templates_dir]
 
-    exporter = MarkdownExporter(
+    exporter = NotebookMarkdownExporter(
         config=app.config,
         template_file=template_file,
         extra_template_paths=extra_template_paths,
