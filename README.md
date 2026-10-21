@@ -220,6 +220,23 @@ plugins:
           dark_scheme: dark
 ```
 
+For themes that use a different attribute or a class to indicate dark mode,
+set `dark_selector` to the CSS selector matching the dark-mode ancestor of the
+notebook. For example, for a theme that adds a `dark` class to `<html>`:
+
+```yml
+plugins:
+    - mkdocs-jupyter:
+          dark_selector: ".dark"
+```
+
+Other examples include `'[data-theme="dark"]'` and
+`'[data-bs-theme="dark"]'`. Selector lists are supported, such as
+`'.dark, [data-theme="dark"]'`. Specify a selector only, without CSS rules or
+HTML. When non-empty, `dark_selector` takes precedence over `dark_scheme`.
+Leave it unset to retain the default Material behavior or use `dark_scheme`.
+The selector follows the theme's existing mode switch; it does not add a switch.
+
 ### Extra CSS classes
 
 This option will add a custom CSS class to the `div` container that highlights

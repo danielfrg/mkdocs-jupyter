@@ -47,6 +47,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("execute_ignore", config_options.Type(list, default=[])),
         ("theme", config_options.Type(str, default="")),
         ("dark_scheme", config_options.Type(str, default="slate")),
+        ("dark_selector", config_options.Type(str, default="")),
         ("kernel_name", config_options.Type(str, default="")),
         ("include_source", config_options.Type(bool, default=False)),
         ("ignore_h1_titles", config_options.Type(bool, default=False)),
@@ -70,6 +71,15 @@ class Plugin(mkdocs.plugins.BasePlugin):
         if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_-]*", dark_scheme):
             raise ConfigurationError(
                 "The mkdocs-jupyter dark_scheme option must be a CSS identifier."
+            )
+
+        dark_selector = self.config["dark_selector"]
+        if dark_selector and (
+            not dark_selector.strip() or re.search(r"[{};<\x00]", dark_selector)
+        ):
+            raise ConfigurationError(
+                "The mkdocs-jupyter dark_selector option must be a CSS selector, "
+                "without CSS rules or HTML."
             )
 
     def should_include(self, file):
@@ -213,10 +223,17 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
     def on_post_page(self, output_content, page, config):
         dark_scheme = self.config["dark_scheme"]
-        if dark_scheme != "slate":
+        dark_selector = self.config["dark_selector"]
+        if dark_selector or dark_scheme != "slate":
+            # :is() keeps every branch of a selector list scoped to each
+            # descendant rule, e.g. :is(.dark, [data-theme="dark"]) .jupyter-wrapper.
+            selector = (
+                f":is({dark_selector})"
+                if dark_selector
+                else f'[data-md-color-scheme="{dark_scheme}"]'
+            )
             output_content = output_content.replace(
-                "[data-md-color-scheme=slate]",
-                f'[data-md-color-scheme="{dark_scheme}"]',
+                "[data-md-color-scheme=slate]", selector
             )
 
         # Include source
