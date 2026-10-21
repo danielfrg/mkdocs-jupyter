@@ -210,3 +210,17 @@ class TestCacheIntegration:
             # But valid cache files should remain
             cache_files = list(pathlib.Path(cache_dir).glob("*.json"))
             assert len(cache_files) > 0
+
+
+def test_identical_notebooks_in_different_directories_have_distinct_cache_keys(
+    tmp_path, sample_nb, base_config
+):
+    first = tmp_path / "first" / "notebook.ipynb"
+    second = tmp_path / "second" / "notebook.ipynb"
+    for source in (first, second):
+        source.parent.mkdir()
+        source.write_bytes(sample_nb.read_bytes())
+
+    assert _compute_cache_key(first, base_config, True) != _compute_cache_key(
+        second, base_config, True
+    )
