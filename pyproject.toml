@@ -18,6 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "nbconvert>=7.2.9,<8",
+    "beautifulsoup4>=4.7,<5",
     "mkdocs>=1.4.0,<2",
     "mkdocs-material>9.0.0",
     "jupytext>1.13.8,<2",

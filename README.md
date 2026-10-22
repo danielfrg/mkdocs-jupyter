@@ -148,6 +148,43 @@ plugins:
           ignore: ["some-irrelevant-files/*.ipynb"]
 ```
 
+### Notebooks outside the docs directory
+
+Use `notebook_dirs` to mount source directories outside `docs_dir`:
+
+```yaml
+plugins:
+    - mkdocs-jupyter:
+          notebook_dirs:
+              examples: notebooks
+
+nav:
+    - Home: index.md
+    - Example: examples/tutorial.ipynb
+```
+
+Each mapping key is a relative documentation path; its value is a source
+folder, resolved relative to `mkdocs.yml` (absolute source paths also work).
+This example renders `notebooks/tutorial.ipynb` at `examples/tutorial/`.
+Nested folders are preserved, and notebooks stay in their original location.
+Execution uses each notebook's source folder, and `include_source` provides
+the original file for download.
+
+Companion files such as images and datasets are published under the same
+mount. Relative notebook links and image URLs pointing to registered files
+are adjusted to their generated site URLs. Hidden files and directories,
+the source folder's top-level `templates/` directory, and build/cache
+folders are skipped. Directory symlinks are not followed.
+
+The existing `include` and `ignore` patterns match physical source paths
+and control conversion. Unconverted `.ipynb` and `.py` files are copied
+raw; `.md` files use ordinary MkDocs rendering. On versions that support `exclude_docs`, use it with the
+mounted documentation paths to omit files from the site entirely.
+
+Source directories are watched automatically by `mkdocs serve`. Mount
+paths cannot be absolute or contain `..`, source folders must exist, and
+conflicting documentation paths or output files produce a build error.
+
 ### Execute Notebook
 
 You can tell the plugin to execute the notebook before converting, default is
