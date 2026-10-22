@@ -62,6 +62,31 @@ plugins:
     - mkdocs-jupyter
 ```
 
+### Markdown cell processor
+
+Markdown cells use Jupyter's nbconvert renderer by default
+(`markdown_cell_processor: jupyter`). To process them with MkDocs and its
+configured Markdown extensions, opt in with:
+
+```yaml
+plugins:
+    - mkdocs-jupyter:
+          markdown_cell_processor: mkdocs
+    - mkdocstrings
+```
+
+With mkdocstrings installed and configured, notebook Markdown cells can then
+reference documented API objects, for example
+`[Model.fit][my_package.Model.fit]`. Code cells and rich outputs still use
+nbconvert.
+
+In this mode, Markdown syntax, heading IDs and the table of contents follow
+MkDocs and your `markdown_extensions`. For notebook math, configure
+`pymdownx.arithmatex` with `generic: true`; Mermaid fences likewise need your
+site's configured Mermaid extension, such as Material's SuperFences setup.
+References and Markdown extensions are processed on every build, including
+when notebook conversion is cached.
+
 ### Titles and Table of Contents
 
 The first h1 header (`#`) in your notebook will be used as the title.

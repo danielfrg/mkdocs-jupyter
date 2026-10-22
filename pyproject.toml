@@ -35,6 +35,7 @@ dev-dependencies = [
     # Testing
     "coverage[toml]",
     "pymdown-extensions",
+    "mkdocstrings[python]",
     "pytest",
     "pytest-cov",
     # Utils
