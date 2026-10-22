@@ -4,6 +4,8 @@ It provides a cleaner / more self-contained version of the HTML content
 that can be embedded into existing HTML pages without breaking existing styles
 """
 
+import base64
+import hashlib
 import io
 import json
 import logging
@@ -11,6 +13,7 @@ import os
 import re
 from html import escape
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import jupytext
 import mistune
@@ -28,6 +31,10 @@ from pygments.lexers import get_lexer_by_name
 from pygments.util import ClassNotFound
 
 from mkdocs_jupyter.config import settings
+from mkdocs_jupyter.exporter_options import (
+    MANAGED_OPTIONS,
+    validate_html_exporter_options,
+)
 from mkdocs_jupyter.metadata import NotebookMetadataMixin
 from mkdocs_jupyter.mathjax import (
     DEFAULT_MATHJAX_URL as DEFAULT_MATHJAX_URL,
@@ -51,16 +58,19 @@ class NotebookHTMLExporter(NotebookMetadataMixin, HTMLExporter):
 
     @pass_context
     def markdown2html(self, context, source):
-        if (
+        legacy_math = (
             context.get("resources", {}).get("mkdocs", {}).get("mathjax_version", 4)
             == 2
-        ):
+        )
+        if legacy_math and not self.embed_images:
             return super().markdown2html(context, source)
         cell = context.get("cell", {})
-        renderer = ModernMathRenderer(
+        renderer_class = ImageDependencyRenderer if legacy_math else ModernMathRenderer
+        renderer = renderer_class(
             escape=False,
             attachments=cell.get("attachments", {}),
             embed_images=self.embed_images,
+            image_dependencies=getattr(self, "_image_dependencies", None),
             path=context.get("resources", {}).get("metadata", {}).get("path", ""),
             anchor_link_text=self.anchor_link_text,
             exclude_anchor_links=self.exclude_anchor_links,
@@ -68,7 +78,36 @@ class NotebookHTMLExporter(NotebookMetadataMixin, HTMLExporter):
         return MarkdownWithMath(renderer=renderer).render(source)
 
 
-class ModernMathRenderer(IPythonRenderer):
+class ImageDependencyRenderer(IPythonRenderer):
+    """Record the exact local bytes embedded by nbconvert's image renderer."""
+
+    def __init__(self, *args, image_dependencies=None, **kwargs):
+        self.image_dependencies = image_dependencies
+        super().__init__(*args, **kwargs)
+
+    def _src_to_base64(self, src):
+        embedded = super()._src_to_base64(src)
+        if self.image_dependencies is None:
+            return embedded
+        # Keep the lookup path so replacing a symlink also invalidates the cache.
+        if embedded is None:
+            try:
+                scheme = urlsplit(src).scheme
+            except ValueError:
+                return embedded
+            if (scheme and not os.path.isabs(src)) or src.startswith("//"):
+                return embedded
+        path = os.path.abspath(os.path.join(self.path, src))
+        digest = (
+            hashlib.sha256(base64.b64decode(embedded.split(",", 1)[1])).hexdigest()
+            if embedded is not None
+            else None
+        )
+        self.image_dependencies[path] = digest
+        return embedded
+
+
+class ModernMathRenderer(ImageDependencyRenderer):
     """Emit explicit math regions compatible with site-owned arithmatex setups."""
 
     def inline_math(self, body):
@@ -108,6 +147,8 @@ def nb2html(
     custom_template: str | None = None,
     mathjax_version: int = 4,
     include_mathjax: bool = True,
+    html_exporter_options: dict | None = None,
+    image_dependencies: dict | None = None,
     markdown_cell_processor: str = "jupyter",
 ):
     """
@@ -141,6 +182,7 @@ def nb2html(
     -------
         HTML content
     """
+    exporter_options = validate_html_exporter_options(html_exporter_options)
     if markdown_cell_processor not in ("jupyter", "mkdocs"):
         raise ValueError("markdown_cell_processor must be jupyter or mkdocs")
     logger.info(f"Converting notebook (execute={execute}): {nb_path}")
@@ -189,7 +231,19 @@ def nb2html(
 
     default_filters["clean_html"] = custom_clean_html
 
+    # Dedicated plugin settings and package-owned templates take precedence.
+    options = {
+        name: value
+        for name, value in exporter_options.items()
+        if name not in MANAGED_OPTIONS
+    }
+    if exporter_options:
+        options["exclude_input"] = no_input or not show_input
+        if no_input or no_prompt:
+            options["exclude_input_prompt"] = True
+            options["exclude_output_prompt"] = True
     exporter = NotebookHTMLExporter(
+        **options,
         config=app.config,
         template_file=template_file,
         extra_template_paths=extra_template_paths,
@@ -199,6 +253,7 @@ def nb2html(
         mathjax_url=mathjax_url(mathjax_version, custom_mathjax_url),
         **template_options,
     )
+    exporter._image_dependencies = image_dependencies
     if custom_template:
         # nbconvert's binary asset fallback uses paths rather than Jinja loaders.
         exporter.template_paths = [str(template_path.parent), *exporter.template_paths]

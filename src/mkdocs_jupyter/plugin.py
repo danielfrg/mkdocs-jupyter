@@ -18,6 +18,7 @@ from mkdocs.structure.pages import Page
 from mkdocs.structure.toc import get_toc
 
 from . import convert
+from .exporter_options import image_dependencies_valid, validate_html_exporter_options
 from .markdown_cells import NotebookMarkdownExtension
 from .metadata import get_notebook_metadata
 from .mathjax import mathjax_script, mathjax_url
@@ -82,6 +83,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
             "markdown_cell_processor",
             config_options.Choice(("jupyter", "mkdocs"), default="jupyter"),
         ),
+        ("html_exporter_options", config_options.Type(dict, default={})),
         ("custom_template", config_options.Optional(config_options.File(exists=True))),
         (
             "custom_mathjax_url",
@@ -94,6 +96,10 @@ class Plugin(mkdocs.plugins.BasePlugin):
     _supported_extensions = [".ipynb", ".py", ".md"]
 
     def on_config(self, config):
+        try:
+            validate_html_exporter_options(self.config["html_exporter_options"])
+        except ValueError as error:
+            raise ConfigurationError(str(error)) from error
         self._notebook_dirs = configure_notebook_dirs(
             self.config["notebook_dirs"], config
         )
@@ -202,6 +208,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             theme = self.config["theme"]
             custom_template = self.config["custom_template"]
+            html_exporter_options = self.config["html_exporter_options"]
             # Custom templates can depend on dynamic includes and local assets.
             cache_enabled = self.config["cache"] and not custom_template
             cache_dir = self.config["cache_dir"]
@@ -220,9 +227,12 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             def notebook_content():
                 if cache_path and cache_path.exists():
-                    logger.info("Cache hit: %s", page.file.abs_src_path)
-                    return json.loads(cache_path.read_text(encoding="utf-8"))
+                    cached = json.loads(cache_path.read_text(encoding="utf-8"))
+                    if image_dependencies_valid(cached.get("image_dependencies", {})):
+                        logger.info("Cache hit: %s", page.file.abs_src_path)
+                        return cached
 
+                image_dependencies = {}
                 body = convert.nb2html(
                     page.file.abs_src_path,
                     execute=exec_nb,
@@ -241,17 +251,21 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     mathjax_version=mathjax_version,
                     include_mathjax=False,
                     markdown_cell_processor=processor,
+                    html_exporter_options=html_exporter_options,
+                    image_dependencies=image_dependencies,
                 )
                 # MkDocs mode derives headings from the configured Markdown pipeline.
                 toc_tokens, title = (
                     _get_nb_toc_tokens(page.file.abs_src_path, toc_depth)
                     if processor == "jupyter"
+                    and not html_exporter_options.get("exclude_markdown", False)
                     else ([], None)
                 )
                 converted = {
                     "content": body,
                     "toc_tokens": toc_tokens,
                     "title": title,
+                    "image_dependencies": image_dependencies,
                 }
                 if cache_path:
                     logger.info("Cache miss, writing: %s", page.file.abs_src_path)
@@ -480,6 +494,7 @@ def _compute_cache_key(nb_path, config, exec_nb, include_mermaidjs=True):
     hasher.update(f"mathjax_version={config.get('mathjax_version', 4)}".encode())
     processor = config.get("markdown_cell_processor", "jupyter")
     hasher.update(f"markdown_cell_processor={processor}".encode())
+    hasher.update(repr(config.get("html_exporter_options", {})).encode())
     for key in (
         "kernel_name",
         "theme",
