@@ -8,6 +8,7 @@ import re
 import jupytext
 import markdown
 import mkdocs
+import yaml
 from markdown.extensions.toc import TocExtension
 from mkdocs.config import config_options
 from mkdocs.exceptions import ConfigurationError
@@ -16,6 +17,7 @@ from mkdocs.structure.pages import Page
 from mkdocs.structure.toc import get_toc
 
 from . import convert
+from .metadata import get_notebook_metadata
 
 logger = logging.getLogger("mkdocs.plugins.mkdocs_jupyter")
 
@@ -129,6 +131,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
     def on_pre_page(self, page, config, files):
         if self.should_include(page.file):
+            explicit_title = page.title
             ignore_h1_titles = self.config["ignore_h1_titles"]
 
             exec_nb = self.config["execute"]
@@ -171,12 +174,19 @@ class Plugin(mkdocs.plugins.BasePlugin):
                 cache_path = None
 
             def new_render(self, config, files):
+                preserve_title = getattr(
+                    self, "_mkdocs_jupyter_has_metadata", False
+                ) and (explicit_title is not None or "title" in self.meta)
                 if cache_path and cache_path.exists():
                     logger.info("Cache hit: %s", page.file.abs_src_path)
                     cached = json.loads(cache_path.read_text(encoding="utf-8"))
                     self.content = cached["content"]
                     self.toc = get_toc(cached["toc_tokens"])
-                    if cached.get("title") is not None and not ignore_h1_titles:
+                    if (
+                        cached.get("title") is not None
+                        and not ignore_h1_titles
+                        and not preserve_title
+                    ):
                         self.title = cached["title"]
                     return
 
@@ -199,7 +209,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     page.file.abs_src_path, toc_depth
                 )
                 self.toc = get_toc(toc_tokens)
-                if title is not None and not ignore_h1_titles:
+                if title is not None and not ignore_h1_titles and not preserve_title:
                     self.title = title
 
                 if cache_path:
@@ -223,6 +233,20 @@ class Plugin(mkdocs.plugins.BasePlugin):
             self._set_nb_url(page)
             page.data_files = self.config["data_files"].get(page.file.src_path)
         return page
+
+    def on_page_read_source(self, page, config):
+        if not self.should_include(page.file):
+            return None
+        metadata = get_notebook_metadata(
+            jupytext.read(page.file.abs_src_path), page.file.src_path
+        )
+        page._mkdocs_jupyter_has_metadata = metadata is not None
+        if metadata is not None:
+            # Let MkDocs populate page.meta during its normal source-read phase.
+            # Leave notebook headings to our renderer so ignore_h1_titles also
+            # works with MkDocs versions that determine titles during reading.
+            return "---\n" + yaml.safe_dump(metadata, sort_keys=False) + "---\n"
+        return None
 
     def _set_nb_url(self, page):
         from urllib.parse import urljoin
@@ -327,7 +351,7 @@ def _compute_cache_key(nb_path, config, exec_nb):
     """
     hasher = hashlib.sha256()
     # Bump the cache format when rendering or TOC semantics change.
-    hasher.update(b"mkdocs-jupyter-cache-v2\0")
+    hasher.update(b"mkdocs-jupyter-cache-v3\0")
     # Identical sources can read different data relative to their directories.
     hasher.update(os.fsencode(os.path.abspath(nb_path)))
     hasher.update(b"\0")
