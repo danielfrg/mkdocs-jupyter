@@ -48,6 +48,7 @@ def base_config():
         "highlight_extra_classes": "",
         "include_requirejs": False,
         "custom_mathjax_url": "",
+        "mathjax_version": 4,
         "toc_depth": 6,
     }
 
@@ -83,16 +84,27 @@ class TestComputeCacheKey:
         key2 = _compute_cache_key(str(sample_nb), config2, False)
         assert key1 != key2
 
-    def test_empty_mathjax_url_uses_default_cache_key(self, sample_nb, base_config):
+    @pytest.mark.parametrize("version", [2, 3, 4])
+    def test_empty_mathjax_url_uses_default_cache_key(
+        self, sample_nb, base_config, version
+    ):
+        from mkdocs_jupyter.mathjax import MATHJAX_URLS
+
+        base_config = {**base_config, "mathjax_version": version}
         default_config = {
             **base_config,
-            "custom_mathjax_url": (
-                "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js"
-                "?config=TeX-AMS_CHTML-full,Safe"
-            ),
+            "custom_mathjax_url": MATHJAX_URLS[version],
         }
         assert _compute_cache_key(str(sample_nb), base_config, False) == (
             _compute_cache_key(str(sample_nb), default_config, False)
+        )
+
+    @pytest.mark.parametrize("version", [2, 3])
+    def test_mathjax_version_invalidates_cache(self, sample_nb, base_config, version):
+        assert _compute_cache_key(str(sample_nb), base_config, False) != (
+            _compute_cache_key(
+                str(sample_nb), {**base_config, "mathjax_version": version}, False
+            )
         )
 
     def test_different_exec_nb_different_key(self, sample_nb, base_config):

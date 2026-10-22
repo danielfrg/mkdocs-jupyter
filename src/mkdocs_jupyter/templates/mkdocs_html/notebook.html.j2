@@ -62,7 +62,11 @@ mkdocs-material #}
 {%- endblock notebook_css %}
 
 {%- block html_head_js_mathjax -%}
+{%- if resources.mkdocs.mathjax_version == 2 -%}
 {{ mathjax(resources.mathjax_url) }}
+{%- else -%}
+{{ resources.mkdocs.mathjax_script }}
+{%- endif -%}
 {%- endblock html_head_js_mathjax -%}
 
 {%- block html_head_js_mermaidjs -%}
@@ -151,3 +155,13 @@ mkdocs-material #}
 </script>
 {% endif %}
 {% endblock footer %}
+
+{% block data_latex scoped %}
+{% if resources.mkdocs.mathjax_version == 2 %}
+{{ super() }}
+{% else %}
+<div class="jp-RenderedLatex jp-OutputArea-output {{ extra_class }}" data-mime-type="text/latex">
+<div class="arithmatex">{{ output.data['text/latex'] | normalize_latex_output | e }}</div>
+</div>
+{% endif %}
+{% endblock data_latex %}
