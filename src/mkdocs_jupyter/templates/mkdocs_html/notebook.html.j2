@@ -83,13 +83,36 @@ mkdocs-material #}
 
 {# CHANGE: Overwrite body header and footer to include a .jupyter-wrapper div wrapper #}
 {%- block body_header -%}
-<div class="jupyter-wrapper">
+<div class="jupyter-wrapper"{% if resources.mkdocs.markdown_cell_processor == "mkdocs" %} markdown="1"{% endif %}>
 {% if resources.theme == 'dark' %}
-<div class="jp-Notebook" data-jp-theme-light="false" data-jp-theme-name="JupyterLab Dark">
+<div class="jp-Notebook" data-jp-theme-light="false" data-jp-theme-name="JupyterLab Dark"{% if resources.mkdocs.markdown_cell_processor == "mkdocs" %} markdown="1"{% endif %}>
 {% else %}
-<div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+<div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light"{% if resources.mkdocs.markdown_cell_processor == "mkdocs" %} markdown="1"{% endif %}>
 {% endif %}
 {%- endblock body_header -%}
+
+{# Pass only Markdown cells through MkDocs; code and output HTML stays raw. #}
+{% block markdowncell scoped %}
+{% if resources.mkdocs.markdown_cell_processor == "mkdocs" %}
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" markdown="1" data-mkdocs-jupyter-attachments="{{ cell.attachments | default({}) | tojson | forceescape }}">
+<div class="jp-Cell-inputWrapper" markdown="1">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"></div>
+<div class="jp-InputArea jp-Cell-inputArea" markdown="1">
+{% if resources.global_content_filter.include_input_prompt %}
+{{ self.empty_in_prompt() }}
+{% endif %}
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput {{ celltags(cell) }}" data-mime-type="text/markdown" markdown="1">
+
+{{ cell.source }}
+
+</div>
+</div>
+</div>
+</div>
+{% else %}
+{{ super() }}
+{% endif %}
+{% endblock markdowncell %}
 
 {# CHANGE:
 1. Show the tags on the cell toolbar

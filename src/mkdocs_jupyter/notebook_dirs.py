@@ -115,7 +115,7 @@ def check_collisions(files, include_source):
         seen.setdefault(target, file)
 
 
-def rewrite_notebook_urls(html, current, files):
+def rewrite_notebook_urls(html, current, files, *, markdown_processed=False):
     """Resolve links against real sources, then use their final site URLs."""
     by_source = {}
     for file in files:
@@ -128,6 +128,10 @@ def rewrite_notebook_urls(html, current, files):
     source = Path(current.abs_src_path).parent
     soup = BeautifulSoup(html, "html.parser")
     for tag in soup.find_all(True):
+        # MkDocs already resolved parsed Markdown links against the virtual
+        # documentation paths. Only nbconvert's raw HTML still needs remapping.
+        if markdown_processed and tag.find_parent(class_="jp-MarkdownCell"):
+            continue
         for attribute in ("href", "src"):
             value = tag.get(attribute)
             if not isinstance(value, str):

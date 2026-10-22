@@ -4,6 +4,7 @@ import logging
 import os
 import pathlib
 import re
+from copy import copy
 
 import jupytext
 import markdown
@@ -18,6 +19,7 @@ from mkdocs.structure.toc import get_toc
 
 from . import convert
 from .exporter_options import image_dependencies_valid, validate_html_exporter_options
+from .markdown_cells import NotebookMarkdownExtension
 from .metadata import get_notebook_metadata
 from .mathjax import mathjax_script, mathjax_url
 from .notebook_dirs import (
@@ -77,6 +79,10 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("include_requirejs", config_options.Type(bool, default=False)),
         ("toc_depth", config_options.Type(int, default=6)),
         ("data_files", config_options.Type(dict, default={})),
+        (
+            "markdown_cell_processor",
+            config_options.Choice(("jupyter", "mkdocs"), default="jupyter"),
+        ),
         ("html_exporter_options", config_options.Type(dict, default={})),
         ("custom_template", config_options.Optional(config_options.File(exists=True))),
         (
@@ -166,12 +172,6 @@ class Plugin(mkdocs.plugins.BasePlugin):
             check_collisions(ret, self.config["include_source"])
         return ret
 
-    def on_page_content(self, html, page, config, files):
-        if getattr(page.file, "_mkdocs_jupyter_mount", None) and self.should_include(
-            page.file
-        ):
-            return rewrite_notebook_urls(html, page.file, files)
-
     def on_pre_page(self, page, config, files):
         if self.should_include(page.file):
             explicit_title = page.title
@@ -190,6 +190,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
             toc_depth = self.config["toc_depth"]
             custom_mathjax_url = self.config["custom_mathjax_url"]
             mathjax_version = self.config["mathjax_version"]
+            processor = self.config["markdown_cell_processor"]
 
             if self.config["execute_include"]:
                 exec_nb = exec_nb and any(
@@ -224,23 +225,12 @@ class Plugin(mkdocs.plugins.BasePlugin):
             else:
                 cache_path = None
 
-            def new_render(self, config, files):
-                preserve_title = getattr(
-                    self, "_mkdocs_jupyter_has_metadata", False
-                ) and (explicit_title is not None or "title" in self.meta)
+            def notebook_content():
                 if cache_path and cache_path.exists():
                     cached = json.loads(cache_path.read_text(encoding="utf-8"))
                     if image_dependencies_valid(cached.get("image_dependencies", {})):
                         logger.info("Cache hit: %s", page.file.abs_src_path)
-                        self.content = cached["content"]
-                        self.toc = get_toc(cached["toc_tokens"])
-                        if (
-                            cached.get("title") is not None
-                            and not ignore_h1_titles
-                            and not preserve_title
-                        ):
-                            self.title = cached["title"]
-                        return
+                        return cached
 
                 image_dependencies = {}
                 body = convert.nb2html(
@@ -260,42 +250,112 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     custom_template=custom_template,
                     mathjax_version=mathjax_version,
                     include_mathjax=False,
+                    markdown_cell_processor=processor,
                     html_exporter_options=html_exporter_options,
                     image_dependencies=image_dependencies,
                 )
-                self.content = body
-                if html_exporter_options.get("exclude_markdown", False):
-                    toc_tokens, title = [], None
-                else:
-                    toc_tokens, title = _get_nb_toc_tokens(
-                        page.file.abs_src_path, toc_depth
-                    )
-                self.toc = get_toc(toc_tokens)
-                if title is not None and not ignore_h1_titles and not preserve_title:
-                    self.title = title
-
+                # MkDocs mode derives headings from the configured Markdown pipeline.
+                toc_tokens, title = (
+                    _get_nb_toc_tokens(page.file.abs_src_path, toc_depth)
+                    if processor == "jupyter"
+                    and not html_exporter_options.get("exclude_markdown", False)
+                    else ([], None)
+                )
+                converted = {
+                    "content": body,
+                    "toc_tokens": toc_tokens,
+                    "title": title,
+                    "image_dependencies": image_dependencies,
+                }
                 if cache_path:
                     logger.info("Cache miss, writing: %s", page.file.abs_src_path)
                     cache_path.parent.mkdir(parents=True, exist_ok=True)
-                    cache_path.write_text(
-                        json.dumps(
-                            {
-                                "content": body,
-                                "toc_tokens": toc_tokens,
-                                "title": title,
-                                "image_dependencies": image_dependencies,
-                            }
-                        ),
-                        encoding="utf-8",
-                    )
+                    cache_path.write_text(json.dumps(converted), encoding="utf-8")
+                return converted
 
-            # replace render with new_render for this object only
-            page.render = new_render.__get__(page, Page)
+            def new_render(self, config, files):
+                converted = notebook_content()
+                self.content = converted["content"]
+                self.toc = get_toc(converted["toc_tokens"])
+                preserve_title = getattr(
+                    self, "_mkdocs_jupyter_has_metadata", False
+                ) and (explicit_title is not None or "title" in self.meta)
+                if (
+                    converted["title"] is not None
+                    and not ignore_h1_titles
+                    and not preserve_title
+                ):
+                    self.title = converted["title"]
+
+            if processor == "mkdocs":
+                page._mkdocs_jupyter_content = notebook_content
+                original_render = page.render
+
+                def mkdocs_render(self, config, files):
+                    # Keep notebook-only extensions off ordinary Markdown pages.
+                    page_config = copy(config)
+                    extensions = list(config["markdown_extensions"])
+                    if not any(
+                        extension in ("md_in_html", "markdown.extensions.md_in_html")
+                        for extension in extensions
+                    ):
+                        extensions.append("md_in_html")
+                    set_title = (
+                        not ignore_h1_titles
+                        and explicit_title is None
+                        and "title" not in self.meta
+                    )
+                    extensions.append(NotebookMarkdownExtension(self, set_title))
+                    page_config["markdown_extensions"] = extensions
+                    original_render(page_config, files)
+
+                page.render = mkdocs_render.__get__(page, Page)
+            else:
+                # Replace render only for notebooks using nbconvert Markdown.
+                page.render = new_render.__get__(page, Page)
 
             # Add metadata for template
             self._set_nb_url(page)
             page.data_files = self.config["data_files"].get(page.file.src_path)
         return page
+
+    @mkdocs.plugins.event_priority(100)
+    def on_page_markdown(self, markdown, page, config, files):
+        if (
+            self.config["markdown_cell_processor"] == "mkdocs"
+            and self.should_include(page.file)
+        ):
+            if self.config["ignore_h1_titles"]:
+                # Source reading supplied only metadata, so this is the nav,
+                # metadata or filename title, before Markdown renders its H1.
+                page.title = page.title
+            return page._mkdocs_jupyter_content()["content"]
+        return None
+
+    def on_page_content(self, html, page, config, files):
+        if (
+            self.config["markdown_cell_processor"] == "mkdocs"
+            and self.should_include(page.file)
+        ):
+            def limit_depth(items):
+                retained = []
+                for item in items:
+                    if item.level <= self.config["toc_depth"]:
+                        item.children = limit_depth(item.children)
+                        retained.append(item)
+                return retained
+
+            page.toc.items = limit_depth(page.toc.items)
+        if getattr(page.file, "_mkdocs_jupyter_mount", None) and self.should_include(
+            page.file
+        ):
+            html = rewrite_notebook_urls(
+                html,
+                page.file,
+                files,
+                markdown_processed=self.config["markdown_cell_processor"] == "mkdocs",
+            )
+        return html
 
     def on_page_read_source(self, page, config):
         if not self.should_include(page.file):
@@ -309,6 +369,10 @@ class Plugin(mkdocs.plugins.BasePlugin):
             # Leave notebook headings to our renderer so ignore_h1_titles also
             # works with MkDocs versions that determine titles during reading.
             return "---\n" + yaml.safe_dump(metadata, sort_keys=False) + "---\n"
+        if self.config["markdown_cell_processor"] == "mkdocs":
+            # Raw notebook JSON/Python is not page Markdown. The page_markdown
+            # event supplies the converted notebook after MkDocs reads metadata.
+            return ""
         return None
 
     def _set_nb_url(self, page):
@@ -428,6 +492,8 @@ def _compute_cache_key(nb_path, config, exec_nb, include_mermaidjs=True):
     hasher.update(f"execute={exec_nb}".encode())
     hasher.update(f"include_mermaidjs={include_mermaidjs}".encode())
     hasher.update(f"mathjax_version={config.get('mathjax_version', 4)}".encode())
+    processor = config.get("markdown_cell_processor", "jupyter")
+    hasher.update(f"markdown_cell_processor={processor}".encode())
     hasher.update(repr(config.get("html_exporter_options", {})).encode())
     for key in (
         "kernel_name",

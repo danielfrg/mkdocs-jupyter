@@ -149,6 +149,7 @@ def nb2html(
     include_mathjax: bool = True,
     html_exporter_options: dict | None = None,
     image_dependencies: dict | None = None,
+    markdown_cell_processor: str = "jupyter",
 ):
     """
     Convert a notebook to HTML
@@ -182,6 +183,8 @@ def nb2html(
         HTML content
     """
     exporter_options = validate_html_exporter_options(html_exporter_options)
+    if markdown_cell_processor not in ("jupyter", "mkdocs"):
+        raise ValueError("markdown_cell_processor must be jupyter or mkdocs")
     logger.info(f"Converting notebook (execute={execute}): {nb_path}")
 
     global cell_id, kernel_lang
@@ -258,6 +261,7 @@ def nb2html(
     resources = {
         "metadata": {"path": os.path.dirname(os.path.abspath(nb_path))},
         "mkdocs": {
+            "markdown_cell_processor": markdown_cell_processor,
             "include_requirejs": include_requirejs,
             "include_mermaidjs": include_mermaidjs,
             "mathjax_version": mathjax_version,
