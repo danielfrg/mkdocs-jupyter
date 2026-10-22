@@ -11,7 +11,7 @@ import mkdocs
 import yaml
 from markdown.extensions.toc import TocExtension
 from mkdocs.config import config_options
-from mkdocs.exceptions import ConfigurationError
+from mkdocs.exceptions import ConfigurationError, PluginError
 from mkdocs.structure.files import File, Files
 from mkdocs.structure.pages import Page
 from mkdocs.structure.toc import get_toc
@@ -19,6 +19,12 @@ from mkdocs.structure.toc import get_toc
 from . import convert
 from .metadata import get_notebook_metadata
 from .mathjax import mathjax_script, mathjax_url
+from .notebook_dirs import (
+    check_collisions,
+    configure_notebook_dirs,
+    external_files,
+    rewrite_notebook_urls,
+)
 
 logger = logging.getLogger("mkdocs.plugins.mkdocs_jupyter")
 
@@ -31,6 +37,11 @@ class NotebookFile(File):
 
     def __init__(self, file, use_directory_urls, site_dir, **kwargs):
         self.file = file
+        self.abs_src_path = file.abs_src_path
+        if hasattr(file, "inclusion"):
+            self.inclusion = file.inclusion
+        if hasattr(file, "edit_uri"):
+            self.edit_uri = file.edit_uri
         self.dest_path = self._get_dest_path(use_directory_urls)
         self.abs_dest_path = os.path.normpath(os.path.join(site_dir, self.dest_path))
         self.url = self._get_url(use_directory_urls)
@@ -46,6 +57,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
         ("include", config_options.Type(list, default=["*.py", "*.ipynb", "*.md"])),
         ("ignore", config_options.Type(list, default=[])),
+        ("notebook_dirs", config_options.Type(dict, default={})),
         ("execute", config_options.Type(bool, default=False)),
         ("execute_include", config_options.Type(list, default=[])),
         ("execute_ignore", config_options.Type(list, default=[])),
@@ -76,6 +88,9 @@ class Plugin(mkdocs.plugins.BasePlugin):
     _supported_extensions = [".ipynb", ".py", ".md"]
 
     def on_config(self, config):
+        self._notebook_dirs = configure_notebook_dirs(
+            self.config["notebook_dirs"], config
+        )
         dark_scheme = self.config["dark_scheme"]
         if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_-]*", dark_scheme):
             raise ConfigurationError(
@@ -124,13 +139,32 @@ class Plugin(mkdocs.plugins.BasePlugin):
         self._used_cache_paths = set()
 
     def on_files(self, files, config):
+        mounts = getattr(self, "_notebook_dirs", ())
+        if mounts:
+            known = {file.src_path for file in files}
+            for file in external_files(mounts, config, self.config["cache_dir"]):
+                if file.src_path in known:
+                    raise PluginError(
+                        "notebook_dirs source collision: "
+                        f"{file.src_path!r} is already a documentation source."
+                    )
+                known.add(file.src_path)
+                files.append(file)
         ret = Files(
             [
                 NotebookFile(file, **config) if self.should_include(file) else file
                 for file in files
             ]
         )
+        if mounts:
+            check_collisions(ret, self.config["include_source"])
         return ret
+
+    def on_page_content(self, html, page, config, files):
+        if getattr(page.file, "_mkdocs_jupyter_mount", None) and self.should_include(
+            page.file
+        ):
+            return rewrite_notebook_urls(html, page.file, files)
 
     def on_pre_page(self, page, config, files):
         if self.should_include(page.file):
