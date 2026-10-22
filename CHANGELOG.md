@@ -1,5 +1,16 @@
 # mkdocs-jupyter Change Log
 
+## 0.27.0
+
+- Add opt-in MkDocs rendering for notebook Markdown
+- Add support for HTML exporter options and embedded notebook images
+- Support notebooks outside the MkDocs docs directory
+- Support custom notebook templates and upgrade to MathJax 4
+- Add notebook page metadata and improve notebook TOC extraction
+- Fix Mermaid rendering, nested notebook navigation, and notebook execution paths
+- Support custom dark-mode selectors across themes
+- Require Python 3.12 and add support through Python 3.15
+
 ## 0.25.1
 
 - Add option to customize Mathjax URL
