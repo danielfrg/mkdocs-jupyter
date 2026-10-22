@@ -2,3 +2,7 @@
 
 {% block codecell %}
 {% endblock %}
+
+{% block markdowncell scoped %}
+{{ cell.source | extract_toc_headings }}
+{% endblock markdowncell %}

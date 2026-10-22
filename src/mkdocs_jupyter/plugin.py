@@ -313,7 +313,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
 
 def _get_markdown_toc(markdown_source, toc_depth):
-    md = markdown.Markdown(extensions=[TocExtension(toc_depth=toc_depth)])
+    md = markdown.Markdown(extensions=["attr_list", TocExtension(toc_depth=toc_depth)])
     md.convert(markdown_source)
     return md.toc_tokens
 
@@ -350,7 +350,11 @@ def _compute_cache_key(nb_path, config, exec_nb):
     cache key.
     """
     hasher = hashlib.sha256()
-    hasher.update(b"mkdocs-jupyter-cache-v2")
+    # Bump the cache format when rendering or TOC semantics change.
+    hasher.update(b"mkdocs-jupyter-cache-v3\0")
+    # Identical sources can read different data relative to their directories.
+    hasher.update(os.fsencode(os.path.abspath(nb_path)))
+    hasher.update(b"\0")
     hasher.update(pathlib.Path(nb_path).read_bytes())
     hasher.update(f"execute={exec_nb}".encode())
     for key in (

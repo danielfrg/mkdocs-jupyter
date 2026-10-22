@@ -9,9 +9,11 @@ import json
 import logging
 import os
 import re
+from html import escape
 
 import jupytext
 import mistune
+from defusedxml import ElementTree
 from nbconvert.exporters.html import HTMLExporter
 from nbconvert.exporters.markdown import MarkdownExporter
 from nbconvert.exporters.templateexporter import default_filters
@@ -143,20 +145,16 @@ def nb2html(
         mathjax_url=custom_mathjax_url or DEFAULT_MATHJAX_URL,
     )
 
+    resources = {
+        "metadata": {"path": os.path.dirname(os.path.abspath(nb_path))},
+        "mkdocs": {"include_requirejs": include_requirejs},
+    }
     _, extension = os.path.splitext(nb_path)
 
     if extension in (".py", ".md"):
         nb = jupytext.read(nb_path)
         nb_file = io.StringIO(jupytext.writes(nb, fmt="ipynb"))
-        content, resources = exporter.from_file(
-            nb_file,
-            resources={
-                "mkdocs": {
-                    "test": "value",
-                    "include_requirejs": include_requirejs,
-                }
-            },
-        )
+        content, resources = exporter.from_file(nb_file, resources=resources)
     else:
         try:
             with open(nb_path, "r", encoding="utf-8") as f:
@@ -164,15 +162,7 @@ def nb2html(
                 kernel_lang = nb_json["metadata"]["kernelspec"]["language"]
         except KeyError:
             pass
-        content, resources = exporter.from_filename(
-            nb_path,
-            resources={
-                "mkdocs": {
-                    "test": "value",
-                    "include_requirejs": include_requirejs,
-                }
-            },
-        )
+        content, resources = exporter.from_filename(nb_path, resources=resources)
         content = (
             content
             + f"""
@@ -191,18 +181,37 @@ def nb2html(
     return content
 
 
-def _strip_if_no_heading(m):
-    """Strip `m` of headings, check the pattern {1-6}#<space>, does not strip, e.g., "#incldue"."""
-    if re.search(r"^#{1,6} ", m.group(), re.MULTILINE):
-        return m.group()  # keep it
-    return ""
+def _extract_toc_headings(source):
+    """Extract one cell's headings using the notebook HTML Markdown parser."""
+    headings = []
+
+    class HeadingRenderer(IPythonRenderer):
+        def heading(self, text, level, **attrs):
+            html = super().heading(text, level)
+            try:
+                heading = ElementTree.fromstring(html)
+            except Exception:
+                # The HTML exporter also omits anchors for invalid heading HTML.
+                return ""
+            heading_id = heading.get("id")
+            if heading_id is not None:
+                # Preserve literal visible text and the HTML exporter's exact ID.
+                heading.remove(heading[-1])
+                label = "".join(heading.itertext()).replace("\n", " ")
+                label = escape(label, quote=False)
+                label = re.sub(r"([\\`*_{}\[\]()#+.!>-])", r"\\\1", label)
+                headings.append(f"{'#' * level} {label} {{#{heading_id}}}\n")
+            return ""
+
+    MarkdownWithMath(renderer=HeadingRenderer(escape=False)).render(source)
+    return "\n".join(headings)
 
 
 def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):
-    """Convert a notebook to markdown
+    """Extract notebook headings as Markdown for the MkDocs table of contents.
 
-    We use a template that removed all code cells because if the body
-    is to big ( with javascript and CSS) it takes to long to read and parse
+    The template omits code cells and parses each Markdown cell independently
+    using the same parser as HTML export, retaining only its actual headings.
     """
 
     app = get_nbconvert_app(
@@ -217,6 +226,7 @@ def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):
         config=app.config,
         template_file=template_file,
         extra_template_paths=extra_template_paths,
+        filters={"extract_toc_headings": _extract_toc_headings},
     )
 
     _, extension = os.path.splitext(nb_path)
@@ -227,20 +237,6 @@ def nb2md(nb_path, start=0, end=None, execute=False, kernel_name=""):
         body, resources = exporter.from_file(nb_file)
     else:
         body, resources = exporter.from_filename(nb_path)
-
-    # Code cells can also be created using backquotes (text surrounded by up to three backquotes `)
-    # So it needs to be removed, also to not mess the table of contents (for more see "test_toc.py")
-
-    # Remove fenced code blocks (``` ... ```) including their content (may span lines)
-    body = re.sub(r"```.*?```", "", body, flags=re.DOTALL)
-
-    # Remove inline code spans (`...`) without crossing newlines to avoid
-    # destroying headings when backticks are unmatched across cells
-    body = re.sub(r"`[^`\n]*`", "", body)
-
-    # Remove remaining backtick-wrapped spans that may cross lines,
-    # but only if they don't contain markdown headings
-    body = re.sub(r"`[^`]*`", _strip_if_no_heading, body)
 
     return body
 

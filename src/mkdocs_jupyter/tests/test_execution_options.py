@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import nbformat
 import pytest
 import yaml
@@ -144,3 +146,88 @@ def test_mathjax_script_source(notebook_site, options, expected_src):
     scripts = pages["examples/selected"].find_all("script", src=True)
     assert expected_src in [script["src"] for script in scripts]
     assert all(script["src"] for script in scripts)
+
+
+@pytest.mark.parametrize(
+    "fmt,suffix", [("ipynb", ".ipynb"), ("py:percent", ".py"), ("md", ".md")]
+)
+def test_execution_uses_source_directory_with_cold_and_warm_cache(
+    tmp_path, monkeypatch, fmt, suffix
+):
+    import jupytext
+
+    monkeypatch.setenv("JUPYTER_NO_CONFIG", "1")
+    process_dir = tmp_path / "elsewhere"
+    process_dir.mkdir()
+    monkeypatch.chdir(process_dir)
+    notebook = nbformat.v4.new_notebook(
+        cells=[
+            nbformat.v4.new_code_cell(
+                "from pathlib import Path\n"
+                "print(Path('message.txt').read_text())\n"
+                "counter = Path('execution-count.txt')\n"
+                "count = int(counter.read_text()) if counter.exists() else 0\n"
+                "counter.write_text(str(count + 1))\n"
+            )
+        ],
+        metadata={
+            "kernelspec": {
+                "name": "python3",
+                "language": "python",
+                "display_name": "Python 3",
+            }
+        },
+    )
+    originals = {}
+    for name, message in (
+        ("first", "first-directory-data"),
+        ("second", "second-directory-data"),
+    ):
+        source_dir = tmp_path / "docs" / "examples" / name
+        source_dir.mkdir(parents=True)
+        (source_dir / "message.txt").write_text(message, encoding="utf-8")
+        source = source_dir / f"notebook{suffix}"
+        jupytext.write(notebook, source, fmt=fmt)
+        originals[source] = source.read_bytes()
+    config_file = tmp_path / "mkdocs.yml"
+    config_file.write_text(
+        yaml.safe_dump(
+            {
+                "site_name": "Source-relative execution",
+                "plugins": [
+                    {
+                        "mkdocs-jupyter": {
+                            "include": [f"*{suffix}"],
+                            "execute": True,
+                            "allow_errors": False,
+                            "cache_dir": str(tmp_path / ".cache" / "notebooks"),
+                        }
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    for _ in range(2):
+        build(load_config(str(config_file)))
+        for name, expected in (
+            ("first", "first-directory-data"),
+            ("second", "second-directory-data"),
+        ):
+            page = BeautifulSoup(
+                (
+                    tmp_path / "site" / "examples" / name / "notebook" / "index.html"
+                ).read_text(encoding="utf-8"),
+                "html.parser",
+            )
+            output = "".join(
+                area.get_text() for area in page.select(".jp-OutputArea-output")
+            )
+            assert expected in output
+            assert (
+                tmp_path / "docs" / "examples" / name / "execution-count.txt"
+            ).read_text() == "1"
+        assert Path.cwd() == process_dir
+        for source, original in originals.items():
+            assert source.read_bytes() == original
