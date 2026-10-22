@@ -173,6 +173,21 @@ plugins:
           ignore: ["some-irrelevant-files/*.ipynb"]
 ```
 
+### Notebooks outside the docs directory
+
+Use `notebook_dirs` to mount source directories outside `docs_dir`:
+
+```yaml
+plugins:
+    - mkdocs-jupyter:
+          notebook_dirs:
+              examples: notebooks
+
+nav:
+    - Home: index.md
+    - Example: examples/tutorial.ipynb
+```
+
 ### Execute Notebook
 
 You can tell the plugin to execute the notebook before converting, default is

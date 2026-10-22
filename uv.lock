@@ -1196,6 +1196,7 @@ wheels = [
 name = "mkdocs-jupyter"
 source = { editable = "." }
 dependencies = [
+    { name = "beautifulsoup4" },
     { name = "ipykernel" },
     { name = "jupytext" },
     { name = "mkdocs" },
@@ -1220,6 +1221,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "beautifulsoup4", specifier = ">=4.7,<5" },
     { name = "ipykernel", specifier = ">6.0.0,<8" },
     { name = "jupytext", specifier = ">1.13.8,<2" },
     { name = "mkdocs", specifier = ">=1.4.0,<2" },
