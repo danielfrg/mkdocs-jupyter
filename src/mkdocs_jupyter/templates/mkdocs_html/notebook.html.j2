@@ -66,7 +66,10 @@ mkdocs-material #}
 {%- endblock html_head_js_mathjax -%}
 
 {%- block html_head_js_mermaidjs -%}
+{# Material renders pre.mermaid itself, including during instant navigation. #}
+{%- if resources.mkdocs.include_mermaidjs -%}
 {{ mermaid_js(resources.mermaid_js_url) }}
+{%- endif -%}
 {%- endblock html_head_js_mermaidjs -%}
 
 {%- block html_head_css -%}

@@ -66,6 +66,7 @@ def nb2html(
     highlight_extra_classes: str = "",
     include_requirejs: bool = False,
     custom_mathjax_url: str = DEFAULT_MATHJAX_URL,
+    include_mermaidjs: bool = True,
 ):
     """
     Convert a notebook to HTML
@@ -147,7 +148,10 @@ def nb2html(
 
     resources = {
         "metadata": {"path": os.path.dirname(os.path.abspath(nb_path))},
-        "mkdocs": {"include_requirejs": include_requirejs},
+        "mkdocs": {
+            "include_requirejs": include_requirejs,
+            "include_mermaidjs": include_mermaidjs,
+        },
     }
     _, extension = os.path.splitext(nb_path)
 
