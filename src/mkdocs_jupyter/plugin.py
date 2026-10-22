@@ -17,6 +17,7 @@ from mkdocs.structure.pages import Page
 from mkdocs.structure.toc import get_toc
 
 from . import convert
+from .exporter_options import image_dependencies_valid, validate_html_exporter_options
 from .metadata import get_notebook_metadata
 from .mathjax import mathjax_script, mathjax_url
 from .notebook_dirs import (
@@ -76,6 +77,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("include_requirejs", config_options.Type(bool, default=False)),
         ("toc_depth", config_options.Type(int, default=6)),
         ("data_files", config_options.Type(dict, default={})),
+        ("html_exporter_options", config_options.Type(dict, default={})),
         ("custom_template", config_options.Optional(config_options.File(exists=True))),
         (
             "custom_mathjax_url",
@@ -88,6 +90,10 @@ class Plugin(mkdocs.plugins.BasePlugin):
     _supported_extensions = [".ipynb", ".py", ".md"]
 
     def on_config(self, config):
+        try:
+            validate_html_exporter_options(self.config["html_exporter_options"])
+        except ValueError as error:
+            raise ConfigurationError(str(error)) from error
         self._notebook_dirs = configure_notebook_dirs(
             self.config["notebook_dirs"], config
         )
@@ -201,6 +207,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             theme = self.config["theme"]
             custom_template = self.config["custom_template"]
+            html_exporter_options = self.config["html_exporter_options"]
             # Custom templates can depend on dynamic includes and local assets.
             cache_enabled = self.config["cache"] and not custom_template
             cache_dir = self.config["cache_dir"]
@@ -222,18 +229,20 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     self, "_mkdocs_jupyter_has_metadata", False
                 ) and (explicit_title is not None or "title" in self.meta)
                 if cache_path and cache_path.exists():
-                    logger.info("Cache hit: %s", page.file.abs_src_path)
                     cached = json.loads(cache_path.read_text(encoding="utf-8"))
-                    self.content = cached["content"]
-                    self.toc = get_toc(cached["toc_tokens"])
-                    if (
-                        cached.get("title") is not None
-                        and not ignore_h1_titles
-                        and not preserve_title
-                    ):
-                        self.title = cached["title"]
-                    return
+                    if image_dependencies_valid(cached.get("image_dependencies", {})):
+                        logger.info("Cache hit: %s", page.file.abs_src_path)
+                        self.content = cached["content"]
+                        self.toc = get_toc(cached["toc_tokens"])
+                        if (
+                            cached.get("title") is not None
+                            and not ignore_h1_titles
+                            and not preserve_title
+                        ):
+                            self.title = cached["title"]
+                        return
 
+                image_dependencies = {}
                 body = convert.nb2html(
                     page.file.abs_src_path,
                     execute=exec_nb,
@@ -251,11 +260,16 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     custom_template=custom_template,
                     mathjax_version=mathjax_version,
                     include_mathjax=False,
+                    html_exporter_options=html_exporter_options,
+                    image_dependencies=image_dependencies,
                 )
                 self.content = body
-                toc_tokens, title = _get_nb_toc_tokens(
-                    page.file.abs_src_path, toc_depth
-                )
+                if html_exporter_options.get("exclude_markdown", False):
+                    toc_tokens, title = [], None
+                else:
+                    toc_tokens, title = _get_nb_toc_tokens(
+                        page.file.abs_src_path, toc_depth
+                    )
                 self.toc = get_toc(toc_tokens)
                 if title is not None and not ignore_h1_titles and not preserve_title:
                     self.title = title
@@ -269,6 +283,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                                 "content": body,
                                 "toc_tokens": toc_tokens,
                                 "title": title,
+                                "image_dependencies": image_dependencies,
                             }
                         ),
                         encoding="utf-8",
@@ -405,7 +420,7 @@ def _compute_cache_key(nb_path, config, exec_nb, include_mermaidjs=True):
     """
     hasher = hashlib.sha256()
     # Bump the cache format when rendering or TOC semantics change.
-    hasher.update(b"mkdocs-jupyter-cache-v4\0")
+    hasher.update(b"mkdocs-jupyter-cache-v5\0")
     # Identical sources can read different data relative to their directories.
     hasher.update(os.fsencode(os.path.abspath(nb_path)))
     hasher.update(b"\0")
@@ -413,6 +428,7 @@ def _compute_cache_key(nb_path, config, exec_nb, include_mermaidjs=True):
     hasher.update(f"execute={exec_nb}".encode())
     hasher.update(f"include_mermaidjs={include_mermaidjs}".encode())
     hasher.update(f"mathjax_version={config.get('mathjax_version', 4)}".encode())
+    hasher.update(repr(config.get("html_exporter_options", {})).encode())
     for key in (
         "kernel_name",
         "theme",
