@@ -10,7 +10,7 @@ from mkdocs_jupyter.utils import slugify
 # (to make them url-friendly)
 
 
-def add_anchor_lower_id(html, anchor_link_text="¶"):
+def add_anchor_lower_id(html, anchor_link_text="¶", exclude_anchor_links=False):
     from xml.etree.cElementTree import Element
 
     from defusedxml import ElementTree
@@ -23,14 +23,15 @@ def add_anchor_lower_id(html, anchor_link_text="¶"):
         return html
     link = _convert_header_id(slugify(html2text(h)))
     h.set("id", link)
-    a = Element("a", {"class": "anchor-link", "href": "#" + link})
-    try:
-        # Test if the anchor link text is HTML (e.g. an image)
-        a.append(ElementTree.fromstring(anchor_link_text))
-    except Exception:
-        # If we fail to parse, assume we've just got regular text
-        a.text = anchor_link_text
-    h.append(a)
+    if not exclude_anchor_links:
+        a = Element("a", {"class": "anchor-link", "href": "#" + link})
+        try:
+            # Test if the anchor link text is HTML (e.g. an image)
+            a.append(ElementTree.fromstring(anchor_link_text))
+        except Exception:
+            # If we fail to parse, assume we've just got regular text
+            a.text = anchor_link_text
+        h.append(a)
 
     # Known issue of Python3.x, ElementTree.tostring() returns a byte string
     # instead of a text string.  See issue http://bugs.python.org/issue10942
@@ -40,7 +41,11 @@ def add_anchor_lower_id(html, anchor_link_text="¶"):
 
 def new_heading(self, text, level):
     html = super(IPythonRenderer, self).heading(text, level)
-    return add_anchor_lower_id(html, anchor_link_text=self.anchor_link_text)
+    return add_anchor_lower_id(
+        html,
+        anchor_link_text=self.anchor_link_text,
+        exclude_anchor_links=self.exclude_anchor_links,
+    )
 
 
 IPythonRenderer.heading = new_heading

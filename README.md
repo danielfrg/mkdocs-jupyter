@@ -307,6 +307,42 @@ Conversion caching is disabled with `custom_template` so edits to templates,
 includes, and assets take effect on each build. With `execute: true`, this also
 means notebooks execute on each build.
 
+### HTML exporter options
+
+Pass additional nbconvert HTML exporter options through `html_exporter_options`:
+
+```yaml
+plugins:
+    - mkdocs-jupyter:
+          html_exporter_options:
+              embed_images: true
+              anchor_link_text: "Link"
+```
+
+`embed_images` embeds local images referenced in Markdown cells as base64
+URLs, including Markdown images and HTML `<img>` tags. Paths resolve
+relative to the notebook, so the same references work in Jupyter and the
+built documentation. Existing image alt text and HTML attributes are retained.
+Remote images remain external, and missing local images keep their original
+URLs. Images in arbitrary HTML outputs are outside this nbconvert option's
+scope.
+
+Option names and value types are validated against nbconvert's configurable
+`HTMLExporter` traits. Use plain names such as `embed_images`, without an
+`HTMLExporter.` prefix. Unknown options and invalid values produce a
+configuration error.
+
+Dedicated plugin settings take precedence: `show_input` controls input
+visibility, and `no_input` / `no_prompt` keep their prompt-hiding behavior.
+Use the plugin's `custom_template`, `theme` and MathJax settings to configure
+those features; exporter options do not replace the package's templates,
+filters or preprocessing pipeline.
+
+Conversion caching remains enabled. Exporter options and the contents of
+referenced local images are checked before reusing cached HTML. Changing,
+removing or adding an image triggers reconversion; unchanged images reuse
+the cache. With `execute: true`, reconversion also reruns the notebook.
+
 ### Extra CSS classes
 
 This option will add a custom CSS class to the `div` container that highlights
