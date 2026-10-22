@@ -143,6 +143,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
             remove_tag_config = self.config["remove_tag_config"]
             highlight_extra_classes = self.config["highlight_extra_classes"]
             include_requirejs = self.config["include_requirejs"]
+            include_mermaidjs = config["theme"].name != "material"
             toc_depth = self.config["toc_depth"]
             custom_mathjax_url = self.config["custom_mathjax_url"]
 
@@ -166,7 +167,10 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
             if cache_enabled:
                 cache_key = _compute_cache_key(
-                    page.file.abs_src_path, self.config, exec_nb
+                    page.file.abs_src_path,
+                    self.config,
+                    exec_nb,
+                    include_mermaidjs=include_mermaidjs,
                 )
                 cache_path = _get_cache_path(cache_dir, cache_key)
                 self._used_cache_paths.add(cache_path)
@@ -202,6 +206,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     remove_tag_config=remove_tag_config,
                     highlight_extra_classes=highlight_extra_classes,
                     include_requirejs=include_requirejs,
+                    include_mermaidjs=include_mermaidjs,
                     custom_mathjax_url=custom_mathjax_url,
                 )
                 self.content = body
@@ -342,7 +347,7 @@ def get_nb_toc(fpath, toc_depth):
     return toc, title
 
 
-def _compute_cache_key(nb_path, config, exec_nb):
+def _compute_cache_key(nb_path, config, exec_nb, include_mermaidjs=True):
     """Compute a SHA-256 hash from notebook content and relevant config options.
 
     Uses the resolved exec_nb value (after execution filters) rather
@@ -357,6 +362,7 @@ def _compute_cache_key(nb_path, config, exec_nb):
     hasher.update(b"\0")
     hasher.update(pathlib.Path(nb_path).read_bytes())
     hasher.update(f"execute={exec_nb}".encode())
+    hasher.update(f"include_mermaidjs={include_mermaidjs}".encode())
     for key in (
         "kernel_name",
         "theme",
