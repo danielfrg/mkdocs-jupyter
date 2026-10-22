@@ -166,12 +166,6 @@ class Plugin(mkdocs.plugins.BasePlugin):
             check_collisions(ret, self.config["include_source"])
         return ret
 
-    def on_page_content(self, html, page, config, files):
-        if getattr(page.file, "_mkdocs_jupyter_mount", None) and self.should_include(
-            page.file
-        ):
-            return rewrite_notebook_urls(html, page.file, files)
-
     def on_pre_page(self, page, config, files):
         if self.should_include(page.file):
             explicit_title = page.title
@@ -338,6 +332,15 @@ class Plugin(mkdocs.plugins.BasePlugin):
                 return retained
 
             page.toc.items = limit_depth(page.toc.items)
+        if getattr(page.file, "_mkdocs_jupyter_mount", None) and self.should_include(
+            page.file
+        ):
+            html = rewrite_notebook_urls(
+                html,
+                page.file,
+                files,
+                markdown_processed=self.config["markdown_cell_processor"] == "mkdocs",
+            )
         return html
 
     def on_page_read_source(self, page, config):

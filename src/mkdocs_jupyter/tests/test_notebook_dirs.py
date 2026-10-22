@@ -64,9 +64,10 @@ def linked_site_file(root, page_url, reference):
     return path / "index.html" if url.path.endswith("/") else path
 
 
+@pytest.mark.parametrize("processor", ["jupyter", "mkdocs"])
 @pytest.mark.parametrize("use_directory_urls", [True, False])
 def test_external_notebook_navigation_links_assets_and_watch(
-    tmp_path, monkeypatch, use_directory_urls
+    tmp_path, monkeypatch, use_directory_urls, processor
 ):
     # Missing source-backed registration, URL rewriting, or directory watching
     # must break a real build, a rendered link, or the registered watch path.
@@ -78,7 +79,21 @@ def test_external_notebook_navigation_links_assets_and_watch(
                 "# External demo\n\n## Details\n\n"
                 "![A useful figure](figure.svg)\n\n"
                 "[Other notebook](../other.ipynb#other-details)"
-            )
+            ),
+            nbformat.v4.new_code_cell(
+                "",
+                outputs=[
+                    nbformat.v4.new_output(
+                        "display_data",
+                        data={
+                            "text/html": (
+                                '<img alt="Rich output figure" '
+                                'src="figure.svg">'
+                            )
+                        },
+                    )
+                ],
+            ),
         ],
     )
     write_notebook(
@@ -89,11 +104,15 @@ def test_external_notebook_navigation_links_assets_and_watch(
         b'<svg xmlns="http://www.w3.org/2000/svg"><title>Useful figure</title></svg>'
     )
     (source / "sub" / "figure.svg").write_bytes(image)
+    # A second file with the same name catches accidentally rewriting a URL
+    # that MkDocs has already made relative to the rendered page.
+    (source / "figure.svg").write_bytes(b"<svg>Wrong parent figure</svg>")
     (source / ".private.txt").write_text("not public", encoding="utf-8")
     (source / ".hidden").mkdir()
     (source / ".hidden" / "secret.txt").write_text("not public", encoding="utf-8")
     config_file = site_config(
         tmp_path,
+        {"markdown_cell_processor": processor},
         use_directory_urls=use_directory_urls,
         nav=[
             {"Home": "index.md"},
@@ -124,6 +143,8 @@ def test_external_notebook_navigation_links_assets_and_watch(
     assert page.find("a", href="#details")
     image_tag = wrapper.find("img", alt="A useful figure")
     assert linked_site_file(tmp_path, page_url, image_tag["src"]).read_bytes() == image
+    rich_image = wrapper.find("img", alt="Rich output figure")
+    assert linked_site_file(tmp_path, page_url, rich_image["src"]).read_bytes() == image
     notebook_link = wrapper.find("a", string="Other notebook")
     assert urlsplit(notebook_link["href"]).fragment == "other-details"
     other = linked_site_file(tmp_path, page_url, notebook_link["href"])
