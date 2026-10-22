@@ -15,7 +15,7 @@ from pathlib import Path
 import jupytext
 import mistune
 from defusedxml import ElementTree
-from jinja2 import FileSystemLoader
+from jinja2 import FileSystemLoader, pass_context
 from nbconvert.exporters.html import HTMLExporter
 from nbconvert.exporters.markdown import MarkdownExporter
 from nbconvert.exporters.templateexporter import default_filters
@@ -29,14 +29,15 @@ from pygments.util import ClassNotFound
 
 from mkdocs_jupyter.config import settings
 from mkdocs_jupyter.metadata import NotebookMetadataMixin
+from mkdocs_jupyter.mathjax import (
+    DEFAULT_MATHJAX_URL as DEFAULT_MATHJAX_URL,
+    mathjax_script,
+    mathjax_url,
+    normalize_latex_output,
+)
 from mkdocs_jupyter.preprocessors import SubCell
 
 logger = logging.getLogger("mkdocs.mkdocs-jupyter")
-
-DEFAULT_MATHJAX_URL = (
-    "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js"
-    "?config=TeX-AMS_CHTML-full,Safe"
-)
 
 # Language of the kernel (used for syntax highlighting)
 kernel_lang = "python"
@@ -47,6 +48,41 @@ cell_id = 0
 
 class NotebookHTMLExporter(NotebookMetadataMixin, HTMLExporter):
     """HTML export without the notebook's page frontmatter."""
+
+    @pass_context
+    def markdown2html(self, context, source):
+        if (
+            context.get("resources", {}).get("mkdocs", {}).get("mathjax_version", 4)
+            == 2
+        ):
+            return super().markdown2html(context, source)
+        cell = context.get("cell", {})
+        renderer = ModernMathRenderer(
+            escape=False,
+            attachments=cell.get("attachments", {}),
+            embed_images=self.embed_images,
+            path=context.get("resources", {}).get("metadata", {}).get("path", ""),
+            anchor_link_text=self.anchor_link_text,
+            exclude_anchor_links=self.exclude_anchor_links,
+        )
+        return MarkdownWithMath(renderer=renderer).render(source)
+
+
+class ModernMathRenderer(IPythonRenderer):
+    """Emit explicit math regions compatible with site-owned arithmatex setups."""
+
+    def inline_math(self, body):
+        return '<span class="arithmatex">\\(' + self.escape_html(body) + "\\)</span>"
+
+    def block_math(self, body):
+        return '<div class="arithmatex">\\[' + self.escape_html(body) + "\\]</div>"
+
+    def latex_environment(self, name, body):
+        return (
+            '<div class="arithmatex">'
+            + super().latex_environment(name, body)
+            + "</div>"
+        )
 
 
 class NotebookMarkdownExporter(NotebookMetadataMixin, MarkdownExporter):
@@ -67,9 +103,11 @@ def nb2html(
     remove_tag_config: dict = {},
     highlight_extra_classes: str = "",
     include_requirejs: bool = False,
-    custom_mathjax_url: str = DEFAULT_MATHJAX_URL,
+    custom_mathjax_url: str = "",
     include_mermaidjs: bool = True,
     custom_template: str | None = None,
+    mathjax_version: int = 4,
+    include_mathjax: bool = True,
 ):
     """
     Convert a notebook to HTML
@@ -138,7 +176,7 @@ def nb2html(
         "highlight_code": mk_custom_highlight_code(
             extra_css_classes=highlight_extra_classes
         ),
-        # "markdown2html": custom_markdown2html,
+        "normalize_latex_output": normalize_latex_output,
     }
 
     # Ensures SVG rendered with data and rdkit exit with NOOP
@@ -155,7 +193,7 @@ def nb2html(
         preprocessors=preprocessors_,
         filters=filters,
         theme=theme,
-        mathjax_url=custom_mathjax_url or DEFAULT_MATHJAX_URL,
+        mathjax_url=mathjax_url(mathjax_version, custom_mathjax_url),
         **template_options,
     )
     if custom_template:
@@ -167,6 +205,12 @@ def nb2html(
         "mkdocs": {
             "include_requirejs": include_requirejs,
             "include_mermaidjs": include_mermaidjs,
+            "mathjax_version": mathjax_version,
+            "mathjax_script": (
+                mathjax_script(mathjax_version, custom_mathjax_url)
+                if include_mathjax and mathjax_version != 2
+                else ""
+            ),
         },
     }
     _, extension = os.path.splitext(nb_path)

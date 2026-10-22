@@ -18,6 +18,7 @@ from mkdocs.structure.toc import get_toc
 
 from . import convert
 from .metadata import get_notebook_metadata
+from .mathjax import mathjax_script, mathjax_url
 
 logger = logging.getLogger("mkdocs.plugins.mkdocs_jupyter")
 
@@ -66,8 +67,9 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("custom_template", config_options.Optional(config_options.File(exists=True))),
         (
             "custom_mathjax_url",
-            config_options.Type(str, default=convert.DEFAULT_MATHJAX_URL),
+            config_options.Type(str, default=""),
         ),
+        ("mathjax_version", config_options.Choice((2, 3, 4), default=4)),
         ("cache", config_options.Type(bool, default=True)),
         ("cache_dir", config_options.Type(str, default=".cache/mkdocs-jupyter")),
     )
@@ -147,6 +149,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
             include_mermaidjs = config["theme"].name != "material"
             toc_depth = self.config["toc_depth"]
             custom_mathjax_url = self.config["custom_mathjax_url"]
+            mathjax_version = self.config["mathjax_version"]
 
             if self.config["execute_include"]:
                 exec_nb = exec_nb and any(
@@ -212,6 +215,8 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     include_mermaidjs=include_mermaidjs,
                     custom_mathjax_url=custom_mathjax_url,
                     custom_template=custom_template,
+                    mathjax_version=mathjax_version,
+                    include_mathjax=False,
                 )
                 self.content = body
                 toc_tokens, title = _get_nb_toc_tokens(
@@ -265,6 +270,12 @@ class Plugin(mkdocs.plugins.BasePlugin):
         page.nb_url = urljoin(page.abs_url, nb_source_name)
 
     def on_post_page(self, output_content, page, config):
+        if self.config["mathjax_version"] != 2:
+            # Install before the first notebook is reached with instant navigation.
+            script = mathjax_script(
+                self.config["mathjax_version"], self.config["custom_mathjax_url"]
+            )
+            output_content = output_content.replace("</body>", script + "\n</body>")
         dark_scheme = self.config["dark_scheme"]
         dark_selector = self.config["dark_selector"]
         if dark_selector or dark_scheme != "slate":
@@ -360,13 +371,14 @@ def _compute_cache_key(nb_path, config, exec_nb, include_mermaidjs=True):
     """
     hasher = hashlib.sha256()
     # Bump the cache format when rendering or TOC semantics change.
-    hasher.update(b"mkdocs-jupyter-cache-v3\0")
+    hasher.update(b"mkdocs-jupyter-cache-v4\0")
     # Identical sources can read different data relative to their directories.
     hasher.update(os.fsencode(os.path.abspath(nb_path)))
     hasher.update(b"\0")
     hasher.update(pathlib.Path(nb_path).read_bytes())
     hasher.update(f"execute={exec_nb}".encode())
     hasher.update(f"include_mermaidjs={include_mermaidjs}".encode())
+    hasher.update(f"mathjax_version={config.get('mathjax_version', 4)}".encode())
     for key in (
         "kernel_name",
         "theme",
@@ -382,7 +394,7 @@ def _compute_cache_key(nb_path, config, exec_nb, include_mermaidjs=True):
     ):
         value = config[key]
         if key == "custom_mathjax_url":
-            value = value or convert.DEFAULT_MATHJAX_URL
+            value = mathjax_url(config.get("mathjax_version", 4), value)
         hasher.update(f"{key}={repr(value)}".encode())
     return hasher.hexdigest()
 

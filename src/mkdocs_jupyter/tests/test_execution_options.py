@@ -129,23 +129,26 @@ def test_execution_include_changes_invalidate_cache(notebook_site):
     [
         (
             {},
-            "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe",
+            "https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js",
         ),
         (
             {"custom_mathjax_url": ""},
-            "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe",
+            "https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js",
         ),
         (
-            {"custom_mathjax_url": "/assets/mathjax.js?config=TeX-AMS_CHTML-full,Safe"},
-            "/assets/mathjax.js?config=TeX-AMS_CHTML-full,Safe",
+            {"custom_mathjax_url": "/assets/mathjax/tex-mml-chtml.js"},
+            "/assets/mathjax/tex-mml-chtml.js",
         ),
     ],
 )
 def test_mathjax_script_source(notebook_site, options, expected_src):
     pages = build_notebook_site(notebook_site, options)
-    scripts = pages["examples/selected"].find_all("script", src=True)
-    assert expected_src in [script["src"] for script in scripts]
-    assert all(script["src"] for script in scripts)
+    import json
+
+    page = pages["examples/selected"]
+    bootstrap = page.select_one("script[data-mkdocs-jupyter-mathjax]")
+    assert json.loads(bootstrap["data-mkdocs-jupyter-mathjax"])["url"] == expected_src
+    assert all(script["src"] for script in page.find_all("script", src=True))
 
 
 @pytest.mark.parametrize(

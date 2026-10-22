@@ -1,4 +1,5 @@
 import base64
+import json
 
 import jupytext
 import nbformat
@@ -113,7 +114,12 @@ def test_custom_child_template_preserves_notebook_rendering_and_options(
     assert "template output" in output.get_text()
     assert html.select_one(".custom-cell") is not None
     assert not html.select(".jp-InputPrompt, .jp-OutputPrompt")
-    assert html.find("script", src="/custom-mathjax.js") is not None
+    bootstrap = html.select_one("script[data-mkdocs-jupyter-mathjax]")
+    assert bootstrap is not None
+    assert json.loads(bootstrap["data-mkdocs-jupyter-mathjax"]) == {
+        "url": "/custom-mathjax.js",
+        "version": 4,
+    }
     assert ".custom-output { color: red; }" in "".join(
         style.get_text() for style in html.select("style")
     )

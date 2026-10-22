@@ -314,6 +314,38 @@ plugins:
           include_requirejs: true
 ```
 
+### MathJax
+
+Notebook math uses MathJax 4.1.3 by default, including inline equations, display
+math, AMS numbering and labels. Material's instant navigation is supported.
+MathJax loads when a notebook is opened; an existing MathJax 3 or 4 runtime is
+reused, preserving the site's configuration.
+
+To select another supported major version or host MathJax yourself:
+
+```yaml
+plugins:
+    - mkdocs-jupyter:
+          mathjax_version: 3 # Supported: 2, 3, 4. Default: 4.
+          # Optional: URL of the matching MathJax component and its assets.
+          custom_mathjax_url: /assets/mathjax/tex-mml-chtml.js
+```
+
+Without `custom_mathjax_url` (or with an empty value), the plugin uses a CDN
+URL for the selected version. Version 3 uses MathJax 3.2.2; version 2 keeps the
+legacy nbconvert configuration. If you already specify a MathJax 2 URL, add
+`mathjax_version: 2` to keep using it. Custom version 3/4 configuration uses
+`window.MathJax` and the promise API, rather than `MathJax.Hub`.
+
+When your site loads MathJax itself, its TeX and processing settings apply to
+notebooks too. Notebook equations use `arithmatex` regions with `\(` / `\)`
+and `\[` / `\]` delimiters, which Material's MathJax configuration recognizes.
+A site that manages rendering should perform one initial typeset: set
+`startup.typeset: false` when a navigation callback performs it. MathJax 3
+callbacks must serialize asynchronous work through `MathJax.startup.promise`;
+MathJax 4 serializes `typesetPromise` calls itself. The legacy version 2
+renderer supports full page loads.
+
 ### Download notebook link
 
 You can tell the plugin to include the notebook source to make it easy to show a
