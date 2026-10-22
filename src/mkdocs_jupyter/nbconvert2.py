@@ -10,10 +10,12 @@ import logging
 import os
 import re
 from html import escape
+from pathlib import Path
 
 import jupytext
 import mistune
 from defusedxml import ElementTree
+from jinja2 import FileSystemLoader
 from nbconvert.exporters.html import HTMLExporter
 from nbconvert.exporters.markdown import MarkdownExporter
 from nbconvert.exporters.templateexporter import default_filters
@@ -67,6 +69,7 @@ def nb2html(
     include_requirejs: bool = False,
     custom_mathjax_url: str = DEFAULT_MATHJAX_URL,
     include_mermaidjs: bool = True,
+    custom_template: str | None = None,
 ):
     """
     Convert a notebook to HTML
@@ -119,6 +122,15 @@ def nb2html(
     # Use the templates included in this package
     template_file = "mkdocs_html/notebook.html.j2"
     extra_template_paths = [settings.templates_dir]
+    template_options = {}
+    if custom_template:
+        template_path = Path(custom_template).absolute()
+        if not template_path.is_file():
+            raise FileNotFoundError(
+                f"Custom notebook template not found: {template_path}"
+            )
+        template_file = template_path.name
+        template_options["extra_loaders"] = [FileSystemLoader(template_path.parent)]
 
     # Customize NBConvert App
     preprocessors_ = [SubCell]
@@ -144,7 +156,11 @@ def nb2html(
         filters=filters,
         theme=theme,
         mathjax_url=custom_mathjax_url or DEFAULT_MATHJAX_URL,
+        **template_options,
     )
+    if custom_template:
+        # nbconvert's binary asset fallback uses paths rather than Jinja loaders.
+        exporter.template_paths = [str(template_path.parent), *exporter.template_paths]
 
     resources = {
         "metadata": {"path": os.path.dirname(os.path.abspath(nb_path))},

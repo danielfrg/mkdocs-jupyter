@@ -261,6 +261,37 @@ plugins:
           dark_selector: ".dark"
 ```
 
+### Custom notebook templates
+
+Use `custom_template` to extend the bundled notebook HTML template. Paths are
+relative to `mkdocs.yml`; absolute paths also work.
+
+```yaml
+plugins:
+  - mkdocs-jupyter:
+      custom_template: overrides/notebook.html.j2
+      no_prompt: true
+```
+
+For example, `overrides/notebook.html.j2` can make cell outputs collapsible:
+
+```jinja
+{% extends "mkdocs_html/notebook.html.j2" %}
+
+{% block output_group %}
+<details>
+  <summary>Show output</summary>
+  {{ super() }}
+</details>
+{% endblock output_group %}
+```
+
+Includes and local assets are resolved from the custom template's directory
+before the bundled templates. Notebook heading extraction remains unchanged.
+Conversion caching is disabled with `custom_template` so edits to templates,
+includes, and assets take effect on each build. With `execute: true`, this also
+means notebooks execute on each build.
+
 ### Extra CSS classes
 
 This option will add a custom CSS class to the `div` container that highlights

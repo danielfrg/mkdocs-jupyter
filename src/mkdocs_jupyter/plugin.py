@@ -63,6 +63,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
         ("include_requirejs", config_options.Type(bool, default=False)),
         ("toc_depth", config_options.Type(int, default=6)),
         ("data_files", config_options.Type(dict, default={})),
+        ("custom_template", config_options.Optional(config_options.File(exists=True))),
         (
             "custom_mathjax_url",
             config_options.Type(str, default=convert.DEFAULT_MATHJAX_URL),
@@ -162,7 +163,9 @@ class Plugin(mkdocs.plugins.BasePlugin):
                         exec_nb = False
 
             theme = self.config["theme"]
-            cache_enabled = self.config["cache"]
+            custom_template = self.config["custom_template"]
+            # Custom templates can depend on dynamic includes and local assets.
+            cache_enabled = self.config["cache"] and not custom_template
             cache_dir = self.config["cache_dir"]
 
             if cache_enabled:
@@ -208,6 +211,7 @@ class Plugin(mkdocs.plugins.BasePlugin):
                     include_requirejs=include_requirejs,
                     include_mermaidjs=include_mermaidjs,
                     custom_mathjax_url=custom_mathjax_url,
+                    custom_template=custom_template,
                 )
                 self.content = body
                 toc_tokens, title = _get_nb_toc_tokens(
