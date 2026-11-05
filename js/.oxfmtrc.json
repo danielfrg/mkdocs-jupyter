@@ -5,5 +5,5 @@
   "tabWidth": 2,
   "printWidth": 100,
   "trailingComma": "all",
-  "ignorePatterns": ["dist/**", ".astro/**"]
+  "ignorePatterns": ["dist/**", ".astro/**", "src/styles/jupyter-lab-*.scss"]
 }
