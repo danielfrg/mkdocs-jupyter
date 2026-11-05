@@ -2,14 +2,13 @@
 name = "mkdocs-jupyter"
 description = "Use Jupyter in mkdocs websites"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 license = { "text" = "Apache-2.0" }
 keywords = ["mkdocs", "jupyter", "jupyterlab", "notebooks", "documentation"]
 authors = [{ name = "Daniel Rodriguez", email = "daniel@danielfrg.com" }]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
   "Programming Language :: Python :: 3.15",
@@ -27,10 +26,12 @@ dependencies = [
 ]
 dynamic = ["version"]
 
-[tool.uv]
-dev-dependencies = [
-    "isort",
-    "ruff==0.5.0",
+[dependency-groups]
+dev = [
+    # Linting
+    "ruff>=0.17.3",
+    "ty>=0.0.97",
+    # Release
     "build",
     "twine",
     # Testing
@@ -101,14 +102,11 @@ lint.select = [
   "E", # pycodestyle errors
   "W", # pycodestyle warnings
   "F", # pyflakes
-  # "I",  # isort
+  "I", # isort
   "B", # flake8-bugbear
 ]
 exclude = [".venv", "tests", "demo"]
 
-
-[tool.isort]
-profile = "black"
 
 [tool.mypy]
 strict = true

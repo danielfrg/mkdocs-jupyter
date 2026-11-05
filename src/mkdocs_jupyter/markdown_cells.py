@@ -10,6 +10,7 @@ from markdown.treeprocessors import Treeprocessor
 try:
     from mkdocs.utils.rendering import get_heading_text
 except ImportError:  # MkDocs 1.4 does not provide the rendering helper.
+
     def get_heading_text(heading, md):
         heading = deepcopy(heading)
         if len(heading) and heading[-1].get("class") == "headerlink":
@@ -65,7 +66,7 @@ class NotebookCells(Treeprocessor):
             for image in cell.iter("img"):
                 source = image.get("src", "")
                 if source.startswith("attachment:"):
-                    data = attachments.get(source[len("attachment:"):])
+                    data = attachments.get(source[len("attachment:") :])
                     if data:
                         preferred = ("image/svg+xml", "image/png", "image/jpeg")
                         mime = next(

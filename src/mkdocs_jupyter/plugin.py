@@ -321,9 +321,8 @@ class Plugin(mkdocs.plugins.BasePlugin):
 
     @mkdocs.plugins.event_priority(100)
     def on_page_markdown(self, markdown, page, config, files):
-        if (
-            self.config["markdown_cell_processor"] == "mkdocs"
-            and self.should_include(page.file)
+        if self.config["markdown_cell_processor"] == "mkdocs" and self.should_include(
+            page.file
         ):
             if self.config["ignore_h1_titles"]:
                 # Source reading supplied only metadata, so this is the nav,
@@ -333,10 +332,10 @@ class Plugin(mkdocs.plugins.BasePlugin):
         return None
 
     def on_page_content(self, html, page, config, files):
-        if (
-            self.config["markdown_cell_processor"] == "mkdocs"
-            and self.should_include(page.file)
+        if self.config["markdown_cell_processor"] == "mkdocs" and self.should_include(
+            page.file
         ):
+
             def limit_depth(items):
                 retained = []
                 for item in items:
