@@ -26,25 +26,25 @@ jobs:
         # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.13", "3.14", "3.15"]
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     env:
       UV_PYTHON: ${{ matrix.python-version }}
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: extractions/setup-just@v2
+      - uses: actions/checkout@v7
+      - uses: extractions/setup-just@v4
 
       # ------------------------------------------------------------------------
       # JS
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 10.28.0
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
           node-version-file: .node-version
 
@@ -81,12 +81,12 @@ jobs:
           just report
 
       - name: Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v7
         with:
           file: ./coverage.xml
 
       - name: Upload test results to GitHub
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: test-results-py${{ matrix.python-version }}

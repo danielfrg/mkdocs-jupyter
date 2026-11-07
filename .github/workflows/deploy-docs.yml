@@ -23,25 +23,25 @@ jobs:
       matrix:
         python-version: ["3.13"]
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     env:
       UV_PYTHON: ${{ matrix.python-version }}
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: extractions/setup-just@v2
+      - uses: actions/checkout@v7
+      - uses: extractions/setup-just@v4
 
       # ------------------------------------------------------------------------
       # Set up JS
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 10.28.0
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: .node-version
 
@@ -78,7 +78,7 @@ jobs:
 
       - name: Cache website
         id: cache-build
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: demo/dist
           key: >
