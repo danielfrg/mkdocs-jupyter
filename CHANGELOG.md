@@ -1,5 +1,9 @@
 # mkdocs-jupyter Change Log
 
+## Unreleased
+
+- Fix notebook CSS rendering as a code block with `markdown_cell_processor: mkdocs`
+
 ## 0.27.0
 
 - Add opt-in MkDocs rendering for notebook Markdown
