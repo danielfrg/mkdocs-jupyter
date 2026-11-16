@@ -286,14 +286,6 @@ def nb2html(
         except KeyError:
             pass
         content, resources = exporter.from_filename(nb_path, resources=resources)
-        content = (
-            content
-            + f"""
-        <style>
-        {resources["inlining"]["css"]}
-        </style>
-        """
-        )
 
     if highlight_extra_classes:
         content = content.replace(

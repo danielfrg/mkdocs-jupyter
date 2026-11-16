@@ -186,6 +186,19 @@ def test_jupyter_processor_remains_the_default(markdown_site, options):
     assert html.select_one(".jupyter-wrapper .admonition") is None
 
 
+@pytest.mark.parametrize("processor", ["mkdocs", "jupyter"])
+def test_notebook_styles_are_not_rendered_as_a_list(markdown_site, processor):
+    write_notebook(markdown_site, [nbformat.v4.new_markdown_cell("# Demo")])
+    html, _ = build_site(markdown_site, markdown_cell_processor=processor)
+    for node in html.select("pre, code"):
+        text = node.get_text()
+        assert "highlight-ipynb" not in text
+        assert "['" not in text
+    styles = [style.get_text().strip() for style in html.select("style")]
+    assert any(".highlight-ipynb" in style for style in styles)
+    assert not any(style.startswith("[") for style in styles)
+
+
 def test_mkdocs_processor_keeps_cell_attachments_and_outputs_separate(markdown_site):
     first = base64.b64encode(
         b'<svg xmlns="http://www.w3.org/2000/svg"><text>one</text></svg>'
